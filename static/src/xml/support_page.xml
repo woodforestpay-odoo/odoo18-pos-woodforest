@@ -1,0 +1,407 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="pos_woodforest.SupportPage">
+        <div class="o_payrillium_support_page">
+
+            <!-- ── Page header ─────────────────────────────────────── -->
+            <div class="o_support_page_header">
+                <div class="o_support_page_header_inner">
+                    <span class="o_support_icon">
+                        <i class="fa fa-life-ring"></i>
+                    </span>
+                    <div>
+                        <!-- <h1 class="o_support_title">Support</h1> -->
+                        <h2 class="o_payrillium_form_header_title">Woodforest Support</h2>
+                        <p class="o_support_subtitle">Download logs for diagnostics and troubleshooting.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ── Main Container to match Settings Layout ────────────────── -->
+            <div class="o_payrillium_support_container">
+                <div class="row o_support_page_grid w-100 m-0">
+                    
+                    <!-- ── LEFT COLUMN (Logs) ────────────────────────────────────── -->
+                    <div class="col-lg-4 ps-0 pe-lg-3">
+                        <!-- ── Server Logs ─────────────────────────────────────────────── -->
+                        <div class="o_support_body o_support_body--full mb-4">
+                            <div class="o_support_section">
+                            <div class="cs_section_header flex-column align-items-start">
+                                <div class="d-flex w-100 mb-3">
+                                    <div class="o_support_card_icon o_support_card_icon_server me-3">
+                                        <i class="fa fa-database fa-lg"/>
+                                    </div>
+                                    <div class="flex-grow-1">
+                                        <h2 class="o_support_section_title mb-0">Server Logs</h2>
+                                        <p class="o_support_section_desc mb-0">
+                                            Activity and recorded error logs.
+                                        </p>
+                                    </div>
+                                </div>
+                                <!-- Controls below -->
+                                <div class="w-100 d-flex flex-wrap align-items-end gap-2">
+                                    <div class="o_support_date_field flex-grow-1" style="min-width: 130px;">
+                                        <label class="o_support_label mb-1">From</label>
+                                        <input type="date"
+                                               class="o_input o_support_date_input w-100"
+                                               style="min-width: 0;"
+                                               t-model="state.dateFrom"/>
+                                    </div>
+                                    <div class="o_support_date_field flex-grow-1" style="min-width: 130px;">
+                                        <label class="o_support_label mb-1">To</label>
+                                        <input type="date"
+                                               class="o_input o_support_date_input w-100"
+                                               style="min-width: 0;"
+                                               t-model="state.dateTo"/>
+                                    </div>
+                                    <button class="btn btn-primary o_support_btn flex-grow-1"
+                                            t-on-click="downloadServerLogs"
+                                            t-att-disabled="state.downloadingServerLogs">
+                                        <t t-if="state.downloadingServerLogs">
+                                            <i class="fa fa-circle-o-notch fa-spin me-1"/>Downloading...
+                                        </t>
+                                        <t t-else="">
+                                            <i class="fa fa-download me-1"/>Download CSV
+                                        </t>
+                                    </button>
+                                </div>
+                            </div>
+                            </div>
+                        </div>
+
+                        <!-- ── Terminal Logs ───────────────────────────────────────────── -->
+                        <div class="o_support_body o_support_body--full">
+                            <div class="o_support_section">
+                                <div class="cs_section_header">
+                                    <div class="o_support_card_icon o_support_card_icon_terminal me-3">
+                                        <i class="fa fa-desktop fa-lg"/>
+                                    </div>
+                                    <div>
+                                        <h2 class="o_support_section_title mb-0">Terminal Logs</h2>
+                                        <p class="o_support_section_desc mb-0">
+                                            Logs from each terminal.
+                                        </p>
+                                    </div>
+                                </div>
+
+                                <div class="o_support_table_wrapper">
+                                    <table class="o_list_render o_support_table">
+                                        <thead>
+                                            <tr>
+                                                <th>Terminal Name</th>
+                                                <th>Serial Number</th>
+                                                <th class="text-end">Actions</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <t t-if="state.loadingTerminals">
+                                                <tr>
+                                                    <td colspan="3" class="text-center py-4">
+                                                        <i class="fa fa-circle-o-notch fa-spin me-2"/>Loading...
+                                                    </td>
+                                                </tr>
+                                            </t>
+                                            <t t-else="">
+                                                <t t-foreach="state.terminals" t-as="terminal" t-key="terminal.id">
+                                                    <tr>
+                                                        <td t-esc="terminal.name"/>
+                                                        <td t-esc="terminal.serial"/>
+                                                        <td class="text-end">
+                                                            <button class="btn btn-secondary btn-sm"
+                                                                    t-on-click="() => this.downloadTerminalLogs(terminal.id)"
+                                                                    t-att-disabled="state.downloadingTerminalId === terminal.id">
+                                                                <t t-if="state.downloadingTerminalId === terminal.id">
+                                                                    <i class="fa fa-circle-o-notch fa-spin me-1"/>Loading...
+                                                                </t>
+                                                                <t t-else="">
+                                                                    <i class="fa fa-download me-1"/>Download
+                                                                </t>
+                                                            </button>
+                                                        </td>
+                                                    </tr>
+                                                </t>
+                                                <t t-if="state.terminals.length == 0">
+                                                    <tr>
+                                                        <td colspan="3" class="text-center py-4 text-muted">
+                                                            No terminals found.
+                                                        </td>
+                                                    </tr>
+                                                </t>
+                                            </t>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- ── RIGHT COLUMN (Payment Diagnostics) ────────────────────── -->
+                    <div class="col-lg-8 pe-0 ps-lg-3 mt-4 mt-lg-0">
+                        <!-- ── Cybersource Search ───────────────────────────────────────── -->
+                        <div class="o_support_body o_support_body--full h-100">
+                            <div class="o_support_section cs_section d-flex flex-column h-100">
+
+                                <!-- Section header -->
+                                <div class="cs_section_header d-flex align-items-center justify-content-between mb-4">
+                                    <div class="d-flex align-items-center">
+                                        <div class="cs_section_header_icon me-3">
+                                            <i class="fa fa-university fa-lg"/>
+                                        </div>
+                                        <div>
+                                            <h2 class="o_support_section_title mb-0">Payment Diagnostics</h2>
+                                            <p class="o_support_section_desc mb-0">
+                                                Query the external payment network to validate transaction status and reconciliation data.
+                                            </p>
+                                        </div>
+                                    </div>
+                                    <!-- Global Cybersource Download -->
+                                    <button class="btn btn-outline-secondary btn-sm"
+                                            t-on-click="downloadCSVSearch"
+                                            t-att-disabled="state.cs.loading || !state.cs.searched || state.cs.total == 0"
+                                            title="Download all results (ignoring pagination) to CSV">
+                                        <i class="fa fa-download me-1"/> Download CSV
+                                    </button>
+                                </div>
+
+                                <!-- Filter panel -->
+                                <div class="cs_search_filters">
+                                    <div class="cs_filter_row_single">
+                                        <div class="cs_filter_field cs_filter_field--date">
+                                            <label class="o_support_label">Date From</label>
+                                            <input type="date" class="o_input cs_input" t-model="state.cs.dateFrom"/>
+                                        </div>
+                                        <div class="cs_filter_field cs_filter_field--date">
+                                            <label class="o_support_label">Date To</label>
+                                            <input type="date" class="o_input cs_input" t-model="state.cs.dateTo"/>
+                                        </div>
+                                        
+                                        <div class="cs_filter_field cs_filter_field--ref">
+                                            <label class="o_support_label">Odoo Reference</label>
+                                            <input type="text" class="o_input cs_input" placeholder="e.g. 17722" t-model="state.cs.odooRef"/>
+                                        </div>
+                                        <div class="cs_filter_field cs_filter_field--ref">
+                                            <label class="o_support_label">External Reference</label>
+                                            <input type="text" class="o_input cs_input" placeholder="e.g. 7722296..." t-model="state.cs.csId"/>
+                                        </div>
+                                        
+                                        <div class="cs_filter_field cs_filter_field--small">
+                                            <label class="o_support_label">Amount</label>
+                                            <input type="text" class="o_input cs_input" placeholder="4.60" t-model="state.cs.amount"/>
+                                        </div>
+                                        <div class="cs_filter_field cs_filter_field--small">
+                                            <label class="o_support_label">Card Last 4</label>
+                                            <input type="text" class="o_input cs_input" placeholder="6270" t-model="state.cs.cardSuffix" maxlength="4"/>
+                                        </div>
+                                        
+                                        <div class="cs_filter_btn_cell">
+                                            <button class="btn btn-primary cs_search_btn w-100"
+                                                    t-on-click="() => this.searchCybersource(true)"
+                                                    t-att-disabled="state.cs.loading">
+                                                <t t-if="state.cs.loading">
+                                                    <i class="fa fa-circle-o-notch fa-spin me-1"/>Searching
+                                                </t>
+                                                <t t-else="">
+                                                    <i class="fa fa-search me-1"/>Search Network
+                                                </t>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Error message -->
+                                <t t-if="state.cs.error">
+                                    <div class="alert alert-danger mt-3 d-flex align-items-center" role="alert">
+                                        <i class="fa fa-exclamation-triangle me-3 fa-lg"/>
+                                        <div>
+                                            <h4 class="alert-heading h6 mb-1">Search Error</h4>
+                                            <p class="mb-0 small" t-esc="state.cs.error"/>
+                                        </div>
+                                    </div>
+                                </t>
+
+                                <!-- Results -->
+                                <div class="cs_table_container flex-grow-1 mt-3 position-relative d-flex flex-column" style="max-height: 550px;">
+                                    <div class="table-responsive flex-grow-1 border rounded" style="overflow-y: auto;">
+                                        <table class="o_list_render o_support_table table-fixed m-0 w-100">
+                                                <thead class="sticky-top bg-white z-1 shadow-sm">
+                                                    <tr>
+                                                        <th style="width: 150px; cursor: pointer;" t-on-click="() => this.sortBy('submitTimeUtc')" class="user-select-none">
+                                                            Date
+                                                            <t t-if="state.cs.sortField === 'submitTimeUtc'">
+                                                                <i t-attf-class="fa fa-caret-{{ state.cs.sortDir === 'asc' ? 'up' : 'down' }} ms-1"/>
+                                                            </t>
+                                                        </th>
+                                                        <th style="width: 140px;">External Ref</th>
+                                                        <th style="width: 110px;">Odoo Ref</th>
+                                                        <th class="text-end" style="width: 100px;">Amount</th>
+                                                        <th style="width: 120px;">Card</th>
+                                                        <th style="width: 110px;">Status</th>
+                                                        <th style="width: 180px;">Steps</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <!-- Loading State -->
+                                                    <t t-if="state.cs.loading">
+                                                        <t t-foreach="[1, 2, 3, 4, 5]" t-as="i" t-key="i">
+                                                            <tr>
+                                                                <td><div class="cs_skeleton cs_skeleton_text w-100"></div></td>
+                                                                <td><div class="cs_skeleton cs_skeleton_text w-100"></div></td>
+                                                                <td><div class="cs_skeleton cs_skeleton_text w-75"></div></td>
+                                                                <td><div class="cs_skeleton cs_skeleton_text w-50 ms-auto"></div></td>
+                                                                <td><div class="cs_skeleton cs_skeleton_text w-75"></div></td>
+                                                                <td><div class="cs_skeleton cs_skeleton_badge"></div></td>
+                                                                <td><div class="cs_skeleton cs_skeleton_text w-100"></div></td>
+                                                            </tr>
+                                                        </t>
+                                                    </t>
+                                                    
+                                                    <!-- Initial Empty State -->
+                                                    <t t-elif="!state.cs.searched">
+                                                        <tr>
+                                                            <td colspan="7" class="text-center py-5">
+                                                                <div class="cs_empty_state my-4">
+                                                                    <i class="fa fa-search fa-3x mb-3 text-muted" style="opacity: 0.3;"/>
+                                                                    <h5 class="text-muted fw-bold mb-2">Ready to search</h5>
+                                                                    <p class="mb-0 text-muted">No results yet. Use the filters above and click Search Network.</p>
+                                                                </div>
+                                                            </td>
+                                                        </tr>
+                                                    </t>
+                                                    
+                                                    <!-- No Results State -->
+                                                    <t t-elif="state.cs.results.length === 0">
+                                                        <tr>
+                                                            <td colspan="7" class="text-center py-5">
+                                                                <div class="cs_empty_state my-4">
+                                                                    <i class="fa fa-inbox fa-3x mb-3 text-muted" style="opacity: 0.4;"/>
+                                                                    <h5 class="text-muted fw-bold mb-2">No matches</h5>
+                                                                    <p class="mb-0 text-muted">No transactions found for the selected filters.</p>
+                                                                </div>
+                                                            </td>
+                                                        </tr>
+                                                    </t>
+                                                    
+                                                    <!-- Data Rows -->
+                                                    <t t-else="">
+                                                        <t t-foreach="state.cs.results" t-as="row" t-key="row.cs_id">
+                                                            <tr>
+                                                                <td>
+                                                                    <span class="small text-nowrap" t-esc="row.submit_time ? formatSubmitTime(row.submit_time) : '-'"/>
+                                                                </td>
+                                                                <td>
+                                                                    <div class="text-monospace small text-ellipsis" t-att-title="row.cs_id" t-esc="row.cs_id"/>
+                                                                </td>
+                                                                <td>
+                                                                    <div class="small text-muted text-ellipsis" t-att-title="row.odoo_ref" t-esc="row.odoo_ref or '-'"/>
+                                                                </td>
+                                                                <td class="text-end">
+                                                                    <span class="small text-muted me-1" t-esc="row.currency"/>
+                                                                    <strong t-esc="row.amount"/>
+                                                                </td>
+                                                                <td>
+                                                                    <t t-if="row.card_suffix">
+                                                                        <div class="text-nowrap">
+                                                                            <span class="text-muted small">••••</span>
+                                                                            <strong class="mx-1" t-esc="row.card_suffix"/>
+                                                                            <span class="small text-muted" t-esc="row.card_type"/>
+                                                                        </div>
+                                                                    </t>
+                                                                </td>
+                                                                <td>
+                                                                    <t t-if="row.status">
+                                                                        <span t-att-class="'cs_status_badge ' + csStatusClass(row.status)"
+                                                                              t-esc="row.status"/>
+                                                                    </t>
+                                                                    <t t-else="">
+                                                                        <span class="text-muted small">—</span>
+                                                                    </t>
+                                                                </td>
+                                                                <td>
+                                                                    <div class="cs_app_steps">
+                                                                        <t t-if="row.apps_status and row.apps_status.length > 0">
+                                                                            <t t-foreach="row.apps_status" t-as="app" t-key="app.name">
+                                                                                <div class="cs_step_item" t-att-title="'Application: ' + app.name + '\nStatus: ' + app.status + '\nReason Code: ' + app.reasonCode + '\nrCode: ' + app.rCode + '\nMessage: ' + app.rMessage + (app.reconciliationId ? '\nRec ID: ' + app.reconciliationId : '')">
+                                                                                    <span class="cs_step_name" t-esc="app.name"/>
+                                                                                    <t t-if="app.reasonCode == '100'">
+                                                                                        <span class="cs_step_icon cs_step_icon--ok">✓</span>
+                                                                                    </t>
+                                                                                    <t t-elif="app.status == 'PENDING'">
+                                                                                        <span class="cs_step_icon cs_step_icon--pending">⏳</span>
+                                                                                    </t>
+                                                                                    <t t-else="">
+                                                                                        <span class="cs_step_icon cs_step_icon--error" t-esc="app.reasonCode or app.status"/>
+                                                                                    </t>
+                                                                                </div>
+                                                                                <t t-if="!app_last">
+                                                                                    <span class="cs_step_divider">·</span>
+                                                                                </t>
+                                                                            </t>
+                                                                        </t>
+                                                                        <t t-else="">
+                                                                            <span class="text-muted small">—</span>
+                                                                        </t>
+                                                                    </div>
+                                                                </td>
+                                                            </tr>
+                                                        </t>
+                                                    </t>
+                                                </tbody>
+                                        </table>
+                                    </div>
+
+                                    <!-- Pagination Footer -->
+                                    <t t-if="state.cs.searched and state.cs.results.length &gt; 0">
+                                        <div class="cs_pagination_footer d-flex justify-content-between align-items-center mt-3 pt-2 border-top">
+                                            <div class="cs_pagination_info text-muted small">
+                                                Showing 
+                                                <strong>
+                                                    <t t-esc="Math.min((state.cs.page - 1) * state.cs.pageSize + 1, state.cs.total)"/>
+                                                </strong>
+                                                - 
+                                                <strong>
+                                                    <t t-esc="Math.min(state.cs.page * state.cs.pageSize, state.cs.total)"/>
+                                                </strong>
+                                                of 
+                                                <strong><t t-esc="state.cs.total"/></strong>
+                                                results
+                                            </div>
+
+                                            <div class="d-flex align-items-center gap-3">
+                                                <div class="d-flex align-items-center small text-muted">
+                                                    <span class="me-2">Page size:</span>
+                                                    <select class="form-select form-select-sm" 
+                                                            t-model="state.cs.pageSize" 
+                                                            t-on-change="changePageSize"
+                                                            style="width: auto;">
+                                                        <option value="25">25</option>
+                                                        <option value="50">50</option>
+                                                        <option value="100">100</option>
+                                                    </select>
+                                                </div>
+                                                
+                                                <div class="btn-group btn-group-sm">
+                                                    <button class="btn btn-outline-secondary" 
+                                                            t-on-click="prevPage" 
+                                                            t-att-disabled="state.cs.page == 1">
+                                                        <i class="fa fa-chevron-left me-1"/> Prev
+                                                    </button>
+                                                    <button class="btn btn-outline-secondary" 
+                                                            t-on-click="nextPage" 
+                                                            t-att-disabled="state.cs.page * state.cs.pageSize >= state.cs.total">
+                                                        Next <i class="fa fa-chevron-right ms-1"/>
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </t>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </t>
+</templates>

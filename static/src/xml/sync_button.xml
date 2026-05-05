@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+  <t t-name="pos_woodforest.ListView.Buttons" t-inherit="web.ListView.Buttons" t-inherit-mode="primary">
+    <xpath expr="//div[hasclass('o_list_buttons')]" position="inside">
+      <button type="button" class="btn btn-primary" t-on-click="onCustomButtonClick">
+        Sync Links
+      </button>
+    </xpath>
+  </t>
+</templates>
+

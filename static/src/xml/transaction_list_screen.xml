@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="pos_woodforest.TransactionListScreen">
+        <div class="ticket-screen screen h-100 bg-100">
+            <div class="screen-full-width d-flex w-100 h-100">
+                <div class="rightpane pane-border d-flex flex-column flex-grow-1 w-100 h-100 bg-200 overflow-y-auto">
+                    <!-- Controls bar -->
+                    <div class="controls d-flex align-items-center justify-content-between gap-3 p-2 bg-300">
+                        <div class="buttons d-flex gap-2">
+                            <button class="discard btn btn-light text-nowrap" t-on-click="goBack">
+                                <i class="oi oi-chevron-left"/>
+                                <span class="ms-2">Back</span>
+                            </button>
+                        </div>
+                        <h4 class="mb-0 fw-bold flex-grow-1"><t t-esc="viewTitle"/></h4>
+                        
+                        <!-- Filters -->
+                        <div class="d-flex align-items-center gap-2 flex-grow-1 px-3">
+                            <input type="text" class="form-control" placeholder="Search reference or order..." t-model="state.searchText" />
+                            <select class="form-select" style="min-width: 140px;" t-model="state.filterStatus">
+                                <option value="all">All Statuses</option>
+                                <option value="approved">Approved</option>
+                                <option value="declined">Declined</option>
+                                <option value="cancelled">Cancelled</option>
+                                <option value="error">Error</option>
+                            </select>
+                            <select class="form-select" style="min-width: 140px;" t-model="state.filterTerminal">
+                                <option value="all">All Terminals</option>
+                                <t t-foreach="availableTerminals" t-as="terminal" t-key="terminal">
+                                    <option t-att-value="terminal"><t t-esc="terminal"/></option>
+                                </t>
+                            </select>
+                        </div>
+                        
+                        <div class="d-flex align-items-center gap-2">
+                            <span t-if="!state.loading" class="text-muted me-2 text-nowrap">
+                                <t t-esc="state.transactions.length"/> txs
+                            </span>
+
+                            <!-- Profile switcher: only for managers -->
+                            <t t-if="isManager">
+                                <select class="form-select fw-semibold" style="min-width: 150px;"
+                                        t-on-change="onSwitchCashier">
+                                    <t t-foreach="availableCashiers" t-as="emp" t-key="emp.id">
+                                        <option t-att-value="emp.id"
+                                                t-att-selected="emp.id === effectiveViewingAs ? 'selected' : undefined">
+                                            <t t-esc="emp.name"/>
+                                        </option>
+                                    </t>
+                                </select>
+                            </t>
+
+                            <button class="btn text-nowrap"
+                                    t-att-class="isMyMode ? 'btn-primary' : 'btn-outline-secondary'"
+                                    t-on-click="() => this.onToggleView()"
+                                    title="Toggle between this session and all sessions">
+                                <i class="fa fa-user me-1"/>
+                                <t t-esc="toggleLabel"/>
+                            </button>
+                            <button class="btn btn-light text-nowrap" t-on-click="() => this.onClickRefresh()">
+                                <i class="fa fa-refresh me-1"/>Refresh
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Content -->
+                    <div class="orders overflow-y-auto flex-grow-1">
+                        <!-- Loading -->
+                        <t t-if="state.loading">
+                            <div class="d-flex justify-content-center align-items-center h-100">
+                                <i class="fa fa-spinner fa-spin fa-3x text-muted"/>
+                            </div>
+                        </t>
+
+                        <!-- Empty state -->
+                        <t t-elif="state.transactions.length === 0">
+                            <div class="d-flex flex-column justify-content-center align-items-center h-100 text-muted">
+                                <i class="fa fa-credit-card fa-4x mb-3"/>
+                                <h5 t-if="isMyMode">No transactions found</h5>
+                                <h5 t-else="">No transactions in this session</h5>
+                            </div>
+                        </t>
+
+                        <!-- Table -->
+                        <t t-else="">
+                            <div class="header-row d-flex text-bg-700 fw-bolder" style="font-size: 0.85rem;">
+                                <div class="p-2" style="flex: 1;">Time</div>
+                                <div class="p-2" style="flex: 2;">Reference</div>
+                                <div class="p-2 text-end" style="flex: 1;">Amount</div>
+                                <div class="p-2 text-center" style="flex: 1;">Terminal</div>
+                                <div class="p-2" style="flex: 1.5;">Order</div>
+                                <div class="p-2" style="flex: 1;">Cashier</div>
+                                <div class="p-2" style="flex: 1.5;">Session</div>
+                                <div class="p-2 text-center" style="flex: 1;">Card</div>
+                                <div class="p-2 text-center" style="flex: 1.2;">Status</div>
+                            </div>
+                            <t t-foreach="filteredTransactions" t-as="tx" t-key="tx.id">
+                                <div class="order-row" style="font-size: 0.85rem;"
+                                     t-on-click="() => this.onClickTransaction(tx)">
+                                    <div class="p-2" style="flex: 1;">
+                                        <t t-esc="formatTime(tx)"/>
+                                    </div>
+                                    <div class="p-2 text-truncate d-flex align-items-center gap-1" style="flex: 2;">
+                                        <t t-esc="shortRef(tx)"/>
+                                        <span t-if="tx.reference and (tx.reference.endsWith('r') or tx.reference.endsWith('rd'))"
+                                              class="badge rounded-pill"
+                                              style="background: #e8e5ff; color: #6366f1; font-size: 0.65rem; font-weight: 600; padding: 2px 7px;">
+                                            ↩ Refund
+                                        </span>
+                                    </div>
+                                    <div class="p-2 text-end fw-semibold" style="flex: 1;"
+                                         t-att-style="tx.reference and (tx.reference.endsWith('r') or tx.reference.endsWith('rd')) ? 'color: #6366f1;' : ''">
+                                        <t t-if="tx.reference and (tx.reference.endsWith('r') or tx.reference.endsWith('rd'))">-</t><t t-esc="formatAmount(tx)"/>
+                                    </div>
+                                    <div class="p-2 text-center text-muted" style="flex: 1;">
+                                        <t t-esc="formatTerminal(tx)"/>
+                                    </div>
+                                    <div class="p-2 text-muted text-truncate" style="flex: 1.5;">
+                                        <t t-esc="formatOrder(tx)"/>
+                                    </div>
+                                    <div class="p-2 text-muted text-truncate" style="flex: 1;">
+                                        <t t-esc="formatCashier(tx)"/>
+                                    </div>
+                                    <div class="p-2 text-muted text-truncate" style="flex: 1.5;">
+                                        <t t-esc="formatSession(tx)"/>
+                                    </div>
+                                    <div class="p-2 text-center" style="flex: 1;">
+                                        <t t-esc="formatCardType(tx)"/>
+                                    </div>
+                                    <div class="p-2 text-center" style="flex: 1.2;">
+                                        <span class="badge rounded-pill"
+                                              t-att-class="getPaymentStatusClass(tx)">
+                                            <t t-esc="getPaymentStatusLabel(tx)"/>
+                                        </span>
+                                    </div>
+                                </div>
+                            </t>
+                        </t>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </t>
+</templates>

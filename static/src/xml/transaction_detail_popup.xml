@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="pos_woodforest.TransactionDetailPopup">
+        <Dialog title="'Transaction Details'" size="'md'">
+            <div class="p-3">
+                <!-- Amount + Badge + Check Button -->
+                <div class="text-center mb-4">
+                    <h2 class="mb-1 fw-bold" t-esc="formattedAmount"/>
+                    <!-- Tip breakdown -->
+                    <div t-if="formattedTip" class="mb-2" style="font-size: 0.9rem; color: #6c757d;">
+                        <span t-esc="formattedBase"/> + <span t-esc="formattedTip"/> tip
+                    </div>
+                    <span class="badge rounded-pill" t-att-class="paymentStatusClass" t-esc="paymentStatusLabel"/>
+
+                    <!-- Check Status Button — right below the badge -->
+                    <div class="mt-2">
+                        <button class="btn btn-outline-primary btn-sm"
+                                t-att-disabled="state.checking"
+                                t-on-click="onClickCheckStatus">
+                            <t t-if="state.checking">
+                                <i class="fa fa-spinner fa-spin me-1"/> Checking...
+                            </t>
+                            <t t-else="">
+                                <i class="fa fa-refresh me-1"/> Check Status
+                            </t>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Details table -->
+                <table class="table table-sm mb-4">
+                    <tbody>
+                        <tr>
+                            <td class="text-muted fw-bold" style="width: 35%;">Reference</td>
+                            <td><t t-esc="tx.reference || '—'"/></td>
+                        </tr>
+                        <tr>
+                            <td class="text-muted fw-bold">Date</td>
+                            <td><t t-esc="formattedDate"/></td>
+                        </tr>
+                        <tr>
+                            <td class="text-muted fw-bold">Card Type</td>
+                            <td><t t-esc="tx.card_type || '—'"/></td>
+                        </tr>
+                        <tr t-if="tx.provider_reference">
+                            <td class="text-muted fw-bold">Payment ID</td>
+                            <td><t t-esc="tx.provider_reference"/></td>
+                        </tr>
+                        <tr t-if="tx.terminal_short">
+                            <td class="text-muted fw-bold">Terminal</td>
+                            <td><t t-esc="tx.terminal_short"/></td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <!-- User-friendly message (derived from code or saved) -->
+                <div t-if="friendlyMessage" class="mb-3 p-3 rounded" t-att-style="friendlyMessageStyle">
+                    <div class="fw-bold" style="font-size: 0.95rem;">
+                        <i class="fa fa-info-circle me-1"/>
+                        <t t-esc="friendlyMessage"/>
+                    </div>
+                </div>
+
+                <!-- Terminal Response (technical detail) -->
+                <div t-if="tx.terminal_message" class="mb-3">
+                    <h6 class="text-muted fw-bold">Terminal Response</h6>
+                    <div class="bg-100 rounded p-2 small">
+                        <t t-esc="tx.terminal_message"/>
+                    </div>
+                </div>
+
+            </div>
+        </Dialog>
+    </t>
+</templates>

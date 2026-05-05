@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="pos_woodforest.PaymentScreenMethods" t-inherit="point_of_sale.PaymentScreenMethods" t-inherit-mode="extension">
+        <xpath expr="//div[hasclass('paymentmethod')]" position="attributes">
+            <!-- Use name fallback until the wizard migrates use_payment_terminal to 'woodforest' -->
+            <attribute name="t-att-class">{
+                'payrillium-method': paymentMethod.use_payment_terminal === 'woodforest' or (paymentMethod.name and paymentMethod.name.toLowerCase().includes('woodforest')),
+                'opacity-50': this.pos.paymentTerminalInProgress and paymentMethod.use_payment_terminal
+            }</attribute>
+            <attribute name="t-attf-style">{{ (paymentMethod.use_payment_terminal === 'woodforest' or (paymentMethod.name and paymentMethod.name.toLowerCase().includes('woodforest'))) ? 'background-color: ' + (this.paymentMethodColor || '#B3D87F') + ' !important;' : '' }}</attribute>
+        </xpath>
+        <xpath expr="//img[hasclass('payment-method-icon')]" position="attributes">
+            <attribute name="t-att-src">(paymentMethod.use_payment_terminal === 'woodforest' or (paymentMethod.name and paymentMethod.name.toLowerCase().includes('woodforest'))) ? (this.paymentMethodIcon || '/pos_woodforest/static/description/icon.png') : paymentMethodImage(paymentMethod.id)</attribute>
+            <attribute name="t-att-class">{'payrillium-icon': paymentMethod.use_payment_terminal === 'woodforest' or (paymentMethod.name and paymentMethod.name.toLowerCase().includes('woodforest'))}</attribute>
+        </xpath>
+        <xpath expr="//span[hasclass('payment-name')]" position="attributes">
+             <attribute name="t-att-style">(paymentMethod.use_payment_terminal === 'woodforest' or (paymentMethod.name and paymentMethod.name.toLowerCase().includes('woodforest'))) ? 'color: white !important; font-weight: bold;' : ''</attribute>
+        </xpath>
+    </t>
+
+    <t t-name="pos_woodforest.PaymentScreenValidate" t-inherit="point_of_sale.PaymentScreenValidate" t-inherit-mode="extension">
+        <xpath expr="//button[hasclass('validation-button')]" position="attributes">
+            <attribute name="t-attf-class">
+                {{ ui.isSmall ? 'btn-switchpane flex-fill' : 'button next w-50' }}
+                {{ ((currentOrder.is_paid() or currentOrder.is_covered()) and currentOrder._isValidEmptyOrder()) ? 'highlight' : 'disabled' }}
+            </attribute>
+        </xpath>
+    </t>
+</templates>

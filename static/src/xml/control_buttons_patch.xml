@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="pos_woodforest.ControlButtons" t-inherit="point_of_sale.ControlButtons" t-inherit-mode="extension">
+        <!-- Inject a NEW Split button for Retail Mode (when Restaurant is False) -->
+        <xpath expr="//t[@t-if='props.showRemainingButtons']/div/OrderlineNoteButton" position="after">
+                <button class="btn btn-secondary btn-lg py-5"
+                    t-att-disabled="pos.get_order()?.get_orderlines()?.reduce((sum, line) => sum + line.qty, 0) lt 2"
+                    t-on-click="() => pos.showScreen('SplitBillScreen')">
+                    <i class="fa fa-files-o me-1"/>Split
+                </button>
+        </xpath>
+    </t>
+</templates>
+

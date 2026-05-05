@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+    <!-- NOTE: Template inheritance via XPath is not working reliably in OWL for this use case.
+         The checkbox is injected via JavaScript DOM manipulation in payment_lines_patch.js
+         using the onPatched hook. This XML file is kept empty to avoid XPath errors. -->
+
+</templates>
+

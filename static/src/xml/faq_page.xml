@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="pos_woodforest.FaqPage" owl="1">
+        <div class="faq-root-container w-100 h-100" style="overflow-y: auto; background-color: #f1f5f9;">
+            <div class="faq-dashboard-wrapper">
+                <div class="faq-dashboard-container">
+                    
+                    <!-- TOP: STATUS -->
+                    <div class="db-status-panel panel-box">
+                            <h2 class="panel-title">Current Status</h2>
+                            
+                            <div class="status-cards-row">
+                                <div class="status-primary-card">
+                                <div class="spc-label">Can I process payments?</div>
+                                <div class="spc-main-action">
+                                    <img src="/pos_woodforest/static/guide_icons/icon_cloud_plug.png" alt="Ready"/>
+                                    <span class="spc-badge yes">YES</span>
+                                </div>
+                                <p class="spc-desc">You may <strong>only</strong> process a sale if the Cloud + Plug icon is clearly visible on your terminal.</p>
+                                <div class="spc-divider"></div>
+                                <div class="spc-alt-action">
+                                    <p>If you see <strong>any other icon</strong>, stop and follow the steps below.</p>
+                                    <span class="spc-badge no">NO</span>
+                                </div>
+                            </div>
+
+                            <div class="startup-context">
+                                <div class="sc-head">Terminal Startup Sequence</div>
+                                <div class="sc-flow">
+                                    <span>⏳</span> → 
+                                    <img src="/pos_woodforest/static/guide_icons/icon_plug_only.png"/> → 
+                                    <img src="/pos_woodforest/static/guide_icons/icon_cloud_only.png"/> → 
+                                    <img src="/pos_woodforest/static/guide_icons/icon_cloud_plug.png"/>
+                                </div>
+                                <p>Takes <strong>1 to 5 minutes</strong>. Do not intervene during this cycle.</p>
+                            </div>
+                            </div>
+                        </div>
+
+                    <!-- BOTTOM: ACTIONABLE STEPS -->
+                    <div class="db-action-panel panel-box">
+                            <div class="db-action-header">
+                                <h2 class="panel-title">Troubleshooting Actions</h2>
+                                <span class="tag-ordered">Complete strictly in order</span>
+                            </div>
+                            
+                            <div class="db-steps-grid-task">
+                                
+                                <div class="task-step step-1">
+                                    <div class="ts-num">1</div>
+                                    <div class="ts-content">
+                                        <h3>Wait 2 Minutes</h3>
+                                        <p>Following any restart, the terminal requires time to fully establish its connection. <strong>Do not intervene</strong> before two full minutes have passed.</p>
+                                    </div>
+                                </div>
+
+                                <div class="task-step step-2">
+                                    <div class="ts-num">2</div>
+                                    <div class="ts-content">
+                                        <h3>Force Stop the App</h3>
+                                        <ol>
+                                            <li>Press the <strong>Home</strong> button.</li>
+                                            <li>Go to <strong>Settings &gt; Apps</strong>.</li>
+                                            <li>Tap <strong>Delta1st</strong> &gt; <strong>Force Stop</strong>.</li>
+                                        </ol>
+                                    </div>
+                                </div>
+
+                                <div class="task-step step-3">
+                                    <div class="ts-num">3</div>
+                                    <div class="ts-content">
+                                        <h3>Full Restart</h3>
+                                        <ol>
+                                            <li>Hold the physical <strong>Power button</strong>.</li>
+                                            <li>Select <strong>"Restart"</strong> (Not Power Off).</li>
+                                            <li>Allow up to 3 mins to boot.</li>
+                                        </ol>
+                                    </div>
+                                </div>
+
+                                <!-- Step 4 spans explicitly to balance grid logic -->
+                                <div class="task-step step-4">
+                                    <div class="ts-num">4</div>
+                                    <div class="ts-content">
+                                        <h3>Verify Network Hardware</h3>
+                                        <p><strong>Wi-Fi:</strong> Check network limits. <strong>Ethernet:</strong> Reseat the cable firmly.</p>
+                                        <div class="ts-alert">If your personal phone cannot load websites on the store's Wi-Fi, the terminal won't connect either.</div>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+
+                    <!-- UNIFIED REFERENCE BLOCK -->
+                    <div class="db-unified-reference">
+                        <div class="ur-header">
+                            <h2 class="panel-title">Reference Information</h2>
+                        </div>
+                        <div class="ur-body">
+                            <!-- Col 1: Icons -->
+                            <div class="ur-card">
+                                <h3 class="ref-subtitle">Terminal Icon Glossary</h3>
+                                <ul class="compact-icon-list">
+                                    <li class="status-ready"><img src="/pos_woodforest/static/guide_icons/icon_cloud_plug.png"/> <div><strong>Cloud+Plug:</strong> Fully operational.</div></li>
+                                    <li class="status-err"><img src="/pos_woodforest/static/guide_icons/icon_plug_only.png"/> <div><strong>Plug Only:</strong> Limited internet. Cannot reach POS.</div></li>
+                                    <li class="status-err"><img src="/pos_woodforest/static/guide_icons/icon_cloud_only.png"/> <div><strong>Cloud Only:</strong> Receiving data. Cannot process.</div></li>
+                                    <li class="status-err"><img src="/pos_woodforest/static/guide_icons/icon_no_signal.png"/> <div><strong>No Signal:</strong> Lost all connectivity.</div></li>
+                                </ul>
+                            </div>
+                            <!-- Col 2: Rules -->
+                            <div class="ur-card">
+                                <h3 class="ref-subtitle">Key Rules</h3>
+                                <div class="rule-box dont">
+                                    <strong>NEVER</strong> restart the terminal rapidly. Wait 3 minutes.
+                                </div>
+                                <div class="rule-box dont">
+                                    <strong>NEVER</strong> swipe a card without the Cloud+Plug icon.
+                                </div>
+                                <div class="rule-box do">
+                                    <strong>ALWAYS</strong> use the backup terminal if delays occur.
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- FINAL ESCALATION: SUPPORT -->
+                    <div class="db-support-section">
+                        <div class="sup-icon">📞</div>
+                        <div class="sup-body">
+                            <h3>Need Further Assistance? Contact Support.</h3>
+                            <p>If Steps 1 through 4 failed, please have the following ready before calling:</p>
+                            <ul class="sup-checklist-inline">
+                                <li>Current screen icon</li>
+                                <li>App force stopped?</li>
+                                <li>Internet verified?</li>
+                            </ul>
+                        </div>
+                        <div class="sup-action">
+                            <button class="btn-support btn-active">Escalate to IT Support</button>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </t>
+</templates>

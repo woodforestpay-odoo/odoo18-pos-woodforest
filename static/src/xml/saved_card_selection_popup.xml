@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+  <t t-name="pos_woodforest.SavedCardSelectionPopup" owl="1">
+    <Dialog title="props.title" footer="false">
+      <div class="o_pos_saved_cards_popup">
+        <div class="o_pos_saved_cards_list">
+          <t t-foreach="props.list" t-as="item" t-key="item.id">
+            <div
+              class="o_pos_saved_card_line d-flex align-items-center justify-content-between px-3 py-2 border-bottom cursor-pointer"
+              t-on-click="() => selectItem(item.id)"
+            >
+              <span class="o_pos_saved_card_label">
+                <t t-esc="item.label" />
+              </span>
+              <span class="o_pos_saved_card_arrow">
+                <i class="fa fa-chevron-right" />
+              </span>
+            </div>
+          </t>
+        </div>
+
+        <div class="o_pos_saved_cards_footer d-flex justify-content-end mt-3">
+          <button
+            type="button"
+            class="btn btn-secondary"
+            t-on-click="onUseNewCard"
+          >
+            <t t-esc="props.newCardLabel" />
+          </button>
+        </div>
+      </div>
+    </Dialog>
+  </t>
+</templates>
+
+

@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+  <t t-inherit="point_of_sale.OrderReceipt" t-inherit-mode="extension">
+    <!-- When there is a tip, show Subtotal / Tax / Total Before Tip / Tip instead of tip as a line item -->
+    <xpath expr="//t[@t-set='taxTotals']" position="after">
+      <t t-if="props.data.receiptTipInfo and props.data.receiptTipInfo.hasTip">
+        <t t-set="tipInfo" t-value="props.data.receiptTipInfo"/>
+        <t t-set="tb" t-value="tipInfo.taxTotalsBeforeTip"/>
+        <div class="text-center">--------------------------------</div>
+        <div class="pos-receipt-tip-section">
+          <div class="d-flex">
+            <span class="fw-bolder text-nowrap">Subtotal</span>
+            <span t-esc="props.formatCurrency(tipInfo.orderSign * tb.base_amount_currency)" class="ms-auto"/>
+          </div>
+          <t t-foreach="tb.subtotals" t-as="subtotal" t-key="subtotal.name">
+            <t t-foreach="subtotal.tax_groups" t-as="tax_group" t-key="tax_group.id">
+              <div class="d-flex">
+                <span t-esc="tax_group.group_name"/>
+                <span t-esc="props.formatCurrency(tipInfo.orderSign * tax_group.tax_amount_currency)" class="ms-auto"/>
+              </div>
+            </t>
+          </t>
+          <div class="d-flex fw-bolder mt-1">
+            <span>Total Before Tip</span>
+            <span t-esc="props.formatCurrency(tipInfo.totalBeforeTip)" class="ms-auto"/>
+          </div>
+          <div class="d-flex">
+            <span>Tip (Gratuity)</span>
+            <span t-esc="props.formatCurrency(tipInfo.tipAmount)" class="ms-auto"/>
+          </div>
+        </div>
+        <div class="text-center">--------------------------------</div>
+        <div class="pos-receipt-amount receipt-total">
+          <t t-out="props.data.label_total"/>
+          <span t-esc="props.formatCurrency(props.data.taxTotals.order_sign * props.data.taxTotals.order_total)" class="pos-receipt-right-align"/>
+        </div>
+      </t>
+    </xpath>
+    <!-- Hide default tax block when we show tip section -->
+    <xpath expr="//div[hasclass('pos-receipt-taxes')]" position="attributes">
+      <attribute name="t-if">(taxTotals and taxTotals.has_tax_groups) and (!props.data.receiptTipInfo or !props.data.receiptTipInfo.hasTip)</attribute>
+    </xpath>
+    <xpath expr="//div[hasclass('pos-receipt-amount') and hasclass('receipt-total')]/preceding-sibling::div[1]" position="attributes">
+      <attribute name="t-if">!props.data.receiptTipInfo or !props.data.receiptTipInfo.hasTip</attribute>
+    </xpath>
+    <xpath expr="//div[hasclass('pos-receipt-amount') and hasclass('receipt-total')]" position="attributes">
+      <attribute name="t-if">!props.data.receiptTipInfo or !props.data.receiptTipInfo.hasTip</attribute>
+    </xpath>
+
+    <xpath expr="//div[hasclass('before-footer')]" position="inside">
+        <!-- Multiple payments: show each transaction separately -->
+        <t t-if="props.data.payrilliumPayments and props.data.payrilliumPayments.length > 1">
+            <t t-foreach="props.data.payrilliumPayments" t-as="payment" t-key="payment.index">
+                <div class="payment-terminal-info">
+                    <hr/>
+                    <div class="text-center fw-bolder">
+                        Payment <t t-esc="payment.index"/>
+                        <t t-if="payment.amount"> — <t t-esc="props.formatCurrency(payment.amount)"/></t>
+                        <t t-if="payment.tipAmount"> (incl. <t t-esc="props.formatCurrency(payment.tipAmount)"/> tip)</t>
+                    </div>
+                    <p><strong>Cashier: </strong><t t-esc="props.data.cashier"/></p>
+                    <t t-foreach="payment.infoList" t-as="info" t-key="info.label">
+                        <p>
+                          <strong>
+                            <t t-esc="info.label"/>:
+                          </strong>
+                          <t t-esc="info.value"/>
+                        </p>
+                    </t>
+                </div>
+            </t>
+        </t>
+        <!-- Single payment: show as before -->
+        <t t-elif="props.data.payrilliumInfo">
+            <div class="payment-terminal-info">
+                <hr/>
+                <p><strong>Cashier: </strong><t t-esc="props.data.cashier"/></p>
+                <t t-foreach="props.data.payrilliumInfoList" t-as="info" t-key="info.label">
+                    <p>
+                      <strong>
+                        <t t-esc="info.label"/>:
+                      </strong>
+                      <t t-esc="info.value"/>
+                    </p>
+                </t>
+            </div>
+        </t>
+    </xpath>
+  </t>
+</templates>

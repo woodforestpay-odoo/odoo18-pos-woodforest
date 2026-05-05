@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+    <!-- Fix barcode scanner button to prevent null component error -->
+    <t t-name="pos_woodforest.Navbar.Barcode" t-inherit="point_of_sale.Navbar" t-inherit-mode="extension">
+        <xpath expr="//button[@t-on-click='onClickScan']" position="replace">
+            <button class="btn btn-light btn-lg lh-lg" 
+                    t-if="isBarcodeScannerSupported() and pos.mainScreen and pos.mainScreen.component and pos.mainScreen.component.name == 'ProductScreen'" 
+                    t-on-click="onClickScan">
+                <i class="fa fa-fw fa-lg fa-barcode" /><span t-if="this.pos.scanning" class="ms-1">Stop</span>
+            </button>
+        </xpath>
+    </t>
+
+    <!-- Add terminal status button -->
+    <t t-name="pos_woodforest.Navbar" t-inherit="point_of_sale.Navbar" t-inherit-mode="extension">
+        <xpath expr="//div[hasclass('status-buttons')]/Dropdown" position="before">
+            <div class="d-flex align-items-center">
+                <!-- Recovery Button -->
+                <div t-if="pos.global_stuck_transactions and pos.global_stuck_transactions.length > 0" 
+                     class="btn btn-sm d-flex align-items-center cursor-pointer me-2"
+                     style="background: linear-gradient(135deg, #e53935, #c62828); color: #fff; border-radius: 20px; padding: 6px 14px; font-size: 13px; font-weight: 600; letter-spacing: 0.2px; box-shadow: 0 2px 8px rgba(229,57,53,0.35); animation: pulse-recover 2s ease-in-out infinite;"
+                     t-on-click="onClickRecoverPayments"
+                     title="Action Required: Recover Interrupted Payments">
+                    <i class="fa fa-exclamation-circle me-1" style="font-size: 14px;" /> 
+                    <span>Recover</span>
+                    <span class="ms-1 d-flex align-items-center justify-content-center" 
+                          style="background: rgba(255,255,255,0.25); border-radius: 50%; width: 20px; height: 20px; font-size: 11px; font-weight: 700;">
+                        <t t-esc="pos.global_stuck_transactions.length"/>
+                    </span>
+                </div>
+                <!-- Terminal Status Button -->
+                <div class="btn btn-light border-0 rounded-0 cursor-pointer">
+                    <t t-if="terminalIsVisible">
+                        <div t-attf-class="btn btn-light border-0 rounded-0 d-flex align-items-center {{ terminalIsChecking ? 'pe-none opacity-50' : 'cursor-pointer' }}" t-on-click="checkTerminalStatus">
+                            <span t-attf-class="payrillium-led payrillium-led--{{ terminalCssClass }}"
+                                  t-att-title="terminalStatusText" />
+                            <span class="fw-bold ms-2" t-attf-class="text-{{ terminalCssClass }}">
+                                <i t-if="pos.terminalStatus === 'pinging'" class="fa fa-spin fa-circle-o-notch me-1" />
+                                <t t-esc="terminalStatusText"/>
+                            </span>
+                        </div>
+                    </t>
+                </div>
+            </div>
+        </xpath>
+    </t>
+
+</templates>

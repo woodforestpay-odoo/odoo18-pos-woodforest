@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="pos_woodforest.TerminalPosSelector">
+        <div class="o_terminal_pos_selector" t-on-click.stop="() => {}">
+            <!-- Locked state: session is open -->
+            <t t-if="isBusy">
+                <span class="o_pos_selector_locked"
+                      title="Cannot modify assignment while session is Open. Close the session first.">
+                    <i class="fa fa-lock me-1"></i>
+                    <span t-esc="currentPosName || 'No session assigned'"/>
+                </span>
+            </t>
+
+            <!-- Editable state: session is closed or unassigned -->
+            <t t-else="">
+                <select class="o_pos_selector_select"
+                        t-att-disabled="state.loading"
+                        t-on-change="onSelectChange"
+                        t-on-click="onSelectClick">
+                    <option value="">No session assigned</option>
+                    <t t-foreach="state.options" t-as="opt" t-key="opt.id">
+                        <option t-att-value="opt.id"
+                                t-att-selected="opt.id === currentPosId">
+                            <t t-esc="opt.name"/>
+                        </option>
+                    </t>
+                </select>
+            </t>
+        </div>
+    </t>
+</templates>

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+    <!-- Fix for Chrome template to prevent null component error -->
+    <t t-name="point_of_sale.Chrome" t-inherit="point_of_sale.Chrome" t-inherit-mode="extension">
+        <xpath expr="//t[@t-component='pos.mainScreen.component']" position="replace">
+            <t t-if="pos.mainScreen and pos.mainScreen.component" 
+               t-component="pos.mainScreen.component" 
+               t-props="pos.mainScreen.props"/>
+        </xpath>
+    </t>
+
+</templates>

@@ -1,0 +1,16 @@
+/* Hide payment link URLs in chatter but keep them accessible for copying */
+.o_mail_thread
+  .o_mail_message
+  .o_mail_message_content:contains("Payment link created:") {
+  /* Hide the long URL but keep it in the DOM for JavaScript access */
+}
+
+/* Style for payment link messages */
+.o_mail_thread
+  .o_mail_message
+  .o_mail_message_content:contains("Payment link created:") {
+  font-weight: normal;
+  color: #666;
+}
+
+

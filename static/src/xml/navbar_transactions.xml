@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+    <!-- Inject "Transactions" menu item into the burger menu, right after "Orders" -->
+    <t t-name="point_of_sale.Navbar" t-inherit="point_of_sale.Navbar" t-inherit-mode="extension">
+        <xpath expr="//DropdownItem[contains(., 'Orders')]" position="after">
+            <DropdownItem onSelected="() => this.pos.showScreen('TransactionListScreen')">
+                Transactions
+            </DropdownItem>
+        </xpath>
+    </t>
+
+</templates>

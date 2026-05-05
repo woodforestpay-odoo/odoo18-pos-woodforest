@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+    <!--
+        Fix pos_restaurant Navbar null crash:
+        pos_restaurant accesses pos.mainScreen.component.name without null-check.
+        When the component is null (slow session load), OWL crashes.
+        We replace the affected elements with guarded versions.
+    -->
+    <t t-name="pos_woodforest.NavbarRestaurantFix" t-inherit="pos_restaurant.Navbar" t-inherit-mode="extension">
+        <!-- Fix line 5: guard the FloorScreen check -->
+        <xpath expr="//t[@t-if=&quot;pos.mainScreen.component.name == 'FloorScreen'&quot;]" position="attributes">
+            <attribute name="t-if">pos.mainScreen and pos.mainScreen.component and pos.mainScreen.component.name == 'FloorScreen'</attribute>
+        </xpath>
+
+        <!-- Fix line 10: guard the second FloorScreen check -->
+        <xpath expr="//DropdownItem[@t-if=&quot;pos.mainScreen.component.name == 'FloorScreen'&quot;]" position="attributes">
+            <attribute name="t-if">pos.mainScreen and pos.mainScreen.component and pos.mainScreen.component.name == 'FloorScreen'</attribute>
+        </xpath>
+
+        <!-- Fix line 20: guard the t-set screen variable -->
+        <xpath expr="//t[@t-set='screen'][@t-value=&quot;pos.mainScreen.component.name&quot;]" position="attributes">
+            <attribute name="t-value">pos.mainScreen and pos.mainScreen.component and pos.mainScreen.component.name or ''</attribute>
+        </xpath>
+    </t>
+
+</templates>
