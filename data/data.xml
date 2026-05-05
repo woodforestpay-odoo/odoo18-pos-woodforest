@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+
+  <record id="view_payrillium_wizard_form" model="ir.ui.view">
+    <field name="name">payrillium.wizard.form</field>
+    <field name="model">payrillium.wizard</field>
+    <field name="arch" type="xml">
+      <form string="Activate with code">
+        <group>
+          <field name="activate_only" invisible="1"/>
+          <field name="token" placeholder="Enter your activation token" widget="password"/>
+          <field name="account_id" placeholder="Select Payment Account" invisible="activate_only"/>
+          <field name="receivable_account_id" placeholder="Select Receivable Account" invisible="activate_only"/>
+        </group>
+        <footer>
+          <button name="submit_token" type="object" string="Validate &amp; Activate Woodforest" class="btn-primary" invisible="not activate_only"/>
+          <button name="submit_token" type="object" string="Validate" class="btn-primary" invisible="activate_only"/>
+          <button string="Cancel" class="btn-secondary" special="cancel"/>
+        </footer>
+      </form>
+    </field>
+  </record>
+
+  <record id="action_payrillium_wizard" model="ir.actions.act_window">
+    <field name="name">Configure Woodforest</field>
+    <field name="res_model">payrillium.wizard</field>
+    <field name="view_mode">form</field>
+    <field name="target">new</field>
+  </record>
+
+  <record id="action_open_wizard_on_install" model="ir.actions.server">
+    <field name="name">Open Woodforest Configuration</field>
+    <field name="model_id" ref="model_payrillium_config"/>
+    <field name="state">code</field>
+    <field name="sequence">1</field>
+    <field name="code"># Force client reload so backend assets (activation_panel.css) are in the bundle on first paint
+action_id = env.ref('pos_woodforest.payrillium_open_settings_action').id
+action = {'type': 'ir.actions.client', 'tag': 'reload', 'params': {'action_id': action_id}}</field>
+  </record>
+
+  <record id="ir_actions_todo_wizard" model="ir.actions.todo">
+    <field name="action_id" ref="action_open_wizard_on_install"/>
+    <field name="sequence">1</field>
+    <field name="state">open</field>
+  </record>
+
+</odoo>
