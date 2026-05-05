@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- POS Users: can only see transactions they processed (by employee) or created (fallback) -->
+    <record id="rule_woodforest_tx_pos_user" model="ir.rule">
+        <field name="name">Woodforest: POS users see own transactions only</field>
+        <field name="model_id" ref="payment.model_payment_transaction"/>
+        <field name="domain_force">[
+            '|',
+            ('pos_employee_id.user_id', '=', user.id),
+            '&amp;',
+            ('pos_employee_id', '=', False),
+            ('create_uid', '=', user.id)
+        ]</field>
+        <field name="groups" eval="[(4, ref('point_of_sale.group_pos_user'))]"/>
+    </record>
+
+    <!-- POS Managers: can see all transactions (no domain restriction) -->
+    <record id="rule_woodforest_tx_pos_manager" model="ir.rule">
+        <field name="name">Woodforest: POS managers see all transactions</field>
+        <field name="model_id" ref="payment.model_payment_transaction"/>
+        <field name="domain_force">[(1, '=', 1)]</field>
+        <field name="groups" eval="[(4, ref('point_of_sale.group_pos_manager'))]"/>
+    </record>
+</odoo>
