@@ -1,0 +1,40 @@
+<odoo>
+    <record id="pos_payment_method_view_form_inherit_payrillium_msg" model="ir.ui.view">
+        <field name="name">pos.payment.method.form.inherit.payrillium.msg</field>
+        <field name="model">pos.payment.method</field>
+        <field name="inherit_id" ref="point_of_sale.pos_payment_method_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='name']" position="after">
+                <field name="is_payrillium" invisible="1" />
+            </xpath>
+            <xpath expr="//group[div/h2='Tips:']" position="replace">
+                <group>
+                    <group invisible="use_payment_terminal != 'woodforest'">
+                        <h2><field name="name" readonly="1" style="display:inline; font-weight:bold;"/> Method</h2>
+                        <p>
+                          The terminal linked to this payment method is configured per <strong>POS session</strong>,
+                          not on this screen.
+                        </p>
+                        <p>
+                          To manage your Woodforest terminals, go to 
+                          <a href="#" name="%(point_of_sale.action_pos_configuration)d"
+                             type="action" class="btn-link o_form_uri" role="button">
+                             Settings
+                          </a>
+                          <strong> &gt; Payment Terminals</strong>
+                          in the active POS session.
+                        </p>
+                    </group>
+                    <div colspan="2" invisible="use_payment_terminal != 'woodforest'" >
+                        <h2>Tips:</h2>
+                        <p>
+                            Go to <a href="#" name="%(point_of_sale.action_pos_configuration)d" type="action" class="btn-link o_form_uri" role="button">Configurations &gt; Settings</a>
+                            <strong> &gt; Payment Terminals</strong>
+                            in order to install a Payment Terminal and make a fully integrated payment method.
+                        </p>
+                    </div>
+                </group>
+            </xpath>
+        </field>
+    </record>
+</odoo>

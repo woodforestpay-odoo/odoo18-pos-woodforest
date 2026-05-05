@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="view_terminal_log_wizard_form" model="ir.ui.view">
+        <field name="name">payrillium.terminal.log.wizard.form</field>
+        <field name="model">payrillium.terminal.log.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Download Terminal Logs">
+                <group>
+                    <field name="terminal_id" readonly="1"/>
+                    <field name="date"/>
+                </group>
+                <footer>
+                    <button name="action_download"
+                            type="object"
+                            string="Download"
+                            class="btn-primary"
+                            icon="fa-download"/>
+                    <button string="Cancel" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+</odoo>

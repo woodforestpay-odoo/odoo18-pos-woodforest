@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Inherit partner form to add Payment Tokens tab -->
+    <record id="view_partner_form_inherit_payment_tokens" model="ir.ui.view">
+        <field name="name">res.partner.form.inherit.payment.tokens</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_partner_form"/>
+        <field name="arch" type="xml">
+            <!-- Add Payment Tokens tab after Internal Notes -->
+            <xpath expr="//page[@name='internal_notes']" position="after">
+                <page string="Payment Tokens" name="payment_tokens">
+                    <field name="payrillium_payment_token_ids" nolabel="1" 
+                           context="{'default_partner_id': id}">
+                        <list string="Saved Woodforest Cards" create="0" delete="0">
+                            <field name="payment_details" string="Card"/>
+                            <field name="active" invisible="1"/>
+                            <button name="action_disable_token" 
+                                    type="object" 
+                                    string="Disable" 
+                                    class="btn-danger"
+                                    icon="fa-ban"
+                                    confirm="Are you sure you want to disable this payment token? "/>
+                        </list>
+                    </field>
+                </page>
+            </xpath>
+        </field>
+    </record>
+</odoo>
+

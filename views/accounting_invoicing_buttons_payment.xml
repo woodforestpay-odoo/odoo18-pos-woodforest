@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="view_account_move_form_inherit_payrillium_payment_buttons" model="ir.ui.view">
+        <field name="name">account.move.form.inherit.payrillium.payment.buttons</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="account.view_move_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//header/button[@name='button_draft']" position="after">
+                <field name="payrillium_configured" invisible="1"/>
+                <button type="action"
+                        context="{'active_id': id, 'active_model': 'account.move'}"
+                        name="%(pos_woodforest.action_invoice_open_token_selector)d"
+                        class="btn btn-primary"
+                        icon="fa-university"
+                        string="Pay by Token"
+                        groups="account.group_account_invoice"
+                        invisible="state == 'draft' or not payrillium_configured"/>
+                <button type="object"
+                        name="action_get_payment_status_and_sync"
+                        class="btn btn-primary"
+                        string="Get Pay Status"
+                        icon="fa-refresh"
+                        groups="account.group_account_invoice"
+                        invisible="state == 'draft' or not payrillium_configured"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>
+

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="action_invoice_order_generate_token" model="ir.actions.act_window">
+        <field name="name">Generate a Payment Token</field>
+        <field name="res_model">payment.token.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="payment_token_wizard_form_view"/>
+        <field name="target">new</field>
+        <field name="context">{'active_id': active_id, 'active_model': 'account.move'}</field>
+    </record>
+</odoo>
+

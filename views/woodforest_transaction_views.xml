@@ -1,0 +1,293 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Search View -->
+    <record id="view_payment_transaction_search_woodforest" model="ir.ui.view">
+        <field name="name">payment.transaction.search.woodforest</field>
+        <field name="model">payment.transaction</field>
+        <field name="arch" type="xml">
+            <search string="Woodforest Transactions">
+                <field name="reference" string="Order Reference"/>
+                <field name="provider_reference" string="Payment ID"/>
+                <field name="pos_order_id"/>
+                <field name="pos_session_id"/>
+                <field name="partner_id"/>
+                <field name="create_uid" string="Cashier" groups="point_of_sale.group_pos_manager"/>
+                <filter string="Authorized" name="authorized" domain="[('state', '=', 'authorized')]"/>
+                <filter string="Captured / Done" name="done" domain="[('state', '=', 'done')]"/>
+                <filter string="Refunded" name="refunded" domain="[('transaction_status', 'ilike', 'refund')]"/>
+                <separator/>
+                <filter string="Issues &amp; Errors" name="issues" domain="['|', ('state', 'in', ('error', 'cancel')), ('transaction_status', 'in', ('auth_failed', 'capture_failed', 'void_failed', 'reversal_failed', 'error'))]"/>
+                <separator/>
+                <!-- Diagnostic Filters -->
+                <filter string="⏳ Stuck Pending" name="stuck_pending"
+                        domain="[('provider_id.code', '=', 'woodforest'), ('state', '=', 'pending')]"/>
+                <filter string="❌ No Payment Received" name="no_provider_ref"
+                        domain="[('provider_id.code', '=', 'woodforest'), ('provider_reference', '=', False)]"/>
+                <group expand="0" string="Group By">
+                    <filter string="Cashier" name="group_by_cashier" context="{'group_by': 'create_uid'}" groups="point_of_sale.group_pos_manager"/>
+                    <filter string="Session" name="group_by_session" context="{'group_by': 'pos_session_id'}"/>
+                    <filter string="Date" name="group_by_date" context="{'group_by': 'create_date'}"/>
+                    <filter string="Internal Status" name="group_by_status" context="{'group_by': 'state'}"/>
+                    <filter string="Woodforest (CS) Status" name="group_by_cs_status" context="{'group_by': 'transaction_status'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- Woodforest Transactions List View -->
+    <record id="view_payment_transaction_tree_woodforest" model="ir.ui.view">
+        <field name="name">payment.transaction.list.woodforest</field>
+        <field name="model">payment.transaction</field>
+        <field name="arch" type="xml">
+            <list string="Woodforest Transactions" 
+                  create="0" 
+                  edit="0"
+                  decoration-danger="state in ('error', 'cancel') or transaction_status in ('auth_failed', 'declined', 'capture_failed', 'void_failed', 'reversal_failed', 'error')"
+                  decoration-success="state == 'done' or transaction_status in ('captured', 'refunded', 'credit_refunded', 'debit_refunded')"
+                  decoration-info="state == 'authorized' or transaction_status == 'authorized'"
+                  decoration-warning="transaction_status in ('in_progress', 'device_error', 'terminal_busy')"
+                  decoration-muted="state == 'draft' or transaction_status in ('voided', 'cancelled')"
+                  default_order="create_date desc">
+                <field name="reference" string="Order Reference" class="fw-bold"/>
+                <field name="create_date" string="Date" widget="datetime" optional="show"/>
+                <field name="pos_session_id" optional="show"/>
+                <field name="pos_order_id" optional="show"/>
+                <field name="terminal_short" string="Terminal" optional="show"/>
+                <field name="partner_id" optional="show"/>
+                <field name="pos_employee_id" string="Cashier" optional="show"/>
+                <field name="amount" widget="monetary" decoration-bf="1" decoration-danger="state in ('error', 'cancel')"/>
+                <field name="currency_id" column_invisible="True"/>
+                <field name="transaction_status" string="Payment Status" widget="badge" 
+                       decoration-success="transaction_status in ('captured', 'done', 'refunded', 'credit_refunded', 'debit_refunded')"
+                       decoration-info="transaction_status in ('authorized', 'pending')"
+                       decoration-warning="transaction_status in ('in_progress', 'device_error', 'terminal_busy')"
+                       decoration-danger="transaction_status in ('auth_failed', 'declined', 'capture_failed', 'void_failed', 'reversal_failed', 'error')"
+                       decoration-muted="transaction_status in ('voided', 'cancelled')"/>
+                <field name="state" widget="badge" optional="show"/>
+                <field name="provider_reference" string="Payment ID" optional="hide"/>
+                <field name="execution_id" string="Execution ID" optional="hide"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- Woodforest Transactions Kanban View -->
+    <record id="view_payment_transaction_kanban_woodforest" model="ir.ui.view">
+        <field name="name">payment.transaction.kanban.woodforest</field>
+        <field name="model">payment.transaction</field>
+        <field name="arch" type="xml">
+            <kanban create="0" default_order="create_date desc">
+                <field name="reference"/>
+                <field name="amount"/>
+                <field name="currency_id"/>
+                <field name="state"/>
+                <field name="transaction_status"/>
+                <field name="create_date"/>
+                <field name="partner_id"/>
+                <field name="pos_session_id"/>
+                <templates>
+                    <t t-name="card">
+                        <div class="o_kanban_record_top d-flex align-items-baseline justify-content-between mb-1">
+                            <div class="o_kanban_record_headings">
+                                <strong class="o_kanban_record_title text-primary"><field name="reference"/></strong>
+                            </div>
+                            <field name="amount" widget="monetary" class="fw-bold fs-5"/>
+                        </div>
+                        <div class="o_kanban_record_body">
+                            <div t-if="record.pos_session_id.value" class="text-muted small">
+                                <i class="fa fa-shopping-basket me-1"/> <field name="pos_session_id"/>
+                            </div>
+                            <div class="text-secondary small">
+                                <i class="fa fa-user me-1"/> <field name="partner_id"/>
+                            </div>
+                        </div>
+                        <div class="o_kanban_record_bottom d-flex align-items-center justify-content-between mt-2 pt-2 border-top">
+                            <div class="oe_kanban_bottom_left text-muted small">
+                                <field name="create_date" widget="date"/>
+                            </div>
+                            <div class="oe_kanban_bottom_right d-flex gap-1">
+                                <field name="transaction_status" widget="label_selection" options="{'classes': {'captured': 'success', 'authorized': 'info', 'auth_failed': 'danger', 'error': 'danger', 'voided': 'default'}}"/>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <!-- Woodforest Transaction Form View (Dedicated Form) -->
+    <record id="view_payment_transaction_form_woodforest_dashboard" model="ir.ui.view">
+        <field name="name">payment.transaction.form.woodforest.dashboard</field>
+        <field name="model">payment.transaction</field>
+        <field name="arch" type="xml">
+            <form string="Woodforest Transaction Detail" create="0">
+                <header>
+                    <button name="action_woodforest_check_status" 
+                            string="Check Payment Status" 
+                            type="object" 
+                            class="btn-primary" 
+                            icon="fa-refresh"
+                            groups="point_of_sale.group_pos_manager"/>
+
+                    <button name="action_view_pos_order" 
+                            string="Go to Order" 
+                            type="object" 
+                            class="btn-success" 
+                            icon="fa-external-link"
+                            invisible="not has_pos_order"/>
+
+                    <button name="action_view_invoices" 
+                            string="Go to Invoice" 
+                            type="object" 
+                            class="btn-secondary" 
+                            icon="fa-file-text-o"
+                            invisible="not has_invoice"/>
+
+                    <field name="has_pos_order" invisible="1"/>
+                    <field name="has_invoice" invisible="1"/>
+                    <field name="is_fully_synced" invisible="1"/>
+
+                    <field name="state" widget="statusbar" statusbar_visible="draft,pending,authorized,done,cancel"/>
+                </header>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_view_pos_order" type="object" class="oe_stat_button" icon="fa-shopping-cart" invisible="not pos_order_id">
+                            <field name="pos_order_id" widget="statinfo" string="Order"/>
+                        </button>
+                    </div>
+                    <div class="oe_title">
+                        <div class="d-flex align-items-center gap-3">
+                            <div>
+                                <label for="reference" string="Transaction Reference"/>
+                                <h1><field name="reference" readonly="1"/></h1>
+                            </div>
+                            <field name="transaction_status" widget="badge" string="Status"
+                                   decoration-success="transaction_status in ('captured', 'done', 'refunded', 'credit_refunded', 'debit_refunded')"
+                                   decoration-info="transaction_status in ('authorized', 'pending')"
+                                   decoration-warning="transaction_status in ('in_progress', 'device_error', 'terminal_busy')"
+                                   decoration-danger="transaction_status in ('auth_failed', 'declined', 'capture_failed', 'void_failed', 'reversal_failed', 'error')"
+                                   decoration-muted="transaction_status in ('voided', 'cancelled')"
+                                   readonly="1"/>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6 border-end">
+                            <group string="Transaction Information">
+                                <field name="create_date" readonly="1"/>
+                                <field name="amount" widget="monetary" readonly="1" class="text-primary fw-bold"/>
+                                <field name="tip_amount" widget="monetary" readonly="1" invisible="not tip_amount"/>
+                                <field name="currency_id" invisible="1"/>
+                                <field name="terminal_short" string="Terminal" readonly="1" invisible="not payrillium_terminal_id"/>
+                                <field name="execution_id" string="Execution ID" readonly="1" invisible="not execution_id"/>
+                            </group>
+                        </div>
+                        <div class="col-md-6">
+                            <group string="Links &amp; Context">
+                                <field name="pos_session_id" readonly="1" invisible="not pos_session_id"/>
+                                <field name="partner_id" readonly="1"/>
+                                <field name="provider_reference" string="Payment ID" readonly="1" invisible="not provider_reference"/>
+                                <field name="payrillium_terminal_id" readonly="1" invisible="not payrillium_terminal_id"/>
+                                <field name="card_type" readonly="1" invisible="card_type in (False, 'N/A')"/>
+                            </group>
+                        </div>
+                    </div>
+
+
+                    <!-- What Happened — color-coded alert box matching POS popup badge colors -->
+                    <!-- 🔴 Error / Declined -->
+                    <div style="margin-top: 16px; padding: 12px 16px; border-radius: 6px; border-left: 4px solid #dc3545; background: #fdf0f0;"
+                         invisible="transaction_status not in ('auth_failed', 'declined', 'capture_failed', 'void_failed', 'reversal_failed', 'error') or not status_summary">
+                        <div style="font-weight: 600; font-size: 1rem; margin-bottom: 2px;">
+                            <span style="margin-right: 6px;">✕</span> What Happened
+                        </div>
+                        <field name="status_summary" readonly="1" nolabel="1"/>
+                    </div>
+                    <!-- 🟢 Success -->
+                    <div style="margin-top: 16px; padding: 12px 16px; border-radius: 6px; border-left: 4px solid #28a745; background: #f0fdf4;"
+                         invisible="transaction_status not in ('captured', 'done', 'refunded', 'credit_refunded', 'debit_refunded') or not status_summary">
+                        <div style="font-weight: 600; font-size: 1rem; margin-bottom: 2px;">
+                            <span style="margin-right: 6px;">✓</span> What Happened
+                        </div>
+                        <field name="status_summary" readonly="1" nolabel="1"/>
+                    </div>
+                    <!-- 🔵 Authorized / Pending -->
+                    <div style="margin-top: 16px; padding: 12px 16px; border-radius: 6px; border-left: 4px solid #17a2b8; background: #f0f8ff;"
+                         invisible="transaction_status not in ('authorized', 'pending', 'in_progress') or not status_summary">
+                        <div style="font-weight: 600; font-size: 1rem; margin-bottom: 2px;">
+                            <span style="margin-right: 6px;">ℹ</span> What Happened
+                        </div>
+                        <field name="status_summary" readonly="1" nolabel="1"/>
+                    </div>
+                    <!-- 🟡 Device error / Cancelled / Other -->
+                    <div style="margin-top: 16px; padding: 12px 16px; border-radius: 6px; border-left: 4px solid #ffc107; background: #fff8e1;"
+                         invisible="transaction_status in ('auth_failed', 'declined', 'capture_failed', 'void_failed', 'reversal_failed', 'error', 'captured', 'done', 'refunded', 'credit_refunded', 'debit_refunded', 'authorized', 'pending', 'in_progress') or not status_summary">
+                        <div style="font-weight: 600; font-size: 1rem; margin-bottom: 2px;">
+                            <span style="margin-right: 6px;">⚠</span> What Happened
+                        </div>
+                        <field name="status_summary" readonly="1" nolabel="1"/>
+                    </div>
+
+                    <!-- Technical Details — collapsed by default -->
+                    <div style="margin-top: 16px;">
+                        <details>
+                            <summary style="cursor: pointer; font-weight: 600; font-size: 0.9rem; color: #6c757d; user-select: none;">
+                                Technical Details
+                            </summary>
+                            <div style="margin-top: 8px; padding: 12px; background: #f8f9fa; border-radius: 4px;">
+                                <group string="Terminal Response" invisible="not terminal_message">
+                                    <field name="terminal_message" readonly="1" widget="text" nolabel="1"/>
+                                </group>
+                                <group string="Status History">
+                                    <field name="state_message" readonly="1" widget="text" nolabel="1"/>
+                                </group>
+                            </div>
+                        </details>
+                    </div>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Action for Woodforest Transactions using the custom form -->
+    <record id="action_payment_transaction_woodforest" model="ir.actions.act_window">
+        <field name="name">Woodforest Transactions</field>
+        <field name="res_model">payment.transaction</field>
+        <field name="view_mode">list,kanban,form</field>
+        <field name="search_view_id" ref="view_payment_transaction_search_woodforest"/>
+        <field name="domain">[('provider_code', '=', 'woodforest')]</field>
+        <field name="context">{}</field>
+        <field name="view_ids" eval="[(5, 0, 0),
+            (0, 0, {'view_mode': 'list', 'view_id': ref('view_payment_transaction_tree_woodforest')}),
+            (0, 0, {'view_mode': 'kanban', 'view_id': ref('view_payment_transaction_kanban_woodforest')}),
+            (0, 0, {'view_mode': 'form', 'view_id': ref('view_payment_transaction_form_woodforest_dashboard')})]"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                No Woodforest transactions found.
+            </p>
+            <p>
+                All payments processed through Woodforest terminals or Pay by Link will appear here for audit and recovery.
+            </p>
+        </field>
+    </record>
+
+    <!-- Menu Items -->
+    <menuitem id="menu_woodforest_transactions"
+              name="Transactions"
+              parent="pos_woodforest.menu_payrillium_root"
+              action="action_payment_transaction_woodforest"
+              sequence="20"/>
+
+    <!-- Server Action: Check Woodforest Status (single record only) -->
+    <record id="action_woodforest_check_status_server" model="ir.actions.server">
+        <field name="name">Check Woodforest Status</field>
+        <field name="model_id" ref="payment.model_payment_transaction"/>
+        <field name="binding_model_id" ref="payment.model_payment_transaction"/>
+        <field name="binding_view_types">list</field>
+        <field name="state">code</field>
+        <field name="code">
+if len(records) != 1:
+    raise UserError("Please select exactly ONE transaction to check its status.")
+action = records.action_check_status_from_list()
+        </field>
+    </record>
+
+</odoo>

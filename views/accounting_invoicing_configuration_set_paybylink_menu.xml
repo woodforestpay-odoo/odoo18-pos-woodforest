@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+
+  <record id="action_payment_tokens_in_accounting" model="ir.actions.act_window">
+    <field name="name">Woodforest Payment Tokens</field>
+    <field name="res_model">payment.token</field>
+    <field name="view_mode">list,form</field>
+    <field name="domain">[('provider_code', '=', 'woodforest')]</field>
+    <field name="context">{}</field>
+  </record>
+
+  <record id="action_payment_transactions_payrillium" model="ir.actions.act_window">
+    <field name="name">Woodforest Transactions</field>
+    <field name="res_model">payment.transaction</field>
+    <field name="view_mode">list,form</field>
+    <field name="domain">[('provider_code', '=', 'woodforest')]</field>
+    <field name="context">{'search_default_group_by_provider': 1}</field>
+  </record>
+
+  <menuitem id="menu_payrillium_payment_links"
+            name="Woodforest Pay by Link"
+            parent="account.root_payment_menu"
+            action="action_payrillium_payment_links"
+            sequence="32"
+            />
+  <menuitem id="menu_payrillium_sync_history"
+            name="Woodforest Sync History"
+            parent="account.root_payment_menu"
+            action="action_payrillium_sync_history"
+            sequence="100"
+            groups="base.group_system"/>
+  <menuitem id="menu_payment_tokens_in_accounting"
+            name="Woodforest Tokens"
+            parent="account.root_payment_menu"
+            action="action_payment_tokens_in_accounting"
+            sequence="22"
+            groups="base.group_system"/>
+  <menuitem id="menu_payment_transactions_payrillium"
+            name="Woodforest Transactions"
+            parent="account.root_payment_menu"
+            action="action_payment_transactions_payrillium"
+            sequence="23"
+            groups="base.group_system"/>
+
+
+
+</odoo>
+
+

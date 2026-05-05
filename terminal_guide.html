@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Payment Terminal — Quick Reference Guide</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Inter',Arial,sans-serif;background:#fff;color:#111;font-size:13.5px;line-height:1.6;}
+
+@page{size:letter;margin:0.55in 0.6in;}
+.page{width:100%;max-width:7.3in;margin:0 auto;}
+.page-break{page-break-after:always;padding-bottom:0.35in;}
+.page2{page-break-before:always;}
+
+/* ── ALERT BANNER ── */
+.alert-banner{background:#c72a03;color:#fff;border-radius:12px;padding:18px 22px;display:flex;align-items:center;gap:18px;margin-bottom:18px;}
+.alert-banner .ab-icon{font-size:32px;flex-shrink:0;}
+.alert-banner h1{font-size:18px;font-weight:900;letter-spacing:-0.3px;line-height:1.25;}
+.alert-banner p{font-size:12.5px;opacity:0.92;margin-top:4px;}
+.alert-banner .ab-check{background:rgba(255,255,255,0.18);border:1.5px solid rgba(255,255,255,0.3);border-radius:10px;padding:10px 16px;flex-shrink:0;text-align:center;font-size:10.5px;font-weight:800;line-height:1.5;letter-spacing:0.3px;}
+.ab-check img{width:44px;height:44px;display:block;margin:0 auto 5px;}
+
+/* ── STEPS ── */
+.section-label{font-size:11px;font-weight:800;color:#4B5563;text-transform:uppercase;letter-spacing:0.6px;margin-bottom:10px;display:flex;align-items:center;gap:6px;}
+.steps-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px;}
+.step-card{border-radius:10px;overflow:hidden;border:1.5px solid #E5E7EB;page-break-inside:avoid;}
+
+.step-head{display:flex;align-items:center;gap:12px;padding:11px 14px;}
+.step-num{width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:16px;flex-shrink:0;color:#fff;}
+.step-title{font-weight:700;font-size:13.5px;}
+
+.step-body{padding:12px 14px;background:#fff;font-size:13px;}
+.step-body p{margin-bottom:6px;}
+.step-body ol{padding-left:18px;}
+.step-body li{margin-bottom:5px;}
+.step-next{display:block;margin-top:9px;font-size:11.5px;color:#6B7280;border-top:1px dashed #E5E7EB;padding-top:8px;}
+.step-next b{color:#B91C1C;}
+.step-next img{width:14px;height:14px;vertical-align:middle;}
+
+/* Step color themes */
+.s1 .step-head{background:#EFF6FF;} .s1 .step-num{background:#2563EB;}
+.s2 .step-head{background:#FFF7ED;} .s2 .step-num{background:#EA580C;}
+.s3 .step-head{background:#FEFCE8;} .s3 .step-num{background:#CA8A04;}
+.s4 .step-head{background:#F0FDF4;} .s4 .step-num{background:#16A34A;}
+.s5{grid-column:1/-1;border-color:#1D4ED8;border-width:2px;}
+.s5 .step-head{background:#FFF1F1;} .s5 .step-num{background:#1D4ED8;}
+.s5 .step-title{color:#1D4ED8;}
+.s5 .step-body{background:#FFFAFA;}
+
+/* Sub-steps box */
+.substep{background:#EEF2FF;border-left:4px solid #2563EB;border-radius:0 8px 8px 0;padding:10px 14px;margin:8px 0;font-size:12.5px;}
+.substep > strong{display:block;color:#1D4ED8;font-size:11px;margin-bottom:6px;text-transform:uppercase;letter-spacing:0.4px;font-weight:800;}
+.substep ol li strong{display:inline;color:inherit;font-size:inherit;text-transform:none;letter-spacing:normal;font-weight:700;}
+.substep ol{padding-left:16px;}
+.substep li{margin-bottom:4px;}
+
+/* ── STEP 5 / SUPPORT ── */
+.support-wrap{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:12px;}
+.support-box{border:1.5px solid #FCA5A5;border-radius:10px;padding:12px 14px;background:#fff;}
+.support-box h4{font-size:11px;font-weight:800;color:#B91C1C;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:10px;}
+.check-row{display:flex;justify-content:space-between;align-items:center;padding:6px 0;border-bottom:1px solid #FEE2E2;font-size:12.5px;}
+.check-row:last-child{border-bottom:none;}
+.yesno{display:flex;gap:6px;font-size:11px;font-weight:700;flex-shrink:0;}
+.cy{color:#16A34A;} .cn{color:#B91C1C;}
+.support-cta{background:#1435c5;color:#fff;border-radius:10px;padding:14px 18px;text-align:center;margin-top:12px;}
+.support-cta h3{font-size:15px;font-weight:900;}
+.support-cta p{font-size:12px;opacity:0.9;margin-top:4px;}
+
+/* ── DO / DON'T ── */
+.do-dont{display:grid;grid-template-columns:1fr 1fr;gap:0;border-radius:10px;overflow:hidden;border:1.5px solid #E5E7EB;page-break-inside:avoid;}
+.col-head{padding:10px 16px;font-size:11.5px;font-weight:800;text-transform:uppercase;letter-spacing:0.4px;}
+.dont-col .col-head{background:#B91C1C;color:#fff;}
+.do-col .col-head{background:#15803D;color:#fff;}
+.dont-col{border-right:1.5px solid #E5E7EB;}
+.col-row{display:flex;gap:10px;align-items:flex-start;padding:9px 16px;border-top:1px solid #F3F4F6;font-size:12.5px;}
+.dont-col .col-row{color:#7F1D1D;}
+.do-col .col-row{color:#14532D;}
+.ci{flex-shrink:0;font-size:15px;line-height:1.6;}
+
+/* ── PAGE 2 HEADER ── */
+.p2-header{background:linear-gradient(135deg,#1E293B,#0F3460);color:#fff;border-radius:12px;padding:18px 24px;margin-bottom:18px;display:flex;align-items:center;gap:18px;}
+.p2-header h2{font-size:20px;font-weight:900;}
+.p2-header p{font-size:12.5px;opacity:0.85;margin-top:4px;line-height:1.5;}
+.p2-header img{width:60px;height:60px;flex-shrink:0;}
+
+/* ── ICON TABLE ── */
+.icon-ref{width:100%;border-collapse:collapse;margin-bottom:18px;border-radius:10px;overflow:hidden;}
+.icon-ref th{padding:11px 16px;font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:0.5px;background:#1E293B;color:#fff;text-align:left;}
+.icon-ref th:first-child{width:90px;text-align:center;}
+.icon-ref th:nth-child(2){width:120px;}
+.icon-ref td{padding:13px 16px;border-bottom:1px solid #F1F5F9;vertical-align:middle;font-size:13px;line-height:1.6;}
+.icon-ref tr:last-child td{border-bottom:none;}
+.icon-ref img{width:56px;height:56px;display:block;margin:0 auto;}
+.icon-name{text-align:center;font-size:10.5px;color:#94A3B8;margin-top:4px;font-weight:600;}
+.badge-yes{display:inline-flex;align-items:center;gap:4px;background:#DCFCE7;color:#15803D;border-radius:20px;padding:4px 12px;font-size:11px;font-weight:700;}
+.badge-no{display:inline-flex;align-items:center;gap:4px;background:#FEE2E2;color:#B91C1C;border-radius:20px;padding:4px 12px;font-size:11px;font-weight:700;}
+.badge-stop{display:inline-flex;align-items:center;gap:4px;background:#7F1D1D;color:#fff;border-radius:20px;padding:4px 12px;font-size:11px;font-weight:700;}
+
+/* ── STARTUP FLOW ── */
+.flow-label{font-size:11px;font-weight:800;color:#4B5563;text-transform:uppercase;letter-spacing:0.6px;margin-bottom:12px;}
+.flow{display:flex;align-items:center;background:#F8FAFC;border-radius:12px;padding:16px 24px;gap:6px;margin-bottom:18px;border:1.5px solid #E2E8F0;}
+.flow-step{text-align:center;flex:1;}
+.flow-step img{width:44px;height:44px;display:block;margin:0 auto 6px;}
+.flow-step .emoji{font-size:28px;display:block;margin-bottom:6px;}
+.fl{font-size:11px;color:#64748B;font-weight:600;}
+.flow-step.ready .fl{color:#15803D;font-weight:800;font-size:11.5px;}
+.flow-arrow{color:#CBD5E1;font-size:22px;flex-shrink:0;padding:0 4px;}
+
+/* ── STARTUP NOTE ── */
+.startup-note{background:#EFF6FF;border:1.5px solid #BFDBFE;border-radius:10px;padding:14px 18px;font-size:13px;line-height:1.6;}
+.startup-note strong{color:#1D4ED8;display:block;margin-bottom:5px;font-size:13.5px;}
+
+/* ── FOOTER ── */
+.footer{text-align:center;font-size:10px;color:#9CA3AF;margin-top:22px;padding-top:10px;border-top:1px solid #F3F4F6;}
+
+@media print{
+  body{-webkit-print-color-adjust:exact;print-color-adjust:exact;}
+}
+</style>
+</head>
+<body>
+<div class="page">
+
+<!-- ██████████ PAGE 1 ██████████ -->
+<div class="page-break">
+
+<!-- ALERT BANNER -->
+<div class="alert-banner">
+  <div class="ab-icon"></div>
+  <div style="flex:1;">
+    <h1 style="font-size: 24px;">Troubleshooting Terminal</h1>
+    <p>Payments may <strong style="font-size:14px;">only be processed </strong>  when the terminal displays the icon shown on the top-right corner of the screen. <strong style="font-size:14px;">Do not attempt a sale.</strong></p>
+  </div>
+  <div class="ab-check" style="display:flex;align-items:center;gap:6px;"  >
+    <img src="guide_icons/icon_cloud_plug.png" alt="Cloud and plug — Ready"> = <strong style="font-size:12px;">Ready to Process Payments</strong></style>
+  </div>
+</div>
+
+<!-- STEPS LABEL -->
+<div class="section-label">⚡ Terminal not showing cloud icon ? Complete the following steps in order until it appears.</div>
+
+<div class="steps-grid">
+
+  <!-- STEP 1 -->
+  <div class="step-card s1">
+    <div class="step-head">
+      <div class="step-num">1</div>
+      <div class="step-title">Allow 2 minutes to elapse</div>
+    </div>
+    <div class="step-body">
+      <p>Following any restart, the terminal requires time to fully establish its connection. 
+        <br>
+        <strong>Do not intervene — wait the entire two minutes before taking further action.</strong></p>
+      <span class="step-next">Icon still not showing? → <b>Proceed to Step 2</b></span>
+    </div>
+  </div>
+
+  <!-- STEP 2 -->
+  <div class="step-card s2">
+    <div class="step-head">
+      <div class="step-num">2</div>
+      <div class="step-title">Force Stop the Delta1st application</div>
+    </div>
+    <div class="step-body">
+      <p>A standard close is insufficient. The application must be fully terminated through the device settings.</p>
+      <div class="substep">
+        <strong>How to Force Stop Delta1st:</strong>
+        <ol>
+          <li>Press the <strong>Home</strong> button to return to the main screen.</li>
+          <li>Open <strong>Settings</strong>, then select <strong>Apps</strong>.</li>
+          <li>Locate <strong>Delta1st</strong> and select <strong>Force Stop</strong>, then confirm.</li>
+          <li>Return to the home screen, reopen <strong>Delta1st</strong>, and wait 2 minutes.</li>
+        </ol>
+      </div>
+      <span class="step-next">Icon still not showing? → <b>Proceed to Step 3</b></span>
+    </div>
+  </div>
+
+  <!-- STEP 3 -->
+  <div class="step-card s3">
+    <div class="step-head">
+      <div class="step-num">3</div>
+      <div class="step-title">Restart the terminal</div>
+    </div>
+    <div class="step-body">
+      <ol>
+        <li>Press and hold the <strong>Power button</strong> until the menu appears.</li>
+        <li>Select <strong>"Restart."</strong> Do <em>not</em> select "Power Off."</li>
+        <li>Allow the terminal to complete startup — approximately <strong>3 minutes.</strong></li>
+      </ol>
+      <span class="step-next">Icon still not showing? → <b>Proceed to Step 4</b></span>
+    </div>
+  </div>
+
+  <!-- STEP 4 -->
+  <div class="step-card s4">
+    <div class="step-head">
+      <div class="step-num">4</div>
+      <div class="step-title">Verify the network connection</div>
+    </div>
+    <div class="step-body">
+      <p><strong>Begin by testing internet access on your phone.</strong> If your phone has no internet, the terminal cannot connect either.</p>
+      <p><strong>Wi-Fi:</strong> Confirm the terminal is on the correct network. If the network name or password has changed, contact your network provider.</p>
+      <p><strong>Ethernet Cable:</strong> Ensure the cable is firmly connected at both ends. Test the port with another device to confirm it has internet access. If it does not, contact your network provider.</p>
+      <span class="step-next">Icon still not showing? → <b>Proceed to Step 5</b></span>
+    </div>
+  </div>
+
+  <!-- STEP 5 — FULL WIDTH -->
+  <div class="step-card s5">
+    <div class="step-head">
+      <div class="step-num">5</div>
+      <div class="step-title">Contact Technical Support — Please have the following information ready before calling</div>
+    </div>
+    <div class="step-body">
+      <div class="support-wrap">
+        <div class="support-box">
+          <h4>📋 Steps Completed</h4>
+          <div class="check-row"><span>Terminal was restarted recently</span><span class="yesno"><span class="cy">Yes</span><span>/</span><span class="cn">No</span></span></div>
+          <div class="check-row"><span>Delta1st app was force stopped and reopened</span><span class="yesno"><span class="cy">Yes</span><span>/</span><span class="cn">No</span></span></div>
+          <div class="check-row"><span>Terminal was restarted via the power menu</span><span class="yesno"><span class="cy">Yes</span><span>/</span><span class="cn">No</span></span></div>
+          <div class="check-row"><span>Internet connection verified with another device</span><span class="yesno"><span class="cy">Yes</span><span>/</span><span class="cn">No</span></span></div>
+          <div class="check-row"><span>A second terminal is present in the store</span><span class="yesno"><span class="cy">Yes</span><span>/</span><span class="cn">No</span></span></div>
+          <div class="check-row"><span>The second terminal is working correctly</span><span class="yesno"><span class="cy">Yes</span><span>/</span><span class="cn">No</span></span></div>
+          <div class="check-row"><span>Recent changes to the store's network</span><span class="yesno"><span class="cy">Yes</span><span>/</span><span class="cn">No</span></span></div>
+        </div>
+        <div class="support-box">
+          <h4>📝 Additional Details Needed</h4>
+          <div class="check-row" style="flex-direction:column;align-items:flex-start;gap:6px;">
+            <span style="font-weight:700;">Which icon is currently displayed on the terminal?</span>
+            <span style="display:flex;gap:10px;align-items:center;margin-top:2px;">
+              <img src="guide_icons/icon_cloud_plug.png" style="width:26px;height:26px;">
+              <img src="guide_icons/icon_plug_only.png" style="width:26px;height:26px;">
+              <img src="guide_icons/icon_cloud_only.png" style="width:26px;height:26px;">
+              <img src="guide_icons/icon_no_signal.png" style="width:26px;height:26px;">
+            </span>
+          </div>
+          <div class="check-row"><span>Time the issue began:</span><span style="font-style:italic;color:#9CA3AF;font-size:12px;">___ : ___ AM / PM</span></div>
+          <div class="check-row"><span>Steps completed so far:</span><span style="font-style:italic;color:#9CA3AF;font-size:12px;">1 &nbsp;/&nbsp; 2 &nbsp;/&nbsp; 3 &nbsp;/&nbsp; 4</span></div>
+        </div>
+      </div>
+      <div class="support-cta">
+        <h3>📞 Contact Technical Support Now</h3>
+        <p>Do not attempt to process any sales with the terminal in this state. If a secondary terminal is available, use it while the issue is being resolved.</p>
+      </div>
+    </div>
+  </div>
+
+</div><!-- end steps-grid -->
+
+<!-- DO / DON'T -->
+<div class="do-dont">
+  <div class="dont-col">
+    <div class="col-head">❌ DO NOT -</div>
+    <div class="col-row"><span class="ci">🔁</span><span>Restart the terminal multiple times in rapid succession. Each restart resets the connection process and delays recovery.</span></div>
+    <div class="col-row"><span class="ci">💳</span><span>Attempt to complete a sale when the  icon is not displayed in the top-right corner of the terminal.</span></div>
+    <div class="col-row"><span class="ci">⏻</span><span>Power off the terminal entirely. Always select <strong>"Restart"</strong> from the power menu.</span></div>
+  </div>
+  <div class="do-col">
+    <div class="col-head">✅ Best Practices</div>
+    <div class="col-row"><span class="ci">⏱️</span><span>Wait a minimum of three minutes between each restart attempt before concluding the terminal has not recovered.</span></div>
+    <div class="col-row"><span class="ci">👁️</span><span>Confirm the  icon is visible in the top-right corner of the terminal before initiating any sale.</span></div>
+    <div class="col-row"><span class="ci">📱</span><span>Ensure there is only one payment application installed on the terminal at all times.</span></div>
+    <div class="col-row"><span class="ci">📞</span><span>Contact technical support promptly if the issue remains unresolved after completing all four steps above.</span></div>
+  </div>
+</div>
+
+<div class="footer">Payrillium · Payment Terminal Quick Reference Guide · Version 1.1 · April 2026 · Page 1 of 2</div>
+</div><!-- end page 1 -->
+
+
+<!-- ██████████ PAGE 2 ██████████ -->
+<div class="page page2">
+
+<div class="p2-header">
+  <div style="flex:1;">
+    <h2>Terminal Icon Reference Guide</h2>
+    <p>Use this page to identify your terminal's connection status at a glance. Post this guide at the register for easy access by all staff members.</p>
+  </div>
+  <img src="guide_icons/icon_cloud_plug.png" alt="Ready icon">
+</div>
+
+<!-- ICON TABLE -->
+<table class="icon-ref">
+  <thead>
+    <tr>
+      <th style="text-align:center;">Icon</th>
+      <th>Status</th>
+      <th>What It Means &amp; What To Do</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr style="background:#F0FDF4;">
+      <td>
+        <img src="guide_icons/icon_cloud_plug.png" alt="Cloud and plug">
+        <div class="icon-name">Cloud + Plug</div>
+      </td>
+      <td><span class="badge-yes">✅ Ready to Sell</span></td>
+      <td><strong>The terminal is fully connected and operational.</strong> It is able to receive payment amounts, process gratuities, and complete transactions. You may proceed with sales normally.</td>
+    </tr>
+    <tr>
+      <td>
+        <img src="guide_icons/icon_plug_only.png" alt="Plug only">
+        <div class="icon-name">Plug Only</div>
+      </td>
+      <td><span class="badge-no">❌ Do Not Sell</span></td>
+      <td><strong>Partial connection — the terminal cannot receive instructions from the point-of-sale system.</strong> The terminal has limited internet access but is unable to communicate with the register. Follow the steps on Page 1. Contact support if the issue persists.</td>
+    </tr>
+    <tr>
+      <td>
+        <img src="guide_icons/icon_cloud_only.png" alt="Cloud only">
+        <div class="icon-name">Cloud Only</div>
+      </td>
+      <td><span class="badge-no">❌ Do Not Sell</span></td>
+      <td><strong>Partial connection — the terminal cannot process payments correctly.</strong> The terminal is receiving data but is unable to complete transactions. Follow the steps on Page 1. Contact support if the issue persists.</td>
+    </tr>
+    <tr style="background:#FFF5F5;">
+      <td>
+        <img src="guide_icons/icon_no_signal.png" alt="No signal">
+        <div class="icon-name">No Signal</div>
+      </td>
+      <td><span class="badge-stop">🚫 Stop — No Connection</span></td>
+      <td><strong>The terminal has lost all connectivity.</strong> No sales may be processed under any circumstances. Begin immediately from Step 1 on Page 1. Contact technical support without delay if the issue is not resolved within 10 minutes.</td>
+    </tr>
+  </tbody>
+</table>
+
+<!-- STARTUP FLOW -->
+<div class="flow-label">🔄 Normal Startup Sequence — What to Expect After a Restart</div>
+<div class="flow">
+  <div class="flow-step">
+    <span class="emoji">⏳</span>
+    <span class="fl">Starting Up</span>
+  </div>
+  <div class="flow-arrow">→</div>
+  <div class="flow-step">
+    <img src="guide_icons/icon_plug_only.png" alt="Connecting">
+    <span class="fl">Connecting</span>
+  </div>
+  <div class="flow-arrow">→</div>
+  <div class="flow-step">
+    <img src="guide_icons/icon_cloud_only.png" alt="Almost Ready">
+    <span class="fl">Almost Ready</span>
+  </div>
+  <div class="flow-arrow">→</div>
+  <div class="flow-step ready">
+    <img src="guide_icons/icon_cloud_plug.png" alt="Ready to Sell">
+    <span class="fl">✅ Ready to Sell</span>
+  </div>
+</div>
+
+<div class="startup-note">
+  <strong>Important: Allow 1–5 minutes after each restart before processing any sale.</strong>
+  It is entirely normal to observe intermediate icons — such as "Plug Only" or "Cloud Only" — during the startup sequence. This does not indicate a problem. Do not restart the terminal again during this period, as doing so will reset the connection process and further delay readiness. Wait until the terminal displays the full cloud and plug icon <img src="guide_icons/icon_cloud_plug.png" style="width:16px;height:16px;vertical-align:middle;"> in the top-right corner before proceeding with any transaction.
+</div>
+
+<div class="footer">Payrillium · Payment Terminal Quick Reference Guide · Version 1.1 · April 2026 · Page 2 of 2</div>
+</div><!-- end page 2 -->
+
+</div><!-- end .page -->
+</body>
+</html>

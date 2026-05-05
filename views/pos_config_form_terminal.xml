@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+  <data noupdate="1">
+    <record id="view_pos_config_kanban_inherit_terminal_responsive_clean" model="ir.ui.view">
+      <field name="name">pos.config.kanban.inherit.terminal.responsive.clean</field>
+      <field name="model">pos.config</field>
+      <field name="inherit_id" ref="point_of_sale.view_pos_config_kanban"/>
+      <field name="type">kanban</field>
+      <field name="arch" type="xml">
+
+        <xpath expr="//kanban" position="inside">
+          <field name="payrillium_terminal_id"/>
+          <field name="payrillium_terminal_name"/>
+          <field name="payrillium_terminal_serial"/>
+        </xpath>
+
+        <xpath expr="//div[@name='card_title']" position="attributes">
+          <attribute name="style">display:flex; align-items:center; gap:0.5rem; padding-right:1rem; flex-wrap:nowrap;</attribute>
+        </xpath>
+
+        <xpath expr="//div[@name='card_title']" position="inside">
+          <div style="flex:1 1 auto; min-width:0;"></div>
+          <t t-if="record.payrillium_terminal_id.raw_value">
+            <div class="payrillium-terminal-inline"
+                 style="flex:0 0 auto; align-self:center; display:inline-flex; align-items:center; gap:0.35rem; white-space:nowrap; font-size:0.9rem; color:#4e5b61; line-height:1;"
+                 t-att-title="'Payment terminal: ' + (record.payrillium_terminal_name.raw_value or record.payrillium_terminal_id.display_value)">
+              <i class="fa fa-tablet" aria-hidden="true" style="opacity:0.9;"></i>
+              <strong style="font-weight:600;"><t t-esc="record.payrillium_terminal_name.raw_value or record.payrillium_terminal_id.display_value"/></strong>
+              <t t-if="record.payrillium_terminal_serial.raw_value">
+                <small style="color:#788388; font-weight:500;">(<t t-esc="record.payrillium_terminal_serial.raw_value"/>)</small>
+              </t>
+            </div>
+          </t>
+        </xpath>
+
+      </field>
+    </record>
+  </data>
+</odoo>
+

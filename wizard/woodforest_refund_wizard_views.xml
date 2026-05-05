@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_woodforest_refund_wizard_form" model="ir.ui.view">
+        <field name="name">woodforest.refund.wizard.form</field>
+        <field name="model">woodforest.refund.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Cancel Transaction">
+                <sheet>
+                    <div class="alert alert-info" role="alert" invisible="not can_refund">
+                        <i class="fa fa-info-circle me-1"/>
+                        <field name="friendly_message"/>
+                    </div>
+                    <div class="alert alert-warning" role="alert" invisible="can_refund">
+                        <i class="fa fa-exclamation-triangle me-1"/>
+                        <strong>Cannot Cancel:</strong> <field name="rejection_reason"/>
+                    </div>
+                    
+                    <group>
+                        <group>
+                            <field name="payment_status" decoration-bf="1"/>
+                            <field name="card_type"/>
+                        </group>
+                        <group>
+                            <field name="transaction_id"/>
+                            <field name="action_type" invisible="1"/>
+                            <field name="can_refund" invisible="1"/>
+                        </group>
+                    </group>
+                </sheet>
+                <footer>
+                    <button name="action_confirm_refund" 
+                            string="Confirm Order Cancellation" 
+                            type="object" 
+                            class="btn-primary" 
+                            invisible="not can_refund"
+                            data-hotkey="q"/>
+                    <button string="Discard" class="btn-secondary" special="cancel" data-hotkey="x"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_woodforest_refund_wizard" model="ir.actions.act_window">
+        <field name="name">Transaction Cancellation</field>
+        <field name="res_model">woodforest.refund.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+</odoo>

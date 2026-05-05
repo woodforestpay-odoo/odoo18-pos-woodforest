@@ -1,0 +1,28 @@
+<odoo>
+    <record id="view_pos_payment_inherit_woodforest_block" model="ir.ui.view">
+        <field name="name">pos.make.payment.form.inherit.woodforest.block</field>
+        <field name="model">pos.make.payment</field>
+        <field name="inherit_id" ref="point_of_sale.view_pos_payment"/>
+        <field name="arch" type="xml">
+            <!-- Hide the 'Make Payment' button when Woodforest is selected -->
+            <xpath expr="//footer/button[@name='check']" position="attributes">
+                <attribute name="invisible">payment_method_id.use_payment_terminal == 'woodforest'</attribute>
+            </xpath>
+
+            <!-- Show a clear warning message instead -->
+            <xpath expr="//group" position="after">
+                <div class="alert alert-danger mb-0 mt-2" role="alert" 
+                     invisible="payment_method_id.use_payment_terminal != 'woodforest'">
+                    <i class="fa fa-exclamation-triangle me-2" style="font-size: 1.2rem;"/>
+                    <strong>Woodforest Terminal Payment Detected</strong>
+                    <p class="mb-0 mt-1">
+                        Payments using Woodforest terminals <strong>cannot</strong> be processed from this backend screen.
+                    </p>
+                    <p class="mb-0">
+                        Please open an active POS session to complete this transaction via the terminal.
+                    </p>
+                </div>
+            </xpath>
+        </field>
+    </record>
+</odoo>

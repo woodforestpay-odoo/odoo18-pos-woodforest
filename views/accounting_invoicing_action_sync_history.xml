@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="view_payrillium_log_list" model="ir.ui.view">
+        <field name="name">payrillium.log.list</field>
+        <field name="model">payrillium.log</field>
+        <field name="arch" type="xml">
+            <list default_order="timestamp desc">
+                <field name="invoices"/>
+                <field name="processed_invoices"/>
+                <field name="links_processed"/>
+                <field name="ach_processed"/>
+                <field name="links_total"/>
+                <field name="ach_total"/>
+                <field name="errors"/>
+                <field name="timestamp" string="Execution Time"/>
+                <field name="success"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_payrillium_log_form" model="ir.ui.view">
+        <field name="name">payrillium.log.form</field>
+        <field name="model">payrillium.log</field>
+        <field name="arch" type="xml">
+            <form string="Sync History">
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="timestamp" string="Execution Time"/>
+                            <field name="execution_id"/>
+                            <field name="success"/>
+                        </group>
+                        <group string="Summary">
+                            <field name="invoices" readonly="1"/>
+                            <field name="processed_invoices" readonly="1"/>
+                            <field name="links_processed" readonly="1"/>
+                            <field name="ach_processed" readonly="1"/>
+                            <field name="links_total" readonly="1"/>
+                            <field name="ach_total" readonly="1"/>
+                            <field name="errors" readonly="1"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Details">
+                            <field name="detail_html" widget="html" readonly="1"/>
+                        </page>
+                        <page string="Raw Payload">
+                            <field name="response_payload"/>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+    <record id="action_payrillium_sync_history" model="ir.actions.act_window">
+        <field name="name">Woodforest Sync History</field>
+        <field name="res_model">payrillium.log</field>
+        <field name="view_mode">list,form</field>
+        <field name="domain">[('endpoint','=','cron.payment_status'),('log_type','=','finish')]</field>
+    </record>
+</odoo>

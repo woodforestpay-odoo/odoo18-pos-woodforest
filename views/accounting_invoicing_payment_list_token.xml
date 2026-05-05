@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="list_payment_token_selector_form_view" model="ir.ui.view">
+        <field name="name">payment.token.selector.form</field>
+        <field name="model">payment.token.selector</field>
+        <field name="arch" type="xml">
+            <form string="Select Payment Token"  class="payrillium-selector-form">
+                <group>
+                    <field name="partner_id" readonly="1" options="{'no_open': True}"/>
+                </group>
+                 <group>
+                    <field name="token_type" required="1"/>
+                    <field name="payment_token_domain" invisible="1"/>
+                    <field name="payment_token_id" domain="payment_token_domain" options="{'no_open': True}" string="Select Token"/>
+                </group>
+                <group>
+                    <field name="amount" readonly="1"/>
+                </group>
+
+                <div class="alert alert-warning"
+                    invisible="amount &gt; 0">
+                    There is nothing to be paid.
+                </div>
+
+                <footer>
+                    <button name="action_confirm" string="Confirm" type="object" class="btn-primary"/>
+                    <button name="%(pos_woodforest.action_invoice_order_generate_token)d" string="Create New Token" context="{'default_partner_id': partner_id, 'default_amount': amount}" type="action" class="btn-secondary"/>
+                    <button string="Cancel" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+</odoo>
+

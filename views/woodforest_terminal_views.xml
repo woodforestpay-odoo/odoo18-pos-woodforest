@@ -1,0 +1,512 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <!--  WOODFOREST CONFIGURATION FORM VIEW (SETTINGS SCREEN) -->
+    <record id="view_payrillium_config_form" model="ir.ui.view">
+        <field name="name">payrillium.config.form</field>
+        <field name="model">payrillium.config</field>
+        <field name="arch" type="xml">
+            <form string="Woodforest Configuration" create="0" delete="0" class="o_payrillium_full_width_form o_payrillium_settings_form">
+                <sheet>
+                    <field name="activation_state" invisible="1"/>
+                    <field name="payment_method_name" invisible="1"/>
+
+                    <!-- ── Page header banner ── -->
+                    <div class="o_payrillium_form_header">
+                        <div class="o_payrillium_form_header_inner">
+                            <span class="o_payrillium_form_header_icon">
+                                <i class="fa fa-cog"></i>
+                            </span>
+                            <div>
+                                <h2 class="o_payrillium_form_header_title">Woodforest Settings</h2>
+                                <p class="o_payrillium_form_header_sub">Manage your Woodforest activation and payment configuration.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="o_payrillium_settings_container">
+                        <!-- LEVEL 1: CORE & CONNECTIVITY (Full Width Banner) -->
+                        <div class="o_payrillium_card">
+                            <div class="o_payrillium_card_header justify-content-between">
+                                <div class="d-flex align-items-center gap-3">
+                                    <div class="o_payrillium_card_icon">
+                                        <i class="fa fa-rocket"></i>
+                                    </div>
+                                    <div>
+                                        <h2 class="o_payrillium_card_title">Core Activation &amp; Connectivity</h2>
+                                        <p class="text-muted small mb-0">System status and technical credentials.</p>
+                                    </div>
+                                </div>
+                                <div class="d-flex align-items-center gap-2">
+                                    <field name="activation_state" widget="badge" 
+                                           decoration-success="activation_state == 'active'" 
+                                           decoration-warning="activation_state == 'not_configured'"
+                                           decoration-info="activation_state == 'pending'"
+                                           decoration-danger="activation_state == 'rejected'"/>
+                                    <field name="version" readonly="1" class="text-muted small ms-2"/>
+                                </div>
+                            </div>
+                            
+                            <div class="row align-items-center">
+                                <!-- Activation Actions -->
+                                <div class="col-md-4 border-end pe-4">
+                                    <div class="d-flex flex-column gap-2 py-2">
+                                        <button name="open_payrillium_wizard"
+                                                type="object"
+                                                string="Activate Woodforest"
+                                                class="btn btn-primary d-block w-100"
+                                                invisible="activation_state not in ('not_configured', 'rejected')"/>
+                                        
+                                        <button name="open_payrillium_wizard"
+                                                type="object"
+                                                string="Update Configuration"
+                                                class="btn btn-secondary d-block w-100"
+                                                invisible="activation_state == 'not_configured'"/>
+
+                                        <div class="d-flex gap-2">
+                                            <button name="action_refresh_status"
+                                                    type="object"
+                                                    string="Refresh Status"
+                                                    class="btn btn-outline-secondary flex-grow-1"
+                                                    invisible="activation_state == 'not_configured'"/>
+
+                                            <button name="action_deactivate"
+                                                    type="object"
+                                                    string="Deactivate"
+                                                    class="btn btn-outline-danger flex-grow-1"
+                                                    readonly="1"
+                                                    invisible="activation_state != 'active'"/>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Technical Credentials -->
+                                <div class="col-md-7 ps-4">
+                                    <div class="row" invisible="activation_state == 'not_configured'">
+                                        <div class="col-md-6">
+                                            <group class="mt-0">
+                                                <field name="token" password="True" readonly="1" string="Activation Code"/>
+                                            </group>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <group class="mt-0">
+                                                <field name="secret_key" password="True" readonly="1"/>
+                                            </group>
+                                        </div>
+                                    </div>
+                                    <div class="alert alert-info py-2 px-3 m-0 shadow-sm small" invisible="activation_state != 'active'" style="background: #f0f7ff; border: 1px solid #dbeafe; color: #1e40af; border-radius: 8px;">
+                                        <i class="fa fa-check-circle me-1"/> <strong>System Verified.</strong> All credentials successfully validated and encrypted.
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- LEVEL 2: OPERATIONS (Two Columns) -->
+                        <div class="o_payrillium_middle_row">
+                            <!-- Accounting & Synchronization -->
+                            <div class="o_payrillium_card">
+                                <div class="o_payrillium_card_header">
+                                    <div class="o_payrillium_card_icon" style="background: #e8f5e9; color: #2e7d32;">
+                                        <i class="fa fa-university"></i>
+                                    </div>
+                                    <div>
+                                        <h2 class="o_payrillium_card_title">Accounting &amp; Sync</h2>
+                                        <p class="text-muted small mb-0">Financial flows and automated updates.</p>
+                                    </div>
+                                </div>
+                                <group class="mt-0">
+                                    <field name="receivable_account_id" string="Settlement Bank"/>
+                                    <field name="outstanding_account_id" string="Intermediate Account"/>
+                                    <field name="auto_sync_enabled" widget="boolean_toggle" string="Auto Status Sync" readonly="1" force_save="1" help="Coming soon! This feature is temporarily disabled for optimizations."/>
+                                </group>
+                            </div>
+
+                            <!-- Customer Experience (PBL) -->
+                            <div class="o_payrillium_card">
+                                <div class="o_payrillium_card_header">
+                                    <div class="o_payrillium_card_icon" style="background: #fff8e1; color: #f57c00;">
+                                        <i class="fa fa-user-circle"></i>
+                                    </div>
+                                    <div>
+                                        <h2 class="o_payrillium_card_title">Customer Experience (PBL)</h2>
+                                        <p class="text-muted small mb-0">Pay by Link preferences.</p>
+                                    </div>
+                                </div>
+                                <group class="mt-0">
+                                    <field name="pbl_request_phone" widget="boolean_toggle"/>
+                                    <field name="pbl_request_shipping" widget="boolean_toggle"/>
+                                </group>
+                            </div>
+                        </div>
+
+                        <!-- LEVEL 3: TERMINAL EXPERIENCE (Full Width) -->
+                        <div class="o_payrillium_card">
+                            <div class="o_payrillium_card_header">
+                                <div class="o_payrillium_card_icon" style="background: #f3e5f5; color: #7b1fa2;">
+                                    <i class="fa fa-terminal"></i>
+                                </div>
+                                <div>
+                                    <h2 class="o_payrillium_card_title">Terminal Approved / Decline Settings</h2>
+                                    <p class="text-muted small mb-0">Customize visual feedback for transaction results.</p>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6 border-end">
+                                    <div class="p-2 bg-light rounded shadow-sm" style="border-left: 4px solid #16a34a !important;">
+                                        <h6 class="text-success mb-2"><i class="fa fa-check-circle me-1"/> Approved State</h6>
+                                        <group class="mt-0">
+                                            <field name="approved_title" string="Title" placeholder="Approved"/>
+                                            <field name="approved_message" string="Message" placeholder="{amount} Successfully Charged"/>
+                                            <field name="approved_timeout" string="Timeout (sec)" required="1"/>
+                                        </group>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="p-2 bg-light rounded shadow-sm" style="border-left: 4px solid #4px solid #dc3545 !important;">
+                                        <h6 class="text-danger mb-2"><i class="fa fa-times-circle me-1"/> Decline State</h6>
+                                        <group class="mt-0">
+                                            <field name="decline_title" string="Title" placeholder="Declined"/>
+                                            <field name="decline_message" string="Message" placeholder="Transaction failed"/>
+                                            <field name="decline_timeout" string="Timeout (sec)" required="1"/>
+                                        </group>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </sheet>
+            </form>
+        </field>
+    </record>
+    <!--  WINDOW ACTIONS TO OPEN VIEWS -->
+    <record id="action_payrillium_terminals" model="ir.actions.act_window">
+        <field name="name">Woodforest Terminals</field>
+        <field name="res_model">payrillium.terminal</field>
+        <field name="view_mode">list,form</field>
+        <field name="domain">[('serial', '!=', 'NONE')]</field>
+        <field name="help" type="html">
+            <p>Manage your Woodforest payment terminals here.</p>
+        </field>
+    </record>
+
+    <record id="payrillium_open_settings_action" model="ir.actions.server">
+        <field name="name">Open Woodforest Settings</field>
+        <field name="model_id" ref="model_payrillium_config"/>
+        <field name="state">code</field>
+        <field name="code">config_id = env['payrillium.config'].get_singleton_id()
+title = env['payrillium.config']._get_payment_method_name() + ' Configuration'
+action = {
+'type': 'ir.actions.act_window',
+'name': title,
+'res_model': 'payrillium.config',
+'view_mode': 'form',
+'views': [(env.ref('pos_woodforest.view_payrillium_config_form').id, 'form')],
+'res_id': config_id,
+'target': 'current',
+}</field>
+    </record>
+ <!--    ACTIONS FOR TERMINAL OPERATIONS -->
+    <record id="action_test_payrillium_terminal" model="ir.actions.server">
+        <field name="name">Test Terminal</field>
+        <field name="model_id" ref="model_payrillium_terminal"/>
+        <field name="binding_model_id" ref="model_payrillium_terminal"/>
+        <field name="binding_type">action</field>
+        <field name="state">code</field>
+        <field name="code">
+if len(records) != 1:
+    raise UserError("Please select exactly one terminal to test.")
+action = records.action_check_terminal()
+        </field>
+    </record>
+
+    <record id="action_unlink_payrillium_terminal" model="ir.actions.server">
+        <field name="name">Unlink Terminal</field>
+        <field name="model_id" ref="model_payrillium_terminal"/>
+        <field name="binding_model_id" ref="model_payrillium_terminal"/>
+        <field name="binding_type">action</field>
+        <field name="state">code</field>
+        <field name="code">
+if len(records) != 1:
+    raise UserError("Please select exactly one terminal to unlink.")
+action = records.action_unlink_terminal()
+        </field>
+    </record>
+
+    <!-- 18.3: Temporarily disabled (abort terminal bug pending fix from provider)
+    <record id="action_reset_payrillium_terminal" model="ir.actions.server">
+        <field name="name">Reset Terminal</field>
+        <field name="model_id" ref="model_payrillium_terminal"/>
+        <field name="binding_model_id" ref="model_payrillium_terminal"/>
+        <field name="binding_type">action</field>
+        <field name="state">code</field>
+        <field name="code">
+if len(records) != 1:
+    raise UserError("Please select exactly one terminal to reset.")
+action = records.action_abort_terminal()
+        </field>
+    </record>
+    -->
+
+    <record id="action_test_tips_payrillium_terminal" model="ir.actions.server">
+        <field name="name">Test Tips</field>
+        <field name="model_id" ref="model_payrillium_terminal"/>
+        <field name="binding_model_id" ref="model_payrillium_terminal"/>
+        <field name="binding_type">action</field>
+        <field name="state">code</field>
+        <field name="code">
+if len(records) != 1:
+    raise UserError("Please select exactly one terminal to test tips.")
+action = records.action_test_tips()
+        </field>
+    </record>
+
+    <menuitem id="menu_payrillium_root"
+              name="Woodforest"
+              parent="point_of_sale.menu_point_root"
+              sequence="100"/>
+    <menuitem id="menu_payrillium_settings"
+              name="Settings"
+              parent="menu_payrillium_root"
+              action="pos_woodforest.payrillium_open_settings_action"
+              sequence="5"/>
+
+    <menuitem id="menu_payrillium_terminals"
+              name="Terminals"
+              parent="menu_payrillium_root"
+              action="pos_woodforest.action_payrillium_terminals"
+              sequence="10"/>
+
+    <record id="view_payrillium_terminal_list" model="ir.ui.view">
+        <field name="name">payrillium.terminal.list</field>
+        <field name="model">payrillium.terminal</field>
+        <field name="arch" type="xml">
+            <list string="Woodforest Terminals"
+                  create="0" delete="0" duplicate="0" import="0" export_xlsx="1"
+                  class="o_payrillium_terminal_list">
+                <!-- Hidden helper for widget lock logic -->
+                <field name="session_status" column_invisible="1"/>
+
+                <field name="name" decoration-bf="True"/>
+                <field name="serial" decoration-info="True"/>
+
+                <!-- Session state: green=active, gray=closed, blue=no session -->
+                <field name="session_state_label" string="Session" widget="badge"
+                       decoration-success="session_state_label == 'Open'"
+                       decoration-muted="session_state_label == 'Closed'"
+                       decoration-info="session_state_label == 'No Session'"
+                       decoration-warning="session_state_label in ('Opening', 'Closing')"/>
+
+                <!-- Custom 1-click POS assignment widget -->
+                <field name="pos_config_id" string="Assigned to"
+                       widget="terminal_pos_selector"/>
+
+                <field name="tip_mode_ui" string="Tips" widget="badge" optional="show"
+                       decoration-success="tip_mode_ui == 'amount'"
+                       decoration-warning="tip_mode_ui == 'off'"/>
+                <field name="tip_options_summary" string="Presets" optional="show"/>
+            </list>
+        </field>
+    </record>
+    
+
+
+    <!-- Tree for tip options (used inside terminal form); model is woodforest.tip.option -->
+    <record id="view_payrillium_tip_option_tree" model="ir.ui.view">
+        <field name="name">payrillium.tip.option.list</field>
+        <field name="model">payrillium.tip.option</field>
+        <field name="arch" type="xml">
+            <list editable="bottom">
+                <field name="option_type" column_invisible="1"/>
+                <field name="sequence" widget="handle"/>
+                <field name="value"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_payrillium_terminal_form" model="ir.ui.view">
+        <field name="name">payrillium.terminal.form</field>
+        <field name="model">payrillium.terminal</field>
+        <field name="arch" type="xml">
+            <form string="Woodforest Terminal" create="0" delete="0" class="o_payrillium_full_width_form o_payrillium_terminal_form">
+                <sheet>
+                    <!-- ── Page header banner ── -->
+                    <div class="o_payrillium_form_header o_payrillium_form_header_terminal">
+                        <div class="o_payrillium_form_header_inner">
+                            <span class="o_payrillium_form_header_icon">
+                                <i class="fa fa-calculator"></i>
+                            </span>
+                            <div>
+                                <h2 class="o_payrillium_form_header_title">Terminal</h2>
+                                <p class="o_payrillium_form_header_sub">Configure tips and manage this payment terminal.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="o_payrillium_dashboard_grid">
+                        <!-- Left Column: Sticky terminal info -->
+                        <div class="o_payrillium_sticky_col">
+                            <div class="o_payrillium_card">
+                                <div class="o_payrillium_card_header">
+                                    <div class="o_payrillium_card_icon">
+                                        <i class="fa fa-info-circle"></i>
+                                    </div>
+                                    <h2 class="o_payrillium_card_title">Terminal Info</h2>
+                                </div>
+                                <div class="o_payrillium_card_content">
+                                    <div class="mb-4">
+                                        <label for="name" class="o_support_label text-muted small text-uppercase fw-bold">Display Name</label>
+                                        <h3 class="mt-1 fw-bold"><field name="name" placeholder="e.g. Counter Terminal"/></h3>
+                                    </div>
+                                    <div class="mb-4">
+                                        <label for="serial" class="o_support_label text-muted small text-uppercase fw-bold">Serial Number</label>
+                                        <div class="fs-5 fw-600"><field name="serial" readonly="1"/></div>
+                                    </div>
+                                    <div class="mb-4">
+                                        <label for="pos_config_name" class="o_support_label text-muted small text-uppercase fw-bold">Assigned POS</label>
+                                        <div class="mt-1">
+                                            <field name="pos_config_name" readonly="1" class="fw-bold" style="color: #2563a8;"/>
+                                        </div>
+                                    </div>
+                                    <div invisible="session_state_label == ''">
+                                        <label for="session_state_label" class="o_support_label text-muted small text-uppercase fw-bold">Session Status</label>
+                                        <div class="mt-1">
+                                            <field name="session_state_label" readonly="1" class="fw-bold text-success"/>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Right Column: Configurations -->
+                        <div class="o_payrillium_right_col">
+                            <div class="o_payrillium_card" invisible="serial == 'NONE'">
+                                <div class="o_payrillium_card_header d-flex align-items-center justify-content-between">
+                                    <div class="d-flex align-items-center gap-3">
+                                        <div class="o_payrillium_card_icon">
+                                            <i class="fa fa-money"></i>
+                                        </div>
+                                        <div>
+                                            <h2 class="o_payrillium_card_title">Tip Configuration</h2>
+                                            <p class="text-muted small mb-0">Manage presets for customer gratuity.</p>
+                                        </div>
+                                    </div>
+                                    <!-- Operations merged here -->
+                                    <div class="d-flex gap-2">
+                                        <button name="action_check_terminal"
+                                                type="object"
+                                                string="Check Connectivity"
+                                                class="btn btn-outline-primary btn-sm"
+                                                icon="fa-wifi"
+                                                title="Check if terminal is online"/>
+                                        <button name="action_test_tips"
+                                                type="object"
+                                                string="Push Tips"
+                                                class="btn btn-outline-secondary btn-sm"
+                                                icon="fa-mobile"
+                                                title="Test tip menu on screen"
+                                                invisible="tip_mode_ui == 'off'"/>
+                                        <button name="action_test_approved_view"
+                                                type="object"
+                                                string="Test Approved"
+                                                class="btn btn-outline-success btn-sm"
+                                                icon="fa-check-circle"
+                                                title="Test Approved message on screen"/>
+                                        <button name="action_test_decline_view"
+                                                type="object"
+                                                string="Test Decline"
+                                                class="btn btn-outline-danger btn-sm"
+                                                icon="fa-times-circle"
+                                                title="Test Decline message on screen"/>
+                                    </div>
+                                </div>
+                                
+                                <div class="mb-4 pt-2">
+                                    <label for="tip_mode_ui" class="o_support_label fw-bold mb-2 d-block">Tip Mode</label>
+                                    <field name="tip_mode_ui" widget="radio" options="{'horizontal': true}"/>
+                                </div>
+
+                                <div class="o_payrillium_tip_list_container">
+                                    <!-- Amount table -->
+                                    <div invisible="tip_mode_ui != 'amount'">
+                                        <field name="tip_option_ids_amount" 
+                                               nolabel="1"
+                                               context="{'default_option_type': 'amount'}" 
+                                               options="{'no_create': False}">
+                                            <list editable="bottom" class="o_payrillium_compact_table">
+                                                <field name="sequence" widget="handle"/>
+                                                <field name="value" string="Amount ($)"/>
+                                                <field name="write_date" column_invisible="True"/>
+                                            </list>
+                                        </field>
+                                    </div>
+                                    
+                                    <!-- Percentage table -->
+                                    <div invisible="tip_mode_ui != 'percent'">
+                                        <field name="tip_option_ids_percent" 
+                                               nolabel="1"
+                                               context="{'default_option_type': 'percent'}" 
+                                               options="{'no_create': False}">
+                                            <list editable="bottom" class="o_payrillium_compact_table">
+                                                <field name="sequence" widget="handle"/>
+                                                <field name="value" string="Percentage (%)"/>
+                                                <field name="write_date" column_invisible="True"/>
+                                            </list>
+                                        </field>
+                                    </div>
+                                </div>
+                                
+                                <div class="mt-4 pt-3 border-top" invisible="tip_mode_ui == 'off'">
+                                    <p class="text-muted small mb-0">
+                                        <i class="fa fa-info-circle me-1"/> These presets will be displayed as buttons on the terminal screen during payment.
+                                    </p>
+                                </div>
+                            </div>
+                            
+                            <div class="o_payrillium_card" invisible="serial != 'NONE'">
+                                <div class="text-center py-5">
+                                    <i class="fa fa-cloud-upload fa-4x mb-3 text-muted" style="opacity: 0.3;"/>
+                                    <h3>Virtual Terminal</h3>
+                                    <p class="text-muted">Configuration settings are only available for physical PAX terminals.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Payment Transaction View Inheritance -->
+    <record id="view_payment_transaction_form_woodforest" model="ir.ui.view">
+        <field name="name">payment.transaction.form.woodforest</field>
+        <field name="model">payment.transaction</field>
+        <field name="inherit_id" ref="payment.payment_transaction_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//header" position="inside">
+                <button name="action_woodforest_check_status" 
+                        string="Check Woodforest Status" 
+                        type="object" 
+                        class="btn-secondary"
+                        invisible="provider_code != 'woodforest'"/>
+            </xpath>
+            <xpath expr="//field[@name='reference']" position="after">
+                <field name="execution_id" readonly="1"/>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Invoice (Account Move) View Inheritance -->
+    <record id="view_move_form_woodforest_diagnostic" model="ir.ui.view">
+        <field name="name">account.move.form.woodforest.diagnostic</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="account.view_move_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//header" position="inside">
+                <button name="action_get_payment_status_now"
+                        string="Verify Woodforest Payments"
+                        type="object"
+                        class="btn-secondary"
+                        invisible="move_type not in ('out_invoice', 'out_refund') or state != 'posted' or not payrillium_configured"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

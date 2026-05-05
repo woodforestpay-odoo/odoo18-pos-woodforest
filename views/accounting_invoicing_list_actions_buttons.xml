@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="pos_woodforest.action_invoice_open_token_selector" model="ir.actions.act_window">
+        <field name="name">Select Payment Token</field>
+        <field name="res_model">payment.token.selector</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="list_payment_token_selector_form_view" />
+        <field name="target">new</field>
+        <field name="context">{'active_model': 'account.move', 'active_id': active_id}</field>
+    </record>
+
+    <record id="pos_woodforest.action_invoice_get_pay_status" model="ir.actions.act_window">
+        <field name="name">Get Payment Status</field>
+        <field name="res_model">payment.token.selector</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="list_payment_token_selector_form_view" />
+        <field name="target">new</field>
+        <field name="context">{'active_model': 'account.move', 'active_id': active_id, 'get_status': True}</field>
+    </record>
+</odoo>
+

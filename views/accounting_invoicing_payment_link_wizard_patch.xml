@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>      
+    <record id="payment_link_wizard_form_readonly_amount" model="ir.ui.view">
+      <field name="name">payment.link.wizard.form.readonly.amount</field>
+      <field name="model">payment.link.wizard</field>
+      <field name="inherit_id" ref="payment.payment_link_wizard_view_form"/>
+      <field name="arch" type="xml">
+        <field name="amount" position="attributes">
+          <attribute name="readonly">1</attribute>
+        </field>
+      </field>
+    </record>
+</odoo>
+

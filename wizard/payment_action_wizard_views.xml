@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_payrillium_payment_action_wizard_form" model="ir.ui.view">
+        <field name="name">payrillium.payment.action.wizard.form</field>
+        <field name="model">payrillium.payment.action.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Payment Status">
+                <field name="is_pos_recovery_available" invisible="1"/>
+                <field name="derived_transaction_status" invisible="1"/>
+                <field name="derived_state" invisible="1"/>
+                <field name="available_actions_json" invisible="1"/>
+                <field name="currency_id" invisible="1"/>
+
+                <group>
+                    <field name="transaction_id" string="Transaction" options="{'no_open': True}"/>
+                    <field name="amount" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                    <field name="action_type" string="Recommended Action" widget="badge" 
+                           decoration-warning="action_type == 'void'" 
+                           decoration-success="action_type == 'refund'"
+                           decoration-danger="action_type == 'none'"/>
+                </group>
+
+                <div class="alert alert-info" role="alert" invisible="action_type == 'none'" style="margin-top: 12px;">
+                    <span class="fa fa-check-circle mr-2"/>
+                    Payment found at the bank. Use the buttons below to proceed.
+                </div>
+
+                <div class="alert alert-warning" role="alert" invisible="action_type != 'none'" style="margin-top: 12px;">
+                    <span class="fa fa-exclamation-triangle mr-2"/>
+                    No action available for this payment.
+                </div>
+
+                <div class="alert alert-light" role="alert" invisible="not is_pos_recovery_available or action_type == 'none'" style="margin-top: 12px; border: 1px solid #dee2e6;">
+                    <span class="fa fa-shopping-cart mr-2"/>
+                    This payment can be recovered in the register 
+                    (<field name="pos_session_id" class="fw-bold" style="display:inline;"/>).
+                </div>
+
+                <details style="margin-top: 16px; margin-bottom: 12px;">
+                    <summary style="cursor:pointer; color:#6c757d; font-size:0.85em;">Technical details</summary>
+                    <field name="explanation" nolabel="1" readonly="1" widget="html"
+                           style="width: 100%; padding: 10px; background-color: #f8f9fa; margin-top: 8px;"/>
+                </details>
+
+                <footer>
+                    <button string="Void Payment" name="action_confirm_void" type="object" class="btn-warning"
+                            invisible="action_type != 'void'"/>
+
+                    <button string="Go to Register" name="action_open_pos_session" type="object" class="btn-primary"
+                            invisible="not is_pos_recovery_available or action_type == 'none'"/>
+                            
+                    <button string="Close" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+</odoo>

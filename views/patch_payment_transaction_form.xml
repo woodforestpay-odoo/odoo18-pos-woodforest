@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+  <record id="view_payment_transaction_form_inherit_duplicate" model="ir.ui.view">
+    <field name="name">payment.transaction.form.inherit.duplicate</field>
+    <field name="model">payment.transaction</field>
+    <field name="inherit_id" ref="payment.payment_transaction_form"/>
+    <field name="arch" type="xml">
+      <xpath expr="//form/sheet" position="before">
+        <field name="is_duplicate" invisible="1"/>
+        <div class="alert alert-warning" role="alert" style="margin: 16px;"
+            invisible="not is_duplicate">
+             <strong>Duplicate Payment:</strong> This transaction was created using a payment link that was already used. Please review and consider refund if necessary.
+        </div>
+      </xpath>
+    </field>
+  </record>
+</odoo>
+
+
