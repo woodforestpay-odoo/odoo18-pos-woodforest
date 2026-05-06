@@ -1,34 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Woodforest Payment - Odoo Integration</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <style>
+        .wf-store-tabs .nav-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background-color: transparent;
+            color: #6B7280;
+            border: none;
+            border-radius: 999px;
+            font-size: 12px;
+            font-weight: 500;
+            padding: 8px 16px;
+            text-transform: uppercase;
+            letter-spacing: 0.03em;
+            text-decoration: none;
+            cursor: pointer;
+            transition: background-color 0.2s, color 0.2s, box-shadow 0.2s;
+        }
+        .wf-store-tabs .nav-link.active {
+            background-color: #FFFFFF;
+            color: #111111;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+        .wf-store-tabs .nav-link img {
+            width: 14px;
+            height: 14px;
+        }
+    </style>
+</head>
+<body style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background-color: #ffffff;">
 <section class="oe_container" style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background-color: #ffffff; padding: 0; margin: 0;">
 
   <div class="container p-4 mt-5 text-center">
       <div class="wf-store-tabs" style="display:inline-flex; align-items:center; gap:4px; background-color:#F3F4F6; border-radius:999px; padding:6px; margin-top:8px; margin-bottom:8px;">
-        <ul role="tablist" class="nav" style="display:inline-flex; gap:4px; margin:0; padding:0; border:none; list-style:none;">
+        <ul role="tablist" class="nav nav-pills" style="display:inline-flex; gap:4px; margin:0; padding:0; border:none; list-style:none;">
 
             <li class="nav-item" role="presentation">
-                <a href="#" class="nav-link active wf-tab-link wf-target-overview" role="tab"
-                   style="display:inline-flex; align-items:center; gap:6px; background-color:#FFFFFF; color:#111111; border:none; border-radius:999px; font-size:12px; font-weight:500; padding:8px 16px; text-transform:uppercase; letter-spacing:0.03em; box-shadow:0 1px 3px rgba(0,0,0,0.1); text-decoration:none; cursor:pointer;">
-                    <img src="tab_icon_overview.svg" width="14" height="14" alt="" style="filter: brightness(0);">OVERVIEW
+                <a class="nav-link active" id="overview-tab" data-bs-toggle="pill" data-bs-target="#overview-pane" role="tab" aria-controls="overview-pane" aria-selected="true"
+                   style="display:inline-flex; align-items:center; gap:6px; border:none; border-radius:999px; font-size:12px; font-weight:500; padding:8px 16px; text-transform:uppercase; letter-spacing:0.03em; text-decoration:none; cursor:pointer;" type="button">
+                    <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyOCIgaGVpZ2h0PSIyOCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9IiM2QjcyODAiIHN0cm9rZS13aWR0aD0iMiIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIj48cGF0aCBkPSJNMTIgN3YxNCIvPjxwYXRoIGQ9Ik0zIDE4YTEgMSAwIDAgMS0xLTFWNGExIDEgMCAwIDEgMS0xaDVhNCA0IDAgMCAxIDQgNCA0IDQgMCAwIDEgNC00aDVhMSAxIDAgMCAxIDEgMXYxM2ExIDEgMCAwIDEtMSAxaC02YTMgMyAwIDAgMC0zIDMgMyAzIDAgMCAwLTMtM3oiLz48L3N2Zz4K" width="14" height="14" alt="" style="filter: brightness(0);">OVERVIEW
                 </a>
             </li>
 
             <li class="nav-item" role="presentation">
-                <a href="#" class="nav-link wf-tab-link wf-target-features" role="tab"
-                   style="display:inline-flex; align-items:center; gap:6px; background-color:transparent; color:#6B7280; border:none; border-radius:999px; font-size:12px; font-weight:500; padding:8px 16px; text-transform:uppercase; letter-spacing:0.03em; text-decoration:none; cursor:pointer;"><img src="tab_icon_features.svg" width="14" height="14" alt="">FEATURES</a>
+                <a class="nav-link" id="features-tab" data-bs-toggle="pill" data-bs-target="#features-pane" role="tab" aria-controls="features-pane" aria-selected="false"
+                   style="display:inline-flex; align-items:center; gap:6px; border:none; border-radius:999px; font-size:12px; font-weight:500; padding:8px 16px; text-transform:uppercase; letter-spacing:0.03em; text-decoration:none; cursor:pointer;" type="button"><img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyOCIgaGVpZ2h0PSIyOCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9IiM2QjcyODAiIHN0cm9rZS13aWR0aD0iMiIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIj48cGF0aCBkPSJNNCAxNGExIDEgMCAwIDEtLjc4LTEuNjNsOS45LTEwLjJhLjUuNSAwIDAgMSAuODYuNDZsLTEuOTIgNi4wMkExIDEgMCAwIDAgMTMgMTBoN2ExIDEgMCAwIDEgLjc4IDEuNjNsLTkuOSAxMC4yYS41LjUgMCAwIDEtLjg2LS40NmwxLjkyLTYuMDJBMSAxIDAgMCAwIDExIDE0eiIvPjwvc3ZnPgo=" width="14" height="14" alt="">FEATURES</a>
             </li>
 
             <li class="nav-item" role="presentation">
-                <a href="#" class="nav-link wf-tab-link wf-target-support" role="tab"
-                   style="display:inline-flex; align-items:center; gap:6px; background-color:transparent; color:#6B7280; border:none; border-radius:999px; font-size:12px; font-weight:500; padding:8px 16px; text-transform:uppercase; letter-spacing:0.03em; text-decoration:none; cursor:pointer;"><img src="tab_icon_support.svg" width="14" height="14" alt="">SUPPORT</a>
+                <a class="nav-link" id="support-tab" data-bs-toggle="pill" data-bs-target="#support-pane" role="tab" aria-controls="support-pane" aria-selected="false"
+                   style="display:inline-flex; align-items:center; gap:6px; border:none; border-radius:999px; font-size:12px; font-weight:500; padding:8px 16px; text-transform:uppercase; letter-spacing:0.03em; text-decoration:none; cursor:pointer;" type="button"><img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyOCIgaGVpZ2h0PSIyOCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9IiM2QjcyODAiIHN0cm9rZS13aWR0aD0iMiIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIj48Y2lyY2xlIGN4PSIxMiIgY3k9IjEyIiByPSIxMCIvPjxwYXRoIGQ9Im00LjkzIDQuOTMgNC4yNCA0LjI0Ii8+PHBhdGggZD0ibTE0LjgzIDkuMTcgNC4yNC00LjI0Ii8+PHBhdGggZD0ibTE0LjgzIDE0LjgzIDQuMjQgNC4yNCIvPjxwYXRoIGQ9Im05LjE3IDE0LjgzLTQuMjQgNC4yNCIvPjxjaXJjbGUgY3g9IjEyIiBjeT0iMTIiIHI9IjQiLz48L3N2Zz4K" width="14" height="14" alt="">SUPPORT</a>
             </li>
 
             <li class="nav-item" role="presentation">
-                <a href="#" class="nav-link wf-tab-link wf-target-releasenotes" role="tab"
-                   style="display:inline-flex; align-items:center; gap:6px; background-color:transparent; color:#6B7280; border:none; border-radius:999px; font-size:12px; font-weight:500; padding:8px 16px; text-transform:uppercase; letter-spacing:0.03em; text-decoration:none; cursor:pointer;"><img src="tab_icon_releasenotes.svg" width="14" height="14" alt="">RELEASE NOTES</a>
+                <a class="nav-link" id="releasenotes-tab" data-bs-toggle="pill" data-bs-target="#releasenotes-pane" role="tab" aria-controls="releasenotes-pane" aria-selected="false"
+                   style="display:inline-flex; align-items:center; gap:6px; border:none; border-radius:999px; font-size:12px; font-weight:500; padding:8px 16px; text-transform:uppercase; letter-spacing:0.03em; text-decoration:none; cursor:pointer;" type="button"><img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyOCIgaGVpZ2h0PSIyOCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9IiM2QjcyODAiIHN0cm9rZS13aWR0aD0iMiIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIj48Y2lyY2xlIGN4PSIxMiIgY3k9IjEyIiByPSIxMCIvPjxwYXRoIGQ9Ik0xMiA2djZsNCAyIi8+PC9zdmc+Cg==" width="14" height="14" alt="">RELEASE NOTES</a>
             </li>
 
             <li class="nav-item" role="presentation">
-                <a href="#" class="nav-link wf-tab-link wf-target-faq" role="tab"
-                   style="display:inline-flex; align-items:center; gap:6px; background-color:transparent; color:#6B7280; border:none; border-radius:999px; font-size:12px; font-weight:500; padding:8px 16px; text-transform:uppercase; letter-spacing:0.03em; text-decoration:none; cursor:pointer;"><img src="tab_icon_faq.svg" width="14" height="14" alt="">FAQ</a>
+                <a class="nav-link" id="faq-tab" data-bs-toggle="pill" data-bs-target="#faq-pane" role="tab" aria-controls="faq-pane" aria-selected="false"
+                   style="display:inline-flex; align-items:center; gap:6px; border:none; border-radius:999px; font-size:12px; font-weight:500; padding:8px 16px; text-transform:uppercase; letter-spacing:0.03em; text-decoration:none; cursor:pointer;" type="button"><img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyOCIgaGVpZ2h0PSIyOCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9IiM2QjcyODAiIHN0cm9rZS13aWR0aD0iMiIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIj48cGF0aCBkPSJNMi45OTIgMTYuMzQyYTIgMiAwIDAgMSAuMDk0IDEuMTY3bC0xLjA2NSAzLjI5YTEgMSAwIDAgMCAxLjIzNiAxLjE2OGwzLjQxMy0uOTk4YTIgMiAwIDAgMSAxLjA5OS4wOTIgMTAgMTAgMCAxIDAtNC43NzctNC43MTkiLz48L3N2Zz4K" width="14" height="14" alt="">FAQ</a>
             </li>
 
         </ul>
@@ -37,7 +74,7 @@
     <div class="tab-content p-4 mt-3" style="border-radius:10px; text-align: left;" id="mainTabContent">
 
       <!--Tab 1: Overview-->
-      <div class="tab-pane fade active show wf-tab-pane wf-pane-overview" id="overview" role="tabpanel" style="display:block;">
+      <div class="tab-pane fade active show" id="overview-pane" role="tabpanel" aria-labelledby="overview-tab">
 
           <!-- HERO BANNER -->
           <div style="background-color:#F7F8FA; border-radius:20px; padding:80px 40px 80px 40px; margin-bottom:40px; position:relative; overflow:hidden;">
@@ -244,7 +281,7 @@
       </div>
 
       <!--Tab 2: Features-->
-      <div class="tab-pane fade wf-tab-pane wf-pane-features" id="features" role="tabpanel" style="display:none;">
+      <div class="tab-pane fade" id="features-pane" role="tabpanel" aria-labelledby="features-tab">
 
           <!-- Eyebrow -->
           <p class="wf-anim-enter" data-wf-delay="0" style="font-size:11px; font-weight:600; color:#9CA3AF; text-transform:uppercase; letter-spacing:0.15em; text-align:center; margin-bottom:24px; padding-top:40px;">
@@ -368,7 +405,7 @@
       </div>
 
       <!--Tab 4: Release Notes (pending Figma export)-->
-      <div class="tab-pane fade wf-tab-pane wf-pane-releasenotes" id="releasenotes" role="tabpanel" style="display:none;">
+      <div class="tab-pane fade" id="releasenotes-pane" role="tabpanel" aria-labelledby="releasenotes-tab">
           <div style="padding:60px 20px; text-align:center;">
               <h2 style="font-size:32px; font-weight:700; color:#111111; margin-bottom:16px;">Release Notes</h2>
               <p style="color:#6B7280;">Coming soon...</p>
@@ -376,7 +413,7 @@
       </div>
 
       <!--Tab 5: FAQ-->
-      <div class="tab-pane fade wf-tab-pane wf-pane-faq" id="faq" role="tabpanel" style="display:none;">
+      <div class="tab-pane fade" id="faq-pane" role="tabpanel" aria-labelledby="faq-tab">
         <section style="background-color:#FFFFFF; border-top:1px solid #F3F4F6; padding-top:80px; padding-bottom:120px;">
           <div class="container" style="max-width:800px;">
 
@@ -393,98 +430,98 @@
 
                 <!-- Item 1 -->
                 <div class="wf-faq-item" style="border-bottom:1px solid rgba(0,0,0,0.06);">
-                  <div class="wf-faq-question" style="display:flex; align-items:center; padding:26px 8px; cursor:pointer;">
+                  <div class="wf-faq-question" data-bs-toggle="collapse" data-bs-target="#faq-answer-1" aria-expanded="false" aria-controls="faq-answer-1" style="display:flex; align-items:center; padding:26px 8px; cursor:pointer;">
                     <div style="width:44px; height:44px; min-width:44px; border-radius:10px; background-color:rgba(240,247,237,0.85); display:flex; align-items:center; justify-content:center; margin-right:16px; flex-shrink:0;">
-                      <img src="/pos_woodforest/static/description/faq_icon_zap.svg" width="20" height="20" alt="">
+                      <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9IiMzMTZCMTgiIHN0cm9rZS13aWR0aD0iMiIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIj4KICA8cG9seWdvbiBwb2ludHM9IjEzIDIgMyAxNCAxMiAxNCAxMSAyMiAyMSAxMCAxMiAxMCAxMyAyIi8+Cjwvc3ZnPgo=" width="20" height="20" alt="">
                     </div>
                     <span style="font-family:system-ui,-apple-system,sans-serif; flex:1; font-size:17px; font-weight:600; color:#1A1A1A; line-height:1.4; letter-spacing:-0.01em;">What do I need to get started?</span>
-                    <img class="wf-faq-chevron" src="/pos_woodforest/static/description/faq_icon_chevron.svg" width="16" height="16" style="flex-shrink:0; margin-left:16px;" alt="">
+                    <img class="wf-faq-chevron" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9IiM5Q0EzQUYiIHN0cm9rZS13aWR0aD0iMi41IiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiPgogIDxwb2x5bGluZSBwb2ludHM9IjYgOSAxMiAxNSAxOCA5Ii8+Cjwvc3ZnPgo=" width="16" height="16" style="flex-shrink:0; margin-left:16px;" alt="">
                   </div>
-                  <div class="wf-faq-answer" style="display:none; font-family:system-ui,-apple-system,sans-serif; padding:0 8px 28px 76px; font-size:15px; font-weight:400; color:#6B7280; line-height:1.7; max-width:520px;">
+                  <div class="collapse wf-faq-answer" id="faq-answer-1" style="font-family:system-ui,-apple-system,sans-serif; padding:0 8px 28px 76px; font-size:15px; font-weight:400; color:#6B7280; line-height:1.7; max-width:520px;">
                     You'll need an active Woodforest merchant account and Odoo Point of Sale. Install the integration, connect your credentials, and you're ready to accept payments.
                   </div>
                 </div>
 
                 <!-- Item 2 -->
                 <div class="wf-faq-item" style="border-bottom:1px solid rgba(0,0,0,0.06);">
-                  <div class="wf-faq-question" style="display:flex; align-items:center; padding:26px 8px; cursor:pointer;">
+                  <div class="wf-faq-question" data-bs-toggle="collapse" data-bs-target="#faq-answer-2" aria-expanded="false" aria-controls="faq-answer-2" style="display:flex; align-items:center; padding:26px 8px; cursor:pointer;">
                     <div style="width:44px; height:44px; min-width:44px; border-radius:10px; background-color:rgba(240,247,237,0.85); display:flex; align-items:center; justify-content:center; margin-right:16px; flex-shrink:0;">
-                      <img src="/pos_woodforest/static/description/faq_icon_clock.svg" width="20" height="20" alt="">
+                      <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9IiMzMTZCMTgiIHN0cm9rZS13aWR0aD0iMiIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIj4KICA8Y2lyY2xlIGN4PSIxMiIgY3k9IjEyIiByPSIxMCIvPgogIDxwb2x5bGluZSBwb2ludHM9IjEyIDYgMTIgMTIgMTYgMTQiLz4KPC9zdmc+Cg==" width="20" height="20" alt="">
                     </div>
                     <span style="font-family:system-ui,-apple-system,sans-serif; flex:1; font-size:17px; font-weight:600; color:#1A1A1A; line-height:1.4; letter-spacing:-0.01em;">How long does setup take?</span>
-                    <img class="wf-faq-chevron" src="/pos_woodforest/static/description/faq_icon_chevron.svg" width="16" height="16" style="flex-shrink:0; margin-left:16px;" alt="">
+                    <img class="wf-faq-chevron" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9IiM5Q0EzQUYiIHN0cm9rZS13aWR0aD0iMi41IiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiPgogIDxwb2x5bGluZSBwb2ludHM9IjYgOSAxMiAxNSAxOCA5Ii8+Cjwvc3ZnPgo=" width="16" height="16" style="flex-shrink:0; margin-left:16px;" alt="">
                   </div>
-                  <div class="wf-faq-answer" style="display:none; font-family:system-ui,-apple-system,sans-serif; padding:0 8px 28px 76px; font-size:15px; font-weight:400; color:#6B7280; line-height:1.7; max-width:520px;">
+                  <div class="collapse wf-faq-answer" id="faq-answer-2" style="font-family:system-ui,-apple-system,sans-serif; padding:0 8px 28px 76px; font-size:15px; font-weight:400; color:#6B7280; line-height:1.7; max-width:520px;">
                     Most merchants are live in minutes. No middleware. No complex configuration. Just connect and go.
                   </div>
                 </div>
 
                 <!-- Item 3 -->
                 <div class="wf-faq-item" style="border-bottom:1px solid rgba(0,0,0,0.06);">
-                  <div class="wf-faq-question" style="display:flex; align-items:center; padding:26px 8px; cursor:pointer;">
+                  <div class="wf-faq-question" data-bs-toggle="collapse" data-bs-target="#faq-answer-3" aria-expanded="false" aria-controls="faq-answer-3" style="display:flex; align-items:center; padding:26px 8px; cursor:pointer;">
                     <div style="width:44px; height:44px; min-width:44px; border-radius:10px; background-color:rgba(240,247,237,0.85); display:flex; align-items:center; justify-content:center; margin-right:16px; flex-shrink:0;">
-                      <img src="/pos_woodforest/static/description/faq_icon_creditcard.svg" width="20" height="20" alt="">
+                      <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9IiMzMTZCMTgiIHN0cm9rZS13aWR0aD0iMiIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIj4KICA8cmVjdCB4PSIxIiB5PSI0IiB3aWR0aD0iMjIiIGhlaWdodD0iMTYiIHJ4PSIyIiByeT0iMiIvPgogIDxsaW5lIHgxPSIxIiB5MT0iMTAiIHgyPSIyMyIgeTI9IjEwIi8+Cjwvc3ZnPgo=" width="20" height="20" alt="">
                     </div>
                     <span style="font-family:system-ui,-apple-system,sans-serif; flex:1; font-size:17px; font-weight:600; color:#1A1A1A; line-height:1.4; letter-spacing:-0.01em;">What payment types are supported?</span>
-                    <img class="wf-faq-chevron" src="/pos_woodforest/static/description/faq_icon_chevron.svg" width="16" height="16" style="flex-shrink:0; margin-left:16px;" alt="">
+                    <img class="wf-faq-chevron" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9IiM5Q0EzQUYiIHN0cm9rZS13aWR0aD0iMi41IiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiPgogIDxwb2x5bGluZSBwb2ludHM9IjYgOSAxMiAxNSAxOCA5Ii8+Cjwvc3ZnPgo=" width="16" height="16" style="flex-shrink:0; margin-left:16px;" alt="">
                   </div>
-                  <div class="wf-faq-answer" style="display:none; font-family:system-ui,-apple-system,sans-serif; padding:0 8px 28px 76px; font-size:15px; font-weight:400; color:#6B7280; line-height:1.7; max-width:520px;">
+                  <div class="collapse wf-faq-answer" id="faq-answer-3" style="font-family:system-ui,-apple-system,sans-serif; padding:0 8px 28px 76px; font-size:15px; font-weight:400; color:#6B7280; line-height:1.7; max-width:520px;">
                     Chip. Tap. Contactless. All processed directly inside Odoo through your Woodforest terminal.
                   </div>
                 </div>
 
                 <!-- Item 4 -->
                 <div class="wf-faq-item" style="border-bottom:1px solid rgba(0,0,0,0.06);">
-                  <div class="wf-faq-question" style="display:flex; align-items:center; padding:26px 8px; cursor:pointer;">
+                  <div class="wf-faq-question" data-bs-toggle="collapse" data-bs-target="#faq-answer-4" aria-expanded="false" aria-controls="faq-answer-4" style="display:flex; align-items:center; padding:26px 8px; cursor:pointer;">
                     <div style="width:44px; height:44px; min-width:44px; border-radius:10px; background-color:rgba(240,247,237,0.85); display:flex; align-items:center; justify-content:center; margin-right:16px; flex-shrink:0;">
-                      <img src="/pos_woodforest/static/description/faq_icon_link2.svg" width="20" height="20" alt="">
+                      <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9IiMzMTZCMTgiIHN0cm9rZS13aWR0aD0iMiIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIj4KICA8cGF0aCBkPSJNMTUgN2gzYTUgNSAwIDAgMSA1IDUgNSA1IDAgMCAxLTUgNWgtM20tNiAwSDZhNSA1IDAgMCAxLTUtNSA1IDUgMCAwIDEgNS01aDMiLz4KICA8bGluZSB4MT0iOCIgeTE9IjEyIiB4Mj0iMTYiIHkyPSIxMiIvPgo8L3N2Zz4K" width="20" height="20" alt="">
                     </div>
                     <span style="font-family:system-ui,-apple-system,sans-serif; flex:1; font-size:17px; font-weight:600; color:#1A1A1A; line-height:1.4; letter-spacing:-0.01em;">Can I send secure payment links?</span>
-                    <img class="wf-faq-chevron" src="/pos_woodforest/static/description/faq_icon_chevron.svg" width="16" height="16" style="flex-shrink:0; margin-left:16px;" alt="">
+                    <img class="wf-faq-chevron" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9IiM5Q0EzQUYiIHN0cm9rZS13aWR0aD0iMi41IiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiPgogIDxwb2x5bGluZSBwb2ludHM9IjYgOSAxMiAxNSAxOCA5Ii8+Cjwvc3ZnPgo=" width="16" height="16" style="flex-shrink:0; margin-left:16px;" alt="">
                   </div>
-                  <div class="wf-faq-answer" style="display:none; font-family:system-ui,-apple-system,sans-serif; padding:0 8px 28px 76px; font-size:15px; font-weight:400; color:#6B7280; line-height:1.7; max-width:520px;">
+                  <div class="collapse wf-faq-answer" id="faq-answer-4" style="font-family:system-ui,-apple-system,sans-serif; padding:0 8px 28px 76px; font-size:15px; font-weight:400; color:#6B7280; line-height:1.7; max-width:520px;">
                     Yes. Generate secure payment links from Odoo and get paid remotely in seconds.
                   </div>
                 </div>
 
                 <!-- Item 5 -->
                 <div class="wf-faq-item" style="border-bottom:1px solid rgba(0,0,0,0.06);">
-                  <div class="wf-faq-question" style="display:flex; align-items:center; padding:26px 8px; cursor:pointer;">
+                  <div class="wf-faq-question" data-bs-toggle="collapse" data-bs-target="#faq-answer-5" aria-expanded="false" aria-controls="faq-answer-5" style="display:flex; align-items:center; padding:26px 8px; cursor:pointer;">
                     <div style="width:44px; height:44px; min-width:44px; border-radius:10px; background-color:rgba(240,247,237,0.85); display:flex; align-items:center; justify-content:center; margin-right:16px; flex-shrink:0;">
-                      <img src="/pos_woodforest/static/description/faq_icon_rotateccw.svg" width="20" height="20" alt="">
+                      <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9IiMzMTZCMTgiIHN0cm9rZS13aWR0aD0iMiIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIj4KICA8cGF0aCBkPSJNMyAxMmE5IDkgMCAxIDAgOS05IDkuNzUgOS43NSAwIDAgMC02Ljc0IDIuNzRMMyA4Ii8+CiAgPHBhdGggZD0iTTMgM3Y1aDUiLz4KPC9zdmc+Cg==" width="20" height="20" alt="">
                     </div>
                     <span style="font-family:system-ui,-apple-system,sans-serif; flex:1; font-size:17px; font-weight:600; color:#1A1A1A; line-height:1.4; letter-spacing:-0.01em;">How are refunds processed?</span>
-                    <img class="wf-faq-chevron" src="/pos_woodforest/static/description/faq_icon_chevron.svg" width="16" height="16" style="flex-shrink:0; margin-left:16px;" alt="">
+                    <img class="wf-faq-chevron" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9IiM5Q0EzQUYiIHN0cm9rZS13aWR0aD0iMi41IiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiPgogIDxwb2x5bGluZSBwb2ludHM9IjYgOSAxMiAxNSAxOCA5Ii8+Cjwvc3ZnPgo=" width="16" height="16" style="flex-shrink:0; margin-left:16px;" alt="">
                   </div>
-                  <div class="wf-faq-answer" style="display:none; font-family:system-ui,-apple-system,sans-serif; padding:0 8px 28px 76px; font-size:15px; font-weight:400; color:#6B7280; line-height:1.7; max-width:520px;">
+                  <div class="collapse wf-faq-answer" id="faq-answer-5" style="font-family:system-ui,-apple-system,sans-serif; padding:0 8px 28px 76px; font-size:15px; font-weight:400; color:#6B7280; line-height:1.7; max-width:520px;">
                     Refunds are initiated inside Odoo and synced automatically to Woodforest. Fully tracked. Fully reconciled.
                   </div>
                 </div>
 
                 <!-- Item 6 -->
                 <div class="wf-faq-item" style="border-bottom:1px solid rgba(0,0,0,0.06);">
-                  <div class="wf-faq-question" style="display:flex; align-items:center; padding:26px 8px; cursor:pointer;">
+                  <div class="wf-faq-question" data-bs-toggle="collapse" data-bs-target="#faq-answer-6" aria-expanded="false" aria-controls="faq-answer-6" style="display:flex; align-items:center; padding:26px 8px; cursor:pointer;">
                     <div style="width:44px; height:44px; min-width:44px; border-radius:10px; background-color:rgba(240,247,237,0.85); display:flex; align-items:center; justify-content:center; margin-right:16px; flex-shrink:0;">
-                      <img src="/pos_woodforest/static/description/faq_icon_shield.svg" width="20" height="20" alt="">
+                      <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9IiMzMTZCMTgiIHN0cm9rZS13aWR0aD0iMiIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIj4KICA8cGF0aCBkPSJNMTIgMjJzOC00IDgtMTBWNWwtOC0zLTggM3Y3YzAgNiA4IDEwIDggMTB6Ii8+Cjwvc3ZnPgo=" width="20" height="20" alt="">
                     </div>
                     <span style="font-family:system-ui,-apple-system,sans-serif; flex:1; font-size:17px; font-weight:600; color:#1A1A1A; line-height:1.4; letter-spacing:-0.01em;">Is this an official Woodforest integration?</span>
-                    <img class="wf-faq-chevron" src="/pos_woodforest/static/description/faq_icon_chevron.svg" width="16" height="16" style="flex-shrink:0; margin-left:16px;" alt="">
+                    <img class="wf-faq-chevron" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9IiM5Q0EzQUYiIHN0cm9rZS13aWR0aD0iMi41IiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiPgogIDxwb2x5bGluZSBwb2ludHM9IjYgOSAxMiAxNSAxOCA5Ii8+Cjwvc3ZnPgo=" width="16" height="16" style="flex-shrink:0; margin-left:16px;" alt="">
                   </div>
-                  <div class="wf-faq-answer" style="display:none; font-family:system-ui,-apple-system,sans-serif; padding:0 8px 28px 76px; font-size:15px; font-weight:400; color:#6B7280; line-height:1.7; max-width:520px;">
+                  <div class="collapse wf-faq-answer" id="faq-answer-6" style="font-family:system-ui,-apple-system,sans-serif; padding:0 8px 28px 76px; font-size:15px; font-weight:400; color:#6B7280; line-height:1.7; max-width:520px;">
                     Yes. This is the official Woodforest Acceptance integration for Odoo, built for reliability and long-term support.
                   </div>
                 </div>
 
                 <!-- Item 7 -->
                 <div class="wf-faq-item" style="border-bottom:1px solid rgba(0,0,0,0.06);">
-                  <div class="wf-faq-question" style="display:flex; align-items:center; padding:26px 8px; cursor:pointer;">
+                  <div class="wf-faq-question" data-bs-toggle="collapse" data-bs-target="#faq-answer-7" aria-expanded="false" aria-controls="faq-answer-7" style="display:flex; align-items:center; padding:26px 8px; cursor:pointer;">
                     <div style="width:44px; height:44px; min-width:44px; border-radius:10px; background-color:rgba(240,247,237,0.85); display:flex; align-items:center; justify-content:center; margin-right:16px; flex-shrink:0;">
-                      <img src="/pos_woodforest/static/description/faq_icon_trendingup.svg" width="20" height="20" alt="">
+                      <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9IiMzMTZCMTgiIHN0cm9rZS13aWR0aD0iMiIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIj4KICA8cG9seWxpbmUgcG9pbnRzPSIyMyA2IDEzLjUgMTUuNSA4LjUgMTAuNSAxIDE4Ii8+CiAgPHBvbHlsaW5lIHBvaW50cz0iMTcgNiAyMyA2IDIzIDEyIi8+Cjwvc3ZnPgo=" width="20" height="20" alt="">
                     </div>
                     <span style="font-family:system-ui,-apple-system,sans-serif; flex:1; font-size:17px; font-weight:600; color:#1A1A1A; line-height:1.4; letter-spacing:-0.01em;">Why choose Woodforest for Odoo?</span>
-                    <img class="wf-faq-chevron" src="/pos_woodforest/static/description/faq_icon_chevron.svg" width="16" height="16" style="flex-shrink:0; margin-left:16px;" alt="">
+                    <img class="wf-faq-chevron" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9IiM5Q0EzQUYiIHN0cm9rZS13aWR0aD0iMi41IiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiPgogIDxwb2x5bGluZSBwb2ludHM9IjYgOSAxMiAxNSAxOCA5Ii8+Cjwvc3ZnPgo=" width="16" height="16" style="flex-shrink:0; margin-left:16px;" alt="">
                   </div>
-                  <div class="wf-faq-answer" style="display:none; font-family:system-ui,-apple-system,sans-serif; padding:0 8px 28px 76px; font-size:15px; font-weight:400; color:#6B7280; line-height:1.7; max-width:520px;">
+                  <div class="collapse wf-faq-answer" id="faq-answer-7" style="font-family:system-ui,-apple-system,sans-serif; padding:0 8px 28px 76px; font-size:15px; font-weight:400; color:#6B7280; line-height:1.7; max-width:520px;">
                     Bank-backed processing. Intelligent routing for higher approvals. Real merchant support when it matters.
                   </div>
                 </div>
@@ -494,7 +531,7 @@
         </section>
       </div>
 
-      <div class="tab-pane fade wf-tab-pane wf-pane-support" id="support" role="tabpanel" style="display:none;">
+      <div class="tab-pane fade" id="support-pane" role="tabpanel" aria-labelledby="support-tab">
 
 
 <section style="background-color: #ffffff; border-top: 1px solid #f3f4f6; padding-top: 120px; padding-bottom: 140px;">
@@ -523,7 +560,7 @@
         <!-- Card 1: Merchant Account Questions — filled green button -->
         <div class="wf-hover-support" style="display: flex; flex-direction: column; background-color: #ffffff; padding: 24px; border-radius: 18px; border: 1px solid #F3F4F6; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06), 0 1px 3px rgba(0, 0, 0, 0.04); min-height: 184px; transition: all 0.3s ease;">
           <div style="display: flex; align-items: flex-start; gap: 12px; margin-bottom: 20px;">
-            <img src="/pos_woodforest/static/description/support_icon_building.svg" width="20" height="20" alt="" style="flex-shrink: 0; margin-top: 2px; opacity: 0.7;">
+            <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyOCIgaGVpZ2h0PSIyOCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9IiMzMTZCMTgiIHN0cm9rZS13aWR0aD0iMiIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIj4KICA8cGF0aCBkPSJNNiAyMlY0YTIgMiAwIDAgMSAyLTJoOGEyIDIgMCAwIDEgMiAydjE4WiIvPgogIDxwYXRoIGQ9Ik02IDEySDRhMiAyIDAgMCAwLTIgMnY2YTIgMiAwIDAgMCAyIDJoMiIvPgogIDxwYXRoIGQ9Ik0xOCA5aDJhMiAyIDAgMCAxIDIgMnY5YTIgMiAwIDAgMS0yIDJoLTIiLz4KICA8cGF0aCBkPSJNMTAgNmg0Ii8+CiAgPHBhdGggZD0iTTEwIDEwaDQiLz4KICA8cGF0aCBkPSJNMTAgMTRoNCIvPgogIDxwYXRoIGQ9Ik0xMCAxOGg0Ii8+Cjwvc3ZnPgo=" width="20" height="20" alt="" style="flex-shrink: 0; margin-top: 2px; opacity: 0.7;">
             <div style="flex: 1;">
               <h3 style="font-size: 20px; font-weight: 700; color: #1A1A1A; margin-bottom: 8px; letter-spacing: -0.01em; line-height: 1.3; font-family: Raleway, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;">
                 Merchant Account Questions
@@ -542,7 +579,7 @@
         <!-- Card 2: Integration Questions — outline button -->
         <div class="wf-hover-support" style="display: flex; flex-direction: column; background-color: #ffffff; padding: 24px; border-radius: 18px; border: 1px solid #F3F4F6; box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04), 0 1px 2px rgba(0, 0, 0, 0.02); min-height: 184px; transition: all 0.3s ease;">
           <div style="display: flex; align-items: flex-start; gap: 12px; margin-bottom: 20px;">
-            <img src="/pos_woodforest/static/description/support_icon_settings.svg" width="20" height="20" alt="" style="flex-shrink: 0; margin-top: 2px; opacity: 0.7;">
+            <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyOCIgaGVpZ2h0PSIyOCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9IiMzMTZCMTgiIHN0cm9rZS13aWR0aD0iMiIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIj4KICA8cGF0aCBkPSJNOS42NzEgNC4xMzZhMi4zNCAyLjM0IDAgMCAxIDQuNjU5IDAgMi4zNCAyLjM0IDAgMCAwIDMuMzE5IDEuOTE1IDIuMzQgMi4zNCAwIDAgMSAyLjMzIDQuMDMzIDIuMzQgMi4zNCAwIDAgMCAwIDMuODMxIDIuMzQgMi4zNCAwIDAgMS0yLjMzIDQuMDMzIDIuMzQgMi4zNCAwIDAgMC0zLjMxOSAxLjkxNSAyLjM0IDIuMzQgMCAwIDEtNC42NTkgMCAyLjM0IDIuMzQgMCAwIDAtMy4zMi0xLjkxNSAyLjM0IDIuMzQgMCAwIDEtMi4zMy00LjAzMyAyLjM0IDIuMzQgMCAwIDAgMC0zLjgzMUEyLjM0IDIuMzQgMCAwIDEgNi4zNSA2LjA1MWEyLjM0IDIuMzQgMCAwIDAgMy4zMTktMS45MTUiLz4KICA8Y2lyY2xlIGN4PSIxMiIgY3k9IjEyIiByPSIzIi8+Cjwvc3ZnPgo=" width="20" height="20" alt="" style="flex-shrink: 0; margin-top: 2px; opacity: 0.7;">
             <div style="flex: 1;">
               <h3 style="font-size: 20px; font-weight: 700; color: #1A1A1A; margin-bottom: 8px; letter-spacing: -0.01em; line-height: 1.3; font-family: Raleway, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;">
                 Integration Questions
@@ -561,7 +598,7 @@
         <!-- Card 3: Sales / Partnerships — outline button -->
         <div class="wf-hover-support" style="display: flex; flex-direction: column; background-color: #ffffff; padding: 24px; border-radius: 18px; border: 1px solid #F3F4F6; box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04), 0 1px 2px rgba(0, 0, 0, 0.02); min-height: 184px; transition: all 0.3s ease;">
           <div style="display: flex; align-items: flex-start; gap: 12px; margin-bottom: 20px;">
-            <img src="/pos_woodforest/static/description/support_icon_handshake.svg" width="20" height="20" alt="" style="flex-shrink: 0; margin-top: 2px; opacity: 0.7;">
+            <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyOCIgaGVpZ2h0PSIyOCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9IiMzMTZCMTgiIHN0cm9rZS13aWR0aD0iMiIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIj4KICA8cGF0aCBkPSJtMTEgMTcgMiAyYTEgMSAwIDEgMCAzLTMiLz4KICA8cGF0aCBkPSJtMTQgMTQgMi41IDIuNWExIDEgMCAxIDAgMy0zbC0zLjg4LTMuODhhMyAzIDAgMCAwLTQuMjQgMGwtLjg4Ljg4YTEgMSAwIDEgMS0zLTNsMi44MS0yLjgxYTUuNzkgNS43OSAwIDAgMSA3LjA2LS44N2wuNDcuMjhhMiAyIDAgMCAwIDEuNDIuMjVMMjEgNCIvPgogIDxwYXRoIGQ9Im0yMSAzIDEgMTFoLTIiLz4KICA8cGF0aCBkPSJNMyAzIDIgMTRsNi41IDYuNWExIDEgMCAxIDAgMy0zIi8+CiAgPHBhdGggZD0iTTMgNGg4Ii8+Cjwvc3ZnPgo=" width="20" height="20" alt="" style="flex-shrink: 0; margin-top: 2px; opacity: 0.7;">
             <div style="flex: 1;">
               <h3 style="font-size: 20px; font-weight: 700; color: #1A1A1A; margin-bottom: 8px; letter-spacing: -0.01em; line-height: 1.3; font-family: Raleway, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;">
                 Sales / Partnerships
@@ -575,16 +612,9 @@
           <a href="mailto:sales@woodforestpay.com" class="wf-hover-btn-outline" style="display: inline-flex; align-items: center; justify-content: center; height: 40px; border-radius: 999px; padding-left: 22px; padding-right: 22px; background-color: transparent; border: 1.5px solid #2D5E15; color: #2D5E15; font-size: 14px; font-weight: 500; transition: all 0.3s ease; text-decoration: none; font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;">
             Contact Sales
           </a>
-        </div>
-
-        </div>
-      </div>
-
     </div>
   </div>
 </section>
-      </div>
-
-    </div>
-  </div>
-</section>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
