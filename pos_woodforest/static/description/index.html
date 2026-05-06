@@ -517,150 +517,203 @@
               </h2>
             </div>
 
-            <!-- BELOW: FAQ Accordion -->
-            <div class="wf-faq-accordion">
+            <!-- FAQ Accordion (Odoo Store safe pattern) -->
+            <div class="accordion accordion-flush" id="woodforestFaqAccordion">
 
-              <!-- Item 1 -->
-              <div class="wf-faq-item" style="border-bottom:1px solid rgba(0,0,0,0.06);">
-                <div class="wf-faq-question"
-                  style="display:flex; align-items:center; padding:26px 8px; cursor:pointer;">
-                  <div
-                    style="width:44px; height:44px; min-width:44px; border-radius:10px; background-color:rgba(240,247,237,0.85); display:flex; align-items:center; justify-content:center; margin-right:16px; flex-shrink:0;">
-                    <img src="faq_icon_zap.svg" width="20" height="20" alt="">
+              <!-- FAQ 1 -->
+              <div class="accordion-item" style="margin-bottom:1rem; overflow:hidden; background-color:white; border:1px solid #E5E7EB !important; border-radius:12px !important;">
+                <h2 class="accordion-header" style="border-radius:12px;">
+                  <a class="accordion-button"
+                     type="button"
+                     data-bs-toggle="collapse"
+                     data-bs-target="#wf-faq-collapse-1"
+                     data-toggle="collapse"
+                     data-target="#wf-faq-collapse-1"
+                     aria-expanded="true"
+                     aria-controls="wf-faq-collapse-1"
+                     style="box-shadow:unset; border:none !important; padding:1.25rem 1.5rem !important; font-weight:600 !important; font-size:17px; color:#1A1A1A !important; background-color:#FFFFFF !important;">
+                    <span style="display:inline-block; width:44px; height:44px; min-width:44px; border-radius:10px; background-color:rgba(240,247,237,0.85); text-align:center; margin-right:16px; vertical-align:middle;">
+                      <img src="faq_icon_zap.svg" width="20" height="20" alt="" style="width:20px; height:20px; margin-top:12px;">
+                    </span>
+                    <span style="vertical-align:middle;">What do I need to get started?</span>
+                  </a>
+                </h2>
+                <div id="wf-faq-collapse-1"
+                     class="accordion-collapse collapse show"
+                     data-bs-parent="#woodforestFaqAccordion"
+                     style="border-top:1px solid #E5E7EB;">
+                  <div class="accordion-body"
+                       style="background-color:#FFFFFF; line-height:1.7; font-size:15px; padding:1.5rem !important; color:#6B7280;">
+                    You'll need an active Woodforest merchant account and Odoo Point of Sale. Install the integration, connect your credentials, and you're ready to accept payments.
                   </div>
-                  <span
-                    style="font-family:system-ui,-apple-system,sans-serif; flex:1; font-size:17px; font-weight:600; color:#1A1A1A; line-height:1.4; letter-spacing:-0.01em;">What
-                    do I need to get started?</span>
-                  <img class="wf-faq-chevron" src="faq_icon_chevron.svg" width="16" height="16"
-                    style="flex-shrink:0; margin-left:16px;" alt="">
-                </div>
-                <div class="wf-faq-answer"
-                  style="display:none; font-family:system-ui,-apple-system,sans-serif; padding:0 8px 28px 76px; font-size:15px; font-weight:400; color:#6B7280; line-height:1.7; max-width:520px;">
-                  You'll need an active Woodforest merchant account and Odoo Point of Sale. Install the integration,
-                  connect your credentials, and you're ready to accept payments.
                 </div>
               </div>
-
-              <!-- Item 2 -->
-              <div class="wf-faq-item" style="border-bottom:1px solid rgba(0,0,0,0.06);">
-                <div class="wf-faq-question"
-                  style="display:flex; align-items:center; padding:26px 8px; cursor:pointer;">
-                  <div
-                    style="width:44px; height:44px; min-width:44px; border-radius:10px; background-color:rgba(240,247,237,0.85); display:flex; align-items:center; justify-content:center; margin-right:16px; flex-shrink:0;">
-                    <img src="faq_icon_clock.svg" width="20" height="20" alt="">
+              <!-- FAQ 2 -->
+              <div class="accordion-item" style="margin-bottom:1rem; overflow:hidden; background-color:white; border:1px solid #E5E7EB !important; border-radius:12px !important;">
+                <h2 class="accordion-header" style="border-radius:12px;">
+                  <a class="accordion-button collapsed"
+                     type="button"
+                     data-bs-toggle="collapse"
+                     data-bs-target="#wf-faq-collapse-2"
+                     data-toggle="collapse"
+                     data-target="#wf-faq-collapse-2"
+                     aria-expanded="false"
+                     aria-controls="wf-faq-collapse-2"
+                     style="box-shadow:unset; border:none !important; padding:1.25rem 1.5rem !important; font-weight:600 !important; font-size:17px; color:#1A1A1A !important; background-color:#FFFFFF !important;">
+                    <span style="display:inline-block; width:44px; height:44px; min-width:44px; border-radius:10px; background-color:rgba(240,247,237,0.85); text-align:center; margin-right:16px; vertical-align:middle;">
+                      <img src="faq_icon_clock.svg" width="20" height="20" alt="" style="width:20px; height:20px; margin-top:12px;">
+                    </span>
+                    <span style="vertical-align:middle;">How long does setup take?</span>
+                  </a>
+                </h2>
+                <div id="wf-faq-collapse-2"
+                     class="accordion-collapse collapse"
+                     data-bs-parent="#woodforestFaqAccordion"
+                     style="border-top:1px solid #E5E7EB;">
+                  <div class="accordion-body"
+                       style="background-color:#FFFFFF; line-height:1.7; font-size:15px; padding:1.5rem !important; color:#6B7280;">
+                    Most merchants are live in minutes. No middleware. No complex configuration. Just connect and go.
                   </div>
-                  <span
-                    style="font-family:system-ui,-apple-system,sans-serif; flex:1; font-size:17px; font-weight:600; color:#1A1A1A; line-height:1.4; letter-spacing:-0.01em;">How
-                    long does setup take?</span>
-                  <img class="wf-faq-chevron" src="faq_icon_chevron.svg" width="16" height="16"
-                    style="flex-shrink:0; margin-left:16px;" alt="">
-                </div>
-                <div class="wf-faq-answer"
-                  style="display:none; font-family:system-ui,-apple-system,sans-serif; padding:0 8px 28px 76px; font-size:15px; font-weight:400; color:#6B7280; line-height:1.7; max-width:520px;">
-                  Most merchants are live in minutes. No middleware. No complex configuration. Just connect and go.
                 </div>
               </div>
-
-              <!-- Item 3 -->
-              <div class="wf-faq-item" style="border-bottom:1px solid rgba(0,0,0,0.06);">
-                <div class="wf-faq-question"
-                  style="display:flex; align-items:center; padding:26px 8px; cursor:pointer;">
-                  <div
-                    style="width:44px; height:44px; min-width:44px; border-radius:10px; background-color:rgba(240,247,237,0.85); display:flex; align-items:center; justify-content:center; margin-right:16px; flex-shrink:0;">
-                    <img src="faq_icon_creditcard.svg" width="20" height="20" alt="">
+              <!-- FAQ 3 -->
+              <div class="accordion-item" style="margin-bottom:1rem; overflow:hidden; background-color:white; border:1px solid #E5E7EB !important; border-radius:12px !important;">
+                <h2 class="accordion-header" style="border-radius:12px;">
+                  <a class="accordion-button collapsed"
+                     type="button"
+                     data-bs-toggle="collapse"
+                     data-bs-target="#wf-faq-collapse-3"
+                     data-toggle="collapse"
+                     data-target="#wf-faq-collapse-3"
+                     aria-expanded="false"
+                     aria-controls="wf-faq-collapse-3"
+                     style="box-shadow:unset; border:none !important; padding:1.25rem 1.5rem !important; font-weight:600 !important; font-size:17px; color:#1A1A1A !important; background-color:#FFFFFF !important;">
+                    <span style="display:inline-block; width:44px; height:44px; min-width:44px; border-radius:10px; background-color:rgba(240,247,237,0.85); text-align:center; margin-right:16px; vertical-align:middle;">
+                      <img src="faq_icon_creditcard.svg" width="20" height="20" alt="" style="width:20px; height:20px; margin-top:12px;">
+                    </span>
+                    <span style="vertical-align:middle;">What payment types are supported?</span>
+                  </a>
+                </h2>
+                <div id="wf-faq-collapse-3"
+                     class="accordion-collapse collapse"
+                     data-bs-parent="#woodforestFaqAccordion"
+                     style="border-top:1px solid #E5E7EB;">
+                  <div class="accordion-body"
+                       style="background-color:#FFFFFF; line-height:1.7; font-size:15px; padding:1.5rem !important; color:#6B7280;">
+                    Chip. Tap. Contactless. All processed directly inside Odoo through your Woodforest terminal.
                   </div>
-                  <span
-                    style="font-family:system-ui,-apple-system,sans-serif; flex:1; font-size:17px; font-weight:600; color:#1A1A1A; line-height:1.4; letter-spacing:-0.01em;">What
-                    payment types are supported?</span>
-                  <img class="wf-faq-chevron" src="faq_icon_chevron.svg" width="16" height="16"
-                    style="flex-shrink:0; margin-left:16px;" alt="">
-                </div>
-                <div class="wf-faq-answer"
-                  style="display:none; font-family:system-ui,-apple-system,sans-serif; padding:0 8px 28px 76px; font-size:15px; font-weight:400; color:#6B7280; line-height:1.7; max-width:520px;">
-                  Chip. Tap. Contactless. All processed directly inside Odoo through your Woodforest terminal.
                 </div>
               </div>
-
-              <!-- Item 4 -->
-              <div class="wf-faq-item" style="border-bottom:1px solid rgba(0,0,0,0.06);">
-                <div class="wf-faq-question"
-                  style="display:flex; align-items:center; padding:26px 8px; cursor:pointer;">
-                  <div
-                    style="width:44px; height:44px; min-width:44px; border-radius:10px; background-color:rgba(240,247,237,0.85); display:flex; align-items:center; justify-content:center; margin-right:16px; flex-shrink:0;">
-                    <img src="faq_icon_link2.svg" width="20" height="20" alt="">
+              <!-- FAQ 4 -->
+              <div class="accordion-item" style="margin-bottom:1rem; overflow:hidden; background-color:white; border:1px solid #E5E7EB !important; border-radius:12px !important;">
+                <h2 class="accordion-header" style="border-radius:12px;">
+                  <a class="accordion-button collapsed"
+                     type="button"
+                     data-bs-toggle="collapse"
+                     data-bs-target="#wf-faq-collapse-4"
+                     data-toggle="collapse"
+                     data-target="#wf-faq-collapse-4"
+                     aria-expanded="false"
+                     aria-controls="wf-faq-collapse-4"
+                     style="box-shadow:unset; border:none !important; padding:1.25rem 1.5rem !important; font-weight:600 !important; font-size:17px; color:#1A1A1A !important; background-color:#FFFFFF !important;">
+                    <span style="display:inline-block; width:44px; height:44px; min-width:44px; border-radius:10px; background-color:rgba(240,247,237,0.85); text-align:center; margin-right:16px; vertical-align:middle;">
+                      <img src="faq_icon_link2.svg" width="20" height="20" alt="" style="width:20px; height:20px; margin-top:12px;">
+                    </span>
+                    <span style="vertical-align:middle;">Can I send secure payment links?</span>
+                  </a>
+                </h2>
+                <div id="wf-faq-collapse-4"
+                     class="accordion-collapse collapse"
+                     data-bs-parent="#woodforestFaqAccordion"
+                     style="border-top:1px solid #E5E7EB;">
+                  <div class="accordion-body"
+                       style="background-color:#FFFFFF; line-height:1.7; font-size:15px; padding:1.5rem !important; color:#6B7280;">
+                    Yes. Generate secure payment links from Odoo and get paid remotely in seconds.
                   </div>
-                  <span
-                    style="font-family:system-ui,-apple-system,sans-serif; flex:1; font-size:17px; font-weight:600; color:#1A1A1A; line-height:1.4; letter-spacing:-0.01em;">Can
-                    I send secure payment links?</span>
-                  <img class="wf-faq-chevron" src="faq_icon_chevron.svg" width="16" height="16"
-                    style="flex-shrink:0; margin-left:16px;" alt="">
-                </div>
-                <div class="wf-faq-answer"
-                  style="display:none; font-family:system-ui,-apple-system,sans-serif; padding:0 8px 28px 76px; font-size:15px; font-weight:400; color:#6B7280; line-height:1.7; max-width:520px;">
-                  Yes. Generate secure payment links from Odoo and get paid remotely in seconds.
                 </div>
               </div>
-
-              <!-- Item 5 -->
-              <div class="wf-faq-item" style="border-bottom:1px solid rgba(0,0,0,0.06);">
-                <div class="wf-faq-question"
-                  style="display:flex; align-items:center; padding:26px 8px; cursor:pointer;">
-                  <div
-                    style="width:44px; height:44px; min-width:44px; border-radius:10px; background-color:rgba(240,247,237,0.85); display:flex; align-items:center; justify-content:center; margin-right:16px; flex-shrink:0;">
-                    <img src="faq_icon_rotateccw.svg" width="20" height="20" alt="">
+              <!-- FAQ 5 -->
+              <div class="accordion-item" style="margin-bottom:1rem; overflow:hidden; background-color:white; border:1px solid #E5E7EB !important; border-radius:12px !important;">
+                <h2 class="accordion-header" style="border-radius:12px;">
+                  <a class="accordion-button collapsed"
+                     type="button"
+                     data-bs-toggle="collapse"
+                     data-bs-target="#wf-faq-collapse-5"
+                     data-toggle="collapse"
+                     data-target="#wf-faq-collapse-5"
+                     aria-expanded="false"
+                     aria-controls="wf-faq-collapse-5"
+                     style="box-shadow:unset; border:none !important; padding:1.25rem 1.5rem !important; font-weight:600 !important; font-size:17px; color:#1A1A1A !important; background-color:#FFFFFF !important;">
+                    <span style="display:inline-block; width:44px; height:44px; min-width:44px; border-radius:10px; background-color:rgba(240,247,237,0.85); text-align:center; margin-right:16px; vertical-align:middle;">
+                      <img src="faq_icon_rotateccw.svg" width="20" height="20" alt="" style="width:20px; height:20px; margin-top:12px;">
+                    </span>
+                    <span style="vertical-align:middle;">How are refunds processed?</span>
+                  </a>
+                </h2>
+                <div id="wf-faq-collapse-5"
+                     class="accordion-collapse collapse"
+                     data-bs-parent="#woodforestFaqAccordion"
+                     style="border-top:1px solid #E5E7EB;">
+                  <div class="accordion-body"
+                       style="background-color:#FFFFFF; line-height:1.7; font-size:15px; padding:1.5rem !important; color:#6B7280;">
+                    Refunds are initiated inside Odoo and synced automatically to Woodforest. Fully tracked. Fully reconciled.
                   </div>
-                  <span
-                    style="font-family:system-ui,-apple-system,sans-serif; flex:1; font-size:17px; font-weight:600; color:#1A1A1A; line-height:1.4; letter-spacing:-0.01em;">How
-                    are refunds processed?</span>
-                  <img class="wf-faq-chevron" src="faq_icon_chevron.svg" width="16" height="16"
-                    style="flex-shrink:0; margin-left:16px;" alt="">
-                </div>
-                <div class="wf-faq-answer"
-                  style="display:none; font-family:system-ui,-apple-system,sans-serif; padding:0 8px 28px 76px; font-size:15px; font-weight:400; color:#6B7280; line-height:1.7; max-width:520px;">
-                  Refunds are initiated inside Odoo and synced automatically to Woodforest. Fully tracked. Fully
-                  reconciled.
                 </div>
               </div>
-
-              <!-- Item 6 -->
-              <div class="wf-faq-item" style="border-bottom:1px solid rgba(0,0,0,0.06);">
-                <div class="wf-faq-question"
-                  style="display:flex; align-items:center; padding:26px 8px; cursor:pointer;">
-                  <div
-                    style="width:44px; height:44px; min-width:44px; border-radius:10px; background-color:rgba(240,247,237,0.85); display:flex; align-items:center; justify-content:center; margin-right:16px; flex-shrink:0;">
-                    <img src="faq_icon_shield.svg" width="20" height="20" alt="">
+              <!-- FAQ 6 -->
+              <div class="accordion-item" style="margin-bottom:1rem; overflow:hidden; background-color:white; border:1px solid #E5E7EB !important; border-radius:12px !important;">
+                <h2 class="accordion-header" style="border-radius:12px;">
+                  <a class="accordion-button collapsed"
+                     type="button"
+                     data-bs-toggle="collapse"
+                     data-bs-target="#wf-faq-collapse-6"
+                     data-toggle="collapse"
+                     data-target="#wf-faq-collapse-6"
+                     aria-expanded="false"
+                     aria-controls="wf-faq-collapse-6"
+                     style="box-shadow:unset; border:none !important; padding:1.25rem 1.5rem !important; font-weight:600 !important; font-size:17px; color:#1A1A1A !important; background-color:#FFFFFF !important;">
+                    <span style="display:inline-block; width:44px; height:44px; min-width:44px; border-radius:10px; background-color:rgba(240,247,237,0.85); text-align:center; margin-right:16px; vertical-align:middle;">
+                      <img src="faq_icon_shield.svg" width="20" height="20" alt="" style="width:20px; height:20px; margin-top:12px;">
+                    </span>
+                    <span style="vertical-align:middle;">Is this an official Woodforest integration?</span>
+                  </a>
+                </h2>
+                <div id="wf-faq-collapse-6"
+                     class="accordion-collapse collapse"
+                     data-bs-parent="#woodforestFaqAccordion"
+                     style="border-top:1px solid #E5E7EB;">
+                  <div class="accordion-body"
+                       style="background-color:#FFFFFF; line-height:1.7; font-size:15px; padding:1.5rem !important; color:#6B7280;">
+                    Yes. This is the official Woodforest Acceptance integration for Odoo, built for reliability and long-term support.
                   </div>
-                  <span
-                    style="font-family:system-ui,-apple-system,sans-serif; flex:1; font-size:17px; font-weight:600; color:#1A1A1A; line-height:1.4; letter-spacing:-0.01em;">Is
-                    this an official Woodforest integration?</span>
-                  <img class="wf-faq-chevron" src="faq_icon_chevron.svg" width="16" height="16"
-                    style="flex-shrink:0; margin-left:16px;" alt="">
-                </div>
-                <div class="wf-faq-answer"
-                  style="display:none; font-family:system-ui,-apple-system,sans-serif; padding:0 8px 28px 76px; font-size:15px; font-weight:400; color:#6B7280; line-height:1.7; max-width:520px;">
-                  Yes. This is the official Woodforest Acceptance integration for Odoo, built for reliability and
-                  long-term support.
                 </div>
               </div>
-
-              <!-- Item 7 -->
-              <div class="wf-faq-item" style="border-bottom:1px solid rgba(0,0,0,0.06);">
-                <div class="wf-faq-question"
-                  style="display:flex; align-items:center; padding:26px 8px; cursor:pointer;">
-                  <div
-                    style="width:44px; height:44px; min-width:44px; border-radius:10px; background-color:rgba(240,247,237,0.85); display:flex; align-items:center; justify-content:center; margin-right:16px; flex-shrink:0;">
-                    <img src="faq_icon_trendingup.svg" width="20" height="20" alt="">
+              <!-- FAQ 7 -->
+              <div class="accordion-item" style="margin-bottom:1rem; overflow:hidden; background-color:white; border:1px solid #E5E7EB !important; border-radius:12px !important;">
+                <h2 class="accordion-header" style="border-radius:12px;">
+                  <a class="accordion-button collapsed"
+                     type="button"
+                     data-bs-toggle="collapse"
+                     data-bs-target="#wf-faq-collapse-7"
+                     data-toggle="collapse"
+                     data-target="#wf-faq-collapse-7"
+                     aria-expanded="false"
+                     aria-controls="wf-faq-collapse-7"
+                     style="box-shadow:unset; border:none !important; padding:1.25rem 1.5rem !important; font-weight:600 !important; font-size:17px; color:#1A1A1A !important; background-color:#FFFFFF !important;">
+                    <span style="display:inline-block; width:44px; height:44px; min-width:44px; border-radius:10px; background-color:rgba(240,247,237,0.85); text-align:center; margin-right:16px; vertical-align:middle;">
+                      <img src="faq_icon_trendingup.svg" width="20" height="20" alt="" style="width:20px; height:20px; margin-top:12px;">
+                    </span>
+                    <span style="vertical-align:middle;">Why choose Woodforest for Odoo?</span>
+                  </a>
+                </h2>
+                <div id="wf-faq-collapse-7"
+                     class="accordion-collapse collapse"
+                     data-bs-parent="#woodforestFaqAccordion"
+                     style="border-top:1px solid #E5E7EB;">
+                  <div class="accordion-body"
+                       style="background-color:#FFFFFF; line-height:1.7; font-size:15px; padding:1.5rem !important; color:#6B7280;">
+                    Bank-backed processing. Intelligent routing for higher approvals. Real merchant support when it matters.
                   </div>
-                  <span
-                    style="font-family:system-ui,-apple-system,sans-serif; flex:1; font-size:17px; font-weight:600; color:#1A1A1A; line-height:1.4; letter-spacing:-0.01em;">Why
-                    choose Woodforest for Odoo?</span>
-                  <img class="wf-faq-chevron" src="faq_icon_chevron.svg" width="16" height="16"
-                    style="flex-shrink:0; margin-left:16px;" alt="">
-                </div>
-                <div class="wf-faq-answer"
-                  style="display:none; font-family:system-ui,-apple-system,sans-serif; padding:0 8px 28px 76px; font-size:15px; font-weight:400; color:#6B7280; line-height:1.7; max-width:520px;">
-                  Bank-backed processing. Intelligent routing for higher approvals. Real merchant support when it
-                  matters.
                 </div>
               </div>
 
