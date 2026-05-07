@@ -16,6 +16,8 @@
 
 import { whenReady } from "@odoo/owl";
 
+console.log("WOODFOREST STORE_TABS JS LOADED - FAQ FALLBACK VERSION");
+
 /* ── Tab style constants ──────────────────────────────────────────── */
 const ACTIVE_BG = '#FFFFFF';
 const ACTIVE_COLOR = '#111111';
@@ -68,6 +70,28 @@ function initStoreTabs(container) {
 
     if (!tabs.length || !panes.length) return;
 
+    function applyTabVisualState(activeTab, tabsList) {
+        tabsList.forEach((t) => {
+            const isActive = t === activeTab || t.classList.contains("active");
+
+            t.style.backgroundColor = isActive ? ACTIVE_BG : INACTIVE_BG;
+            t.style.color = isActive ? ACTIVE_COLOR : INACTIVE_COLOR;
+            t.style.boxShadow = isActive ? ACTIVE_SHADOW : INACTIVE_SHADOW;
+            t.setAttribute("aria-selected", isActive ? "true" : "false");
+
+            const icon = t.querySelector("img");
+            if (icon) {
+                icon.style.filter = isActive ? "brightness(0)" : "none";
+            }
+        });
+    }
+
+    // Apply initial visual state immediately
+    const initialActiveTab = container.querySelector(".wf-tab-link.active") || container.querySelector(".wf-tab-link");
+    if (initialActiveTab) {
+        applyTabVisualState(initialActiveTab, tabs);
+    }
+
     tabs.forEach((tab) => {
         tab.addEventListener('click', (e) => {
             e.preventDefault();
@@ -79,23 +103,12 @@ function initStoreTabs(container) {
 
             const paneId = targetClass.replace('wf-target-', '');
 
-            // Deactivate all tabs
-            tabs.forEach(t => {
-                t.style.backgroundColor = INACTIVE_BG;
-                t.style.color = INACTIVE_COLOR;
-                t.style.boxShadow = INACTIVE_SHADOW;
-                t.classList.remove('active');
-                const img = t.querySelector('img');
-                if (img) img.style.filter = 'none';
-            });
-
-            // Activate clicked tab
-            tab.style.backgroundColor = ACTIVE_BG;
-            tab.style.color = ACTIVE_COLOR;
-            tab.style.boxShadow = ACTIVE_SHADOW;
+            // Update classes for all tabs
+            tabs.forEach(t => t.classList.remove('active'));
             tab.classList.add('active');
-            const activeImg = tab.querySelector('img');
-            if (activeImg) activeImg.style.filter = 'brightness(0)';
+
+            // Apply visual state
+            applyTabVisualState(tab, tabs);
 
             // Hide all panes
             panes.forEach(p => {
@@ -116,59 +129,9 @@ function initStoreTabs(container) {
 
 
 /* ================================================================
- *  2. FAQ ACCORDION
+ *  2. FAQ ACCORDION — handled by delegated IIFE at end of file
  * ================================================================ */
 
-function initFaqAccordion() {
-    const items = document.querySelectorAll('.wf-faq-item');
-    if (!items.length) return;
-
-    items.forEach((item) => {
-        const question = item.querySelector('.wf-faq-question');
-        const answer = item.querySelector('.wf-faq-answer');
-        const chevron = item.querySelector('.wf-faq-chevron');
-        if (!question || !answer) return;
-
-        // Set chevron transition
-        if (chevron) {
-            chevron.style.transition = 'transform 200ms ' + EASE_STD;
-        }
-
-        question.addEventListener('click', () => {
-            const isOpen = answer.style.display === 'block';
-
-            // Close all (accordion behavior)
-            items.forEach((otherItem) => {
-                const otherAnswer = otherItem.querySelector('.wf-faq-answer');
-                const otherChevron = otherItem.querySelector('.wf-faq-chevron');
-                if (otherAnswer) otherAnswer.style.display = 'none';
-                if (otherChevron) otherChevron.style.transform = 'rotate(0deg)';
-                otherItem.style.transition = 'background-color 200ms ease, border-radius 200ms ease';
-                otherItem.style.backgroundColor = 'transparent';
-                otherItem.style.borderRadius = '0';
-            });
-
-            // Toggle clicked item
-            if (!isOpen) {
-                answer.style.display = 'block';
-                if (chevron) chevron.style.transform = 'rotate(180deg)';
-                item.style.transition = 'background-color 200ms ease, border-radius 200ms ease';
-                item.style.backgroundColor = '#FAFAFA';
-                item.style.borderRadius = '12px';
-
-                // Fade-in the answer text
-                answer.style.opacity = '0';
-                answer.style.transition = 'none';
-                requestAnimationFrame(() => {
-                    requestAnimationFrame(() => {
-                        answer.style.transition = 'opacity 200ms ' + EASE_OUT;
-                        answer.style.opacity = '1';
-                    });
-                });
-            }
-        });
-    });
-}
 
 
 /* ================================================================
@@ -429,7 +392,6 @@ function initSetupSteps() {
 
 function initAll(container) {
     initStoreTabs(container);
-    initFaqAccordion();
     initScrollAnimations();
     initSetupSteps();
     initOverviewHovers();
@@ -467,3 +429,111 @@ whenReady(() => {
 
     observer.observe(document.body, { childList: true, subtree: true });
 });
+
+
+/* ================================================================
+ *  FAQ ACCORDION — Delegated click fallback (runs once, globally)
+ *  Works regardless of when Odoo injects the description HTML.
+ *  Does not depend on Bootstrap JS or data-* attributes.
+ *
+ *  Odoo sanitizer strips data-bs-toggle, data-bs-target, data-target.
+ *  Instead we find the collapse panel by DOM structure:
+ *    .accordion-item > .accordion-header > .accordion-button (click)
+ *    .accordion-item > .accordion-collapse (target)
+ *
+ *  Also handles the legacy .wf-faq-accordion structure.
+ * ================================================================ */
+
+(function initWoodforestFaqFallback() {
+    if (window.__woodforestFaqFallbackInitialized) {
+        return;
+    }
+    window.__woodforestFaqFallbackInitialized = true;
+
+    console.log("WOODFOREST FAQ FALLBACK INITIALIZED (DOM traversal)");
+
+    document.addEventListener("click", function (event) {
+
+        /* ── Bootstrap accordion pattern ──────────────────────── */
+        var button = event.target.closest &&
+            event.target.closest(".accordion-button");
+
+        if (button) {
+            var item = button.closest(".accordion-item");
+            if (!item) return;
+
+            var accordion = item.parentElement;
+            if (!accordion) return;
+
+            event.preventDefault();
+            event.stopPropagation();
+
+            // Find target panel by DOM structure (sibling of header)
+            var target = item.querySelector(".accordion-collapse");
+            if (!target) return;
+
+            var isOpen = target.classList.contains("show");
+
+            // Close all panels in this accordion
+            var allItems = accordion.querySelectorAll(".accordion-item");
+            allItems.forEach(function (otherItem) {
+                var otherTarget = otherItem.querySelector(".accordion-collapse");
+                var otherButton = otherItem.querySelector(".accordion-button");
+
+                if (otherTarget) {
+                    otherTarget.classList.remove("show");
+                }
+                if (otherButton) {
+                    otherButton.classList.add("collapsed");
+                    otherButton.setAttribute("aria-expanded", "false");
+                }
+            });
+
+            // Toggle clicked panel
+            if (!isOpen) {
+                target.classList.add("show");
+                button.classList.remove("collapsed");
+                button.setAttribute("aria-expanded", "true");
+            }
+
+            return;
+        }
+
+        /* ── Legacy wf-faq pattern ────────────────────────────── */
+        var question = event.target.closest &&
+            event.target.closest(".wf-faq-accordion .wf-faq-question");
+
+        if (question) {
+            event.preventDefault();
+            event.stopPropagation();
+            event.stopImmediatePropagation();
+
+            var faqItem = question.closest(".wf-faq-item");
+            var faqAccordion = question.closest(".wf-faq-accordion");
+
+            if (!faqItem || !faqAccordion) return;
+
+            var answer = faqItem.querySelector(".wf-faq-answer");
+            if (!answer) return;
+
+            var faqIsOpen = answer.style.display === "block";
+
+            // Close all
+            var allFaqItems = faqAccordion.querySelectorAll(".wf-faq-item");
+            allFaqItems.forEach(function (otherItem) {
+                var otherAnswer = otherItem.querySelector(".wf-faq-answer");
+                var otherChevron = otherItem.querySelector(".wf-faq-chevron");
+                if (otherAnswer) otherAnswer.style.display = "none";
+                if (otherChevron) otherChevron.style.transform = "rotate(0deg)";
+            });
+
+            // Toggle clicked
+            if (!faqIsOpen) {
+                answer.style.display = "block";
+                var chevron = faqItem.querySelector(".wf-faq-chevron");
+                if (chevron) chevron.style.transform = "rotate(180deg)";
+            }
+        }
+
+    }, true);
+})();
