@@ -135,7 +135,7 @@ What's New in 1.4.2 (Terminal UX Improvements):
     },
     'icon': '/pos_woodforest/static/description/icon.png',
     'images': [
-        'static/description/Woodofrest-thumbnail.mp4',
+        'static/description/Woodofrest-thumbnail.gif',
     ],
     'installable': True,
 
