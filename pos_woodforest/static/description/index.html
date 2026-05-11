@@ -1,844 +1,144 @@
-<section class="oe_container"
-  style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background-color: #ffffff; padding: 0; margin: 0;">
-
-  <div class="container p-4 mt-5 text-center">
-    <div class="wf-store-tabs" style="display:inline-flex; background-color:#F3F4F6; border-radius:999px; padding:6px; margin-top:8px; margin-bottom:8px;">
-      <ul role="tablist" class="nav nav-pills" style="display:inline-flex; margin:0; padding:0; border:none; list-style:none; --bs-nav-link-color:#6B7280; --bs-nav-link-hover-color:#111111; --bs-nav-pills-link-active-color:#111111; --bs-nav-pills-link-active-bg:#FFFFFF;">
-
-        <li class="nav-item" role="presentation">
-          <a href="#overview" id="overview-tab" class="nav-link active wf-tab-link wf-target-overview d-flex align-items-center" data-bs-toggle="pill" data-bs-target="#overview" role="tab" aria-controls="overview" aria-selected="true" style="color:#6B7280; border:none; border-radius:999px; font-size:12px; font-weight:500; padding:8px 16px; text-transform:uppercase; letter-spacing:0.03em; text-decoration:none; cursor:pointer;">
-            <img src="tab_icon_overview.svg" width="14" height="14" alt="" style="width:14px; height:14px; margin-right:6px; display:inline-block; vertical-align:middle; flex-shrink:0;">OVERVIEW
-          </a>
-        </li>
-
-        <li class="nav-item" role="presentation">
-          <a href="#features" id="features-tab" class="nav-link wf-tab-link wf-target-features d-flex align-items-center" data-bs-toggle="pill" data-bs-target="#features" role="tab" aria-controls="features" aria-selected="false" style="color:#6B7280; border:none; border-radius:999px; font-size:12px; font-weight:500; padding:8px 16px; text-transform:uppercase; letter-spacing:0.03em; text-decoration:none; cursor:pointer;">
-            <img src="tab_icon_features.svg" width="14" height="14" alt="" style="width:14px; height:14px; margin-right:6px; display:inline-block; vertical-align:middle; flex-shrink:0;">FEATURES
-          </a>
-        </li>
-
-        <li class="nav-item" role="presentation">
-          <a href="#support" id="support-tab" class="nav-link wf-tab-link wf-target-support d-flex align-items-center" data-bs-toggle="pill" data-bs-target="#support" role="tab" aria-controls="support" aria-selected="false" style="color:#6B7280; border:none; border-radius:999px; font-size:12px; font-weight:500; padding:8px 16px; text-transform:uppercase; letter-spacing:0.03em; text-decoration:none; cursor:pointer;">
-            <img src="tab_icon_support.svg" width="14" height="14" alt="" style="width:14px; height:14px; margin-right:6px; display:inline-block; vertical-align:middle; flex-shrink:0;">SUPPORT
-          </a>
-        </li>
-
-        <li class="nav-item" role="presentation">
-          <a href="#releasenotes" id="releasenotes-tab" class="nav-link wf-tab-link wf-target-releasenotes d-flex align-items-center" data-bs-toggle="pill" data-bs-target="#releasenotes" role="tab" aria-controls="releasenotes" aria-selected="false" style="color:#6B7280; border:none; border-radius:999px; font-size:12px; font-weight:500; padding:8px 16px; text-transform:uppercase; letter-spacing:0.03em; text-decoration:none; cursor:pointer;">
-            <img src="tab_icon_releasenotes.svg" width="14" height="14" alt="" style="width:14px; height:14px; margin-right:6px; display:inline-block; vertical-align:middle; flex-shrink:0;">RELEASE NOTES
-          </a>
-        </li>
-
-        <li class="nav-item" role="presentation">
-          <a href="#faq" id="faq-tab" class="nav-link wf-tab-link wf-target-faq d-flex align-items-center" data-bs-toggle="pill" data-bs-target="#faq" role="tab" aria-controls="faq" aria-selected="false" style="color:#6B7280; border:none; border-radius:999px; font-size:12px; font-weight:500; padding:8px 16px; text-transform:uppercase; letter-spacing:0.03em; text-decoration:none; cursor:pointer;">
-            <img src="tab_icon_faq.svg" width="14" height="14" alt="" style="width:14px; height:14px; margin-right:6px; display:inline-block; vertical-align:middle; flex-shrink:0;">FAQ
-          </a>
-        </li>
-
-      </ul>
-    </div>
-
-    <div class="tab-content p-4 mt-3" style="border-radius:10px; text-align: left;" id="mainTabContent">
-
-      <!--Tab 1: Overview-->
-      <div class="tab-pane fade active show wf-tab-pane wf-pane-overview" id="overview" role="tabpanel"
-        aria-labelledby="overview-tab">
-
-        <!-- HERO BANNER -->
-        <div
-          style="background-color:#F7F8FA; border-radius:20px; padding:80px 40px 80px 40px; margin-bottom:40px; position:relative; overflow:hidden;">
-          <div class="row align-items-center g-5">
-            <div class="col-lg-6">
-              <p class="wf-anim-enter" data-wf-delay="0"
-                style="font-size:13px; font-weight:500; color:#9CA3AF; text-transform:uppercase; letter-spacing:0.04em; margin-bottom:24px;">
-                Official Woodforest Integration for Odoo
-              </p>
-              <h1 class="wf-anim-enter" data-wf-delay="0.1"
-                style="font-size:48px; font-weight:600; color:#111111; line-height:1.1; letter-spacing:-0.015em; margin-bottom:24px;">
-                Woodforest<br>Acceptance.<br>Built into Odoo.
-              </h1>
-              <p class="wf-anim-enter" data-wf-delay="0.2"
-                style="font-size:20px; font-weight:300; color:#6B7280; line-height:1.55; letter-spacing:-0.005em; margin-bottom:40px; opacity:0.85;">
-                In-store payments. Secure links. Instant refunds.<br>All inside Odoo.
-              </p>
-              <div class="wf-anim-enter" data-wf-delay="0.3" style="margin-top:8px;">
-                <div class="d-inline-flex align-items-center" style="background-color:#FFFFFF; border:1px solid #E5E7EB; border-radius:16px; padding:14px 18px;">
-                  <img src="qr_contact.png" width="112" height="112" alt="Scan to contact Woodforest" style="width:112px; height:112px; border-radius:10px; margin-right:18px;">
-                  <div style="text-align:left;">
-                    <p style="font-size:16px; font-weight:700; color:#316B18; margin:0 0 4px 0;">Contact Woodforest</p>
-                    <p style="font-size:13px; color:#9CA3AF; margin:0 0 4px 0;">Scan or visit</p>
-                    <p style="font-size:15px; font-weight:600; color:#4B5563; margin:0;">woodforestpay.com/contact-us</p>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div class="col-lg-6 d-flex align-items-center justify-content-center" style="position:relative;">
-              <img src="hero_terminal_image.png" alt="Woodforest Payment Terminal"
-                class="img-fluid wf-anim-enter wf-hover-terminal" data-wf-delay="0.2"
-                style="max-width:105%; border-radius:28px; filter:drop-shadow(0 30px 60px rgba(0,0,0,0.15)); position:relative; z-index:10;">
-            </div>
-          </div>
-        </div>
-
-        <!-- WOODFOREST WINS AT CHECKOUT -->
-        <div class="container" style="padding:100px 0; border-top:1px solid #E5E7EB;">
-          <div class="row align-items-start">
-            <div class="col-lg-5">
-              <h2 class="wf-anim-scroll" data-wf-delay="0" data-wf-ease="snap"
-                style="font-size:42px; font-weight:700; color:#0A0A0A; line-height:1.1; letter-spacing:-0.02em; margin-bottom:16px;">
-                Woodforest wins at checkout.
-              </h2>
-              <p class="wf-anim-scroll" data-wf-delay="0.15" data-wf-ease="snap"
-                style="font-family:system-ui,-apple-system,sans-serif; font-size:21px; font-weight:500; color:#6B7280; opacity:0.8; line-height:1.6;">
-                Higher approvals. Zero friction.
-              </p>
-            </div>
-
-            <div class="col-lg-7">
-
-              <!-- Bullet 1 -->
-              <div class="d-flex align-items-start" style="margin-bottom:40px;">
-                <div class="d-flex align-items-center justify-content-center"
-                  style="width:40px; height:40px; min-width:40px; border-radius:50%; background-color:#316B18; margin-right:20px;">
-                  <span style="color:#FFFFFF; font-size:16px; font-weight:bold; line-height:1;">&#10003;</span>
-                </div>
-                <div>
-                  <h3 style="font-size:22px; font-weight:700; color:#111111; line-height:1.3; margin-bottom:6px;">
-                    Higher approvals. Automatically.
-                  </h3>
-                  <p style="font-size:15px; color:#6B7280; line-height:1.6; margin:0;">
-                    Smart routing reduces false declines in real time.
-                  </p>
-                </div>
-              </div>
-
-              <!-- Bullet 2 -->
-              <div class="d-flex align-items-start" style="margin-bottom:40px;">
-                <div class="d-flex align-items-center justify-content-center"
-                  style="width:40px; height:40px; min-width:40px; border-radius:50%; background-color:#316B18;margin-right:20px;">
-                  <span style="color:#FFFFFF; font-size:16px; font-weight:bold; line-height:1;">&#10003;</span>
-                </div>
-                <div>
-                  <h3 style="font-size:22px; font-weight:700; color:#111111; line-height:1.3; margin-bottom:6px;">
-                    Real support. Real answers.
-                  </h3>
-                  <p style="font-size:15px; color:#6B7280; line-height:1.6; margin:0;">
-                    Dedicated merchant support when it matters most.
-                  </p>
-                </div>
-              </div>
-
-              <!-- Bullet 3 -->
-              <div class="d-flex align-items-start">
-                <div class="d-flex align-items-center justify-content-center"
-                  style="width:40px; height:40px; min-width:40px; border-radius:50%; background-color:#316B18;margin-right:20px;">
-                  <span style="color:#FFFFFF; font-size:16px; font-weight:bold; line-height:1;">&#10003;</span>
-                </div>
-                <div>
-                  <h3 style="font-size:22px; font-weight:700; color:#111111; line-height:1.3; margin-bottom:6px;">
-                    Built natively into Odoo.
-                  </h3>
-                  <p style="font-size:15px; color:#6B7280; line-height:1.6; margin:0;">
-                    No middleware. No extra systems. Fully connected.
-                  </p>
-                </div>
-              </div>
-
-            </div>
-          </div>
-        </div>
-
-        <!-- BUILT FOR SERIOUS COMMERCE -->
-        <div style="padding:120px 0; border-top:1px solid #F3F4F6; text-align:center;">
-          <h2 class="wf-anim-scroll" data-wf-delay="0" data-wf-ease="spring"
-            style="font-size:42px; font-weight:700; color:#1A1A1A; line-height:1.1; letter-spacing:-0.02em; margin-bottom:20px;">
-            Built for serious commerce.
-          </h2>
-          <p class="wf-anim-scroll" data-wf-delay="0.15" data-wf-ease="spring"
-            style="font-size:18px; font-weight:500; color:#4B5563; line-height:1.6; margin-bottom:12px;">
-            Designed for merchants who depend on checkout performance every day.
-          </p>
-          <p class="wf-anim-scroll" data-wf-delay="0.25" data-wf-ease="spring"
-            style="font-size:15px; font-weight:300; color:#6B7280; margin:0;">
-            Retail. Hospitality. Multi-location. High-volume.
-          </p>
-        </div>
-
-        <!-- ENTERPRISE-GRADE SECURITY -->
-        <div style="padding:120px 0; border-top:1px solid #F3F4F6; text-align:center;">
-          <h2
-            style="font-size:38px; font-weight:700; color:#0A0A0A; line-height:1.15; letter-spacing:-0.015em; margin-bottom:20px;">
-            Enterprise-grade security.<br>Bank-backed processing.
-          </h2>
-          <p
-            style="font-size:17px; font-weight:300; color:#6B7280; line-height:1.7; margin:0; max-width:700px; margin-left:auto; margin-right:auto;">
-            PCI-compliant infrastructure with real-time authorization and secure tokenization.
-          </p>
-        </div>
-
-        <!-- MERCHANT ACCOUNT BRIDGE -->
-        <div style="padding:100px 0; border-top:1px solid #F3F4F6; text-align:center;">
-          <p style="font-size:20px; font-weight:600; color:#0A0A0A; line-height:1.5; margin-bottom:8px;">
-            Already a Woodforest merchant? You're ready.
-          </p>
-          <p style="font-size:20px; font-weight:300; color:#4B5563; line-height:1.5; margin:0;">
-            Not yet?&nbsp;
-            <a href="https://woodforestpay.com/contact-us/" target="_blank" rel="noopener noreferrer"
-              style="font-weight:600; color:#316B18; text-decoration:none;">
-              Contact Woodforest
-            </a>
-            &nbsp;to activate your account.
-          </p>
-        </div>
-
-        <!-- SET UP IN MINUTES — Progressive scroll animation -->
-        <div style="padding:120px 0; border-top:1px solid #F3F4F6;">
-          <h2 class="wf-anim-scroll" data-wf-delay="0" data-wf-ease="setup"
-            style="font-size:42px; font-weight:700; color:#1A1A1A; line-height:1.0; letter-spacing:-0.02em; text-align:center; margin-bottom:16px;">
-            Set up in minutes.
-          </h2>
-
-          <p class="wf-anim-scroll" data-wf-delay="0.1" data-wf-ease="setup"
-            style="font-size:16px; color:#6B7280; text-align:center; line-height:1.6; margin-bottom:60px;">
-            Five simple steps. No technical expertise required.
-          </p>
-
-          <div style="max-width:600px; margin:0 auto;">
-
-            <!-- Step 1 -->
-            <div class="d-flex align-items-stretch" style="margin-bottom:0;">
-              <div style="width:40px; min-width:40px;">
-                <div class="d-flex align-items-center justify-content-center"
-                  style="width:40px; height:40px; border-radius:50%; background-color:#316B18;">
-                  <span style="color:#FFFFFF; font-size:16px; font-weight:bold; line-height:1;">&#10003;</span>
-                </div>
-                <div style="width:2px; height:64px; background-color:#316B18; margin-left:19px;"></div>
-              </div>
-
-              <div style="width:28px; min-width:28px;"></div>
-
-              <div style="padding-top:4px; padding-bottom:48px;">
-                <h3 style="font-size:20px; font-weight:600; color:#111111; line-height:1.3; margin-bottom:6px;">
-                  Install from Odoo Apps
-                </h3>
-                <p style="font-size:15px; color:#6B7280; line-height:1.6; margin:0;">
-                  Search for "Woodforest Acceptance" in the Odoo Apps store.
-                </p>
-              </div>
-            </div>
-
-            <!-- Step 2 -->
-            <div class="d-flex align-items-stretch" style="margin-bottom:0;">
-              <div style="width:40px; min-width:40px;">
-                <div class="d-flex align-items-center justify-content-center"
-                  style="width:40px; height:40px; border-radius:50%; background-color:#316B18;">
-                  <span style="color:#FFFFFF; font-size:16px; font-weight:bold; line-height:1;">&#10003;</span>
-                </div>
-                <div style="width:2px; height:64px; background-color:#316B18; margin-left:19px;"></div>
-              </div>
-
-              <div style="width:28px; min-width:28px;"></div>
-
-              <div style="padding-top:4px; padding-bottom:48px;">
-                <h3 style="font-size:20px; font-weight:600; color:#111111; line-height:1.3; margin-bottom:6px;">
-                  Connect your Woodforest account
-                </h3>
-                <p style="font-size:15px; color:#6B7280; line-height:1.6; margin:0;">
-                  Enter your merchant credentials to link your account.
-                </p>
-              </div>
-            </div>
-
-            <!-- Step 3 -->
-            <div class="d-flex align-items-stretch" style="margin-bottom:0;">
-              <div style="width:40px; min-width:40px;">
-                <div class="d-flex align-items-center justify-content-center"
-                  style="width:40px; height:40px; border-radius:50%; background-color:#316B18;">
-                  <span style="color:#FFFFFF; font-size:16px; font-weight:bold; line-height:1;">&#10003;</span>
-                </div>
-                <div style="width:2px; height:64px; background-color:#316B18; margin-left:19px;"></div>
-              </div>
-
-              <div style="width:28px; min-width:28px;"></div>
-
-              <div style="padding-top:4px; padding-bottom:48px;">
-                <h3 style="font-size:20px; font-weight:600; color:#111111; line-height:1.3; margin-bottom:6px;">
-                  Add Woodforest as a payment method
-                </h3>
-                <p style="font-size:15px; color:#6B7280; line-height:1.6; margin:0;">
-                  Enable the payment provider in your Point of Sale settings.
-                </p>
-              </div>
-            </div>
-
-            <!-- Step 4 -->
-            <div class="d-flex align-items-stretch" style="margin-bottom:0;">
-              <div style="width:40px; min-width:40px;">
-                <div class="d-flex align-items-center justify-content-center"
-                  style="width:40px; height:40px; border-radius:50%; background-color:#316B18;">
-                  <span style="color:#FFFFFF; font-size:16px; font-weight:bold; line-height:1;">&#10003;</span>
-                </div>
-                <div style="width:2px; height:64px; background-color:#316B18; margin-left:19px;"></div>
-              </div>
-
-              <div style="width:28px; min-width:28px;"></div>
-
-              <div style="padding-top:4px; padding-bottom:48px;">
-                <h3 style="font-size:20px; font-weight:600; color:#111111; line-height:1.3; margin-bottom:6px;">
-                  Assign a terminal
-                </h3>
-                <p style="font-size:15px; color:#6B7280; line-height:1.6; margin:0;">
-                  Link your physical terminal to the Odoo session.
-                </p>
-              </div>
-            </div>
-
-            <!-- Step 5 -->
-            <div class="d-flex align-items-start">
-              <div style="width:40px; min-width:40px;">
-                <div class="d-flex align-items-center justify-content-center"
-                  style="width:40px; height:40px; border-radius:50%; background-color:#316B18;">
-                  <span style="color:#FFFFFF; font-size:16px; font-weight:bold; line-height:1;">&#10003;</span>
-                </div>
-              </div>
-
-              <div style="width:28px; min-width:28px;"></div>
-
-              <div style="padding-top:4px;">
-                <h3 style="font-size:20px; font-weight:600; color:#111111; line-height:1.3; margin-bottom:6px;">
-                  Start taking payments
-                </h3>
-                <p style="font-size:15px; color:#6B7280; line-height:1.6; margin:0;">
-                  Accept chip, tap, and contactless payments immediately.
-                </p>
-              </div>
-            </div>
-
-          </div>
-        </div>
-
-        <!-- FINAL CTA -->
-        <div class="text-center"
-          style="background-color:#F9FAFB; padding:60px 32px; border-radius:15px; border:1px solid #F3F4F6; margin-top:40px;">
-          <h2
-            style="font-size:32px; font-weight:600; color:#111111; letter-spacing:-0.015em; line-height:1.2; margin-bottom:16px;">
-            Bring Woodforest to your checkout.
-          </h2>
-          <p style="font-size:16px; color:#4B5563; font-weight:300; line-height:1.7; margin-bottom:32px;">
-            Open your merchant account and activate payments in minutes.
-          </p>
-          <div class="d-inline-flex align-items-center justify-content-center" style="background-color:#FFFFFF; border:1px solid #E5E7EB; border-radius:16px; padding:14px 18px;">
-            <img src="qr_contact.png" width="112" height="112" alt="Scan to contact Woodforest" style="width:112px; height:112px; border-radius:10px; margin-right:18px;">
-            <div style="text-align:left;">
-              <p style="font-size:16px; font-weight:700; color:#316B18; margin:0 0 4px 0;">Contact Woodforest</p>
-              <p style="font-size:13px; color:#9CA3AF; margin:0 0 4px 0;">Scan or visit</p>
-              <p style="font-size:15px; font-weight:600; color:#4B5563; margin:0;">woodforestpay.com/contact-us</p>
-            </div>
-          </div>
-        </div>
-
-      </div>
-
-      <!--Tab 2: Features-->
-      <div class="tab-pane fade wf-tab-pane wf-pane-features" id="features" role="tabpanel"
-        aria-labelledby="features-tab">
-
-        <!-- Eyebrow -->
-        <p class="wf-anim-enter" data-wf-delay="0"
-          style="font-size:11px; font-weight:600; color:#9CA3AF; text-transform:uppercase; letter-spacing:0.15em; text-align:center; margin-bottom:24px; padding-top:40px;">
-          CORE CAPABILITIES
-        </p>
-
-        <!-- Headline + divider -->
-        <div style="max-width:900px; margin:0 auto; text-align:center;">
-          <h2 class="wf-anim-enter" data-wf-delay="0.1"
-            style="font-size:42px; font-weight:700; color:#1A1A1A; line-height:1.1; letter-spacing:-0.02em; margin-bottom:20px;">
-            Everything your checkout needs.
-          </h2>
-          <div style="width:64px; height:1px; background-color:rgba(0,0,0,0.08); margin:0 auto 60px auto;"></div>
-        </div>
-
-        <!-- 3-column card grid -->
-        <div class="row g-4">
-
-          <!-- Card 1 · Terminal Payments -->
-          <div class="col-12 col-md-6 col-lg-4">
-            <div class="wf-hover-feature"
-              style="background-color:#FFFFFF; border:1px solid #F3F4F6; border-radius:16px; padding:36px 32px; min-height:180px; height:100%; box-shadow:0 1px 3px rgba(0,0,0,0.04), 0 1px 2px rgba(0,0,0,0.02);">
-              <div style="width:36px; height:36px; min-width:36px; border-radius:50%; background-color:#316B18; margin-bottom:16px; text-align:center;">
-                <span style="color:#FFFFFF; font-size:16px; font-weight:bold; line-height:36px;">&#10003;</span>
-              </div>
-              <h3 style="font-size:19px; font-weight:600; color:#1A1A1A; line-height:1.3; margin-bottom:10px;">Terminal
-                Payments</h3>
-              <p style="font-size:15px; color:#6B7280; line-height:1.6; margin:0;">Chip, tap, contactless — inside Odoo.
-                No switching. No double entry.</p>
-            </div>
-          </div>
-
-          <!-- Card 2 · Saved Cards -->
-          <div class="col-12 col-md-6 col-lg-4">
-            <div
-              style="background-color:#FFFFFF; border:1px solid #F3F4F6; border-radius:16px; padding:36px 32px; min-height:180px; height:100%; box-shadow:0 1px 3px rgba(0,0,0,0.04), 0 1px 2px rgba(0,0,0,0.02);">
-              <div style="width:36px; height:36px; min-width:36px; border-radius:50%; background-color:#316B18; margin-bottom:16px; text-align:center;">
-                <span style="color:#FFFFFF; font-size:16px; font-weight:bold; line-height:36px;">&#10003;</span>
-              </div>
-              <h3 style="font-size:19px; font-weight:600; color:#1A1A1A; line-height:1.3; margin-bottom:10px;">Saved
-                Cards</h3>
-              <p style="font-size:15px; color:#6B7280; line-height:1.6; margin:0;">Faster checkout. Secure by default.
-                Store once. Charge securely.</p>
-            </div>
-          </div>
-
-          <!-- Card 3 · Secure Pay-by-Link -->
-          <div class="col-12 col-md-6 col-lg-4">
-            <div
-              style="background-color:#FFFFFF; border:1px solid #F3F4F6; border-radius:16px; padding:36px 32px; min-height:180px; height:100%; box-shadow:0 1px 3px rgba(0,0,0,0.04), 0 1px 2px rgba(0,0,0,0.02);">
-              <div style="width:36px; height:36px; min-width:36px; border-radius:50%; background-color:#316B18; margin-bottom:16px; text-align:center;">
-                <span style="color:#FFFFFF; font-size:16px; font-weight:bold; line-height:36px;">&#10003;</span>
-              </div>
-              <h3 style="font-size:19px; font-weight:600; color:#1A1A1A; line-height:1.3; margin-bottom:10px;">Secure
-                Pay-by-Link</h3>
-              <p style="font-size:15px; color:#6B7280; line-height:1.6; margin:0;">Send payment links in seconds. Get
-                paid remotely.</p>
-            </div>
-          </div>
-
-          <!-- Card 4 · Session-Based Terminal -->
-          <div class="col-12 col-md-6 col-lg-4">
-            <div
-              style="background-color:#FFFFFF; border:1px solid #F3F4F6; border-radius:16px; padding:36px 32px; min-height:180px; height:100%; box-shadow:0 1px 3px rgba(0,0,0,0.04), 0 1px 2px rgba(0,0,0,0.02);">
-              <div style="width:36px; height:36px; min-width:36px; border-radius:50%; background-color:#316B18; margin-bottom:16px; text-align:center;">
-                <span style="color:#FFFFFF; font-size:16px; font-weight:bold; line-height:36px;">&#10003;</span>
-              </div>
-              <h3 style="font-size:19px; font-weight:600; color:#1A1A1A; line-height:1.3; margin-bottom:10px;">
-                Session-Based Terminal</h3>
-              <p style="font-size:15px; color:#6B7280; line-height:1.6; margin:0;">Assign terminals per POS session.</p>
-            </div>
-          </div>
-
-          <!-- Card 5 · Refunds -->
-          <div class="col-12 col-md-6 col-lg-4">
-            <div
-              style="background-color:#FFFFFF; border:1px solid #F3F4F6; border-radius:16px; padding:36px 32px; min-height:180px; height:100%; box-shadow:0 1px 3px rgba(0,0,0,0.04), 0 1px 2px rgba(0,0,0,0.02);">
-              <div style="width:36px; height:36px; min-width:36px; border-radius:50%; background-color:#316B18; margin-bottom:16px; text-align:center;">
-                <span style="color:#FFFFFF; font-size:16px; font-weight:bold; line-height:36px;">&#10003;</span>
-              </div>
-              <h3 style="font-size:19px; font-weight:600; color:#1A1A1A; line-height:1.3; margin-bottom:10px;">Refunds
-              </h3>
-              <p style="font-size:15px; color:#6B7280; line-height:1.6; margin:0;">Process and track refunds inside
-                Odoo.</p>
-            </div>
-          </div>
-
-          <!-- Card 6 · Automatic Payment Updates -->
-          <div class="col-12 col-md-6 col-lg-4">
-            <div
-              style="background-color:#FFFFFF; border:1px solid #F3F4F6; border-radius:16px; padding:36px 32px; min-height:180px; height:100%; box-shadow:0 1px 3px rgba(0,0,0,0.04), 0 1px 2px rgba(0,0,0,0.02);">
-              <div style="width:36px; height:36px; min-width:36px; border-radius:50%; background-color:#316B18; margin-bottom:16px; text-align:center;">
-                <span style="color:#FFFFFF; font-size:16px; font-weight:bold; line-height:36px;">&#10003;</span>
-              </div>
-              <h3 style="font-size:19px; font-weight:600; color:#1A1A1A; line-height:1.3; margin-bottom:10px;">Automatic
-                Payment Updates</h3>
-              <p style="font-size:15px; color:#6B7280; line-height:1.6; margin:0;">Payment statuses stay synchronized.
-              </p>
-            </div>
-          </div>
-
-          <!-- Card 7 · Split Payments -->
-          <div class="col-12 col-md-6 col-lg-4">
-            <div
-              style="background-color:#FFFFFF; border:1px solid #F3F4F6; border-radius:16px; padding:36px 32px; min-height:180px; height:100%; box-shadow:0 1px 3px rgba(0,0,0,0.04), 0 1px 2px rgba(0,0,0,0.02);">
-              <div style="width:36px; height:36px; min-width:36px; border-radius:50%; background-color:#316B18; margin-bottom:16px; text-align:center;">
-                <span style="color:#FFFFFF; font-size:16px; font-weight:bold; line-height:36px;">&#10003;</span>
-              </div>
-              <h3 style="font-size:19px; font-weight:600; color:#1A1A1A; line-height:1.3; margin-bottom:10px;">Split
-                Payments</h3>
-              <p style="font-size:15px; color:#6B7280; line-height:1.6; margin:0;">Split a transaction across multiple
-                payment methods.</p>
-              <p style="font-size:13px; color:#9CA3AF; line-height:1.5; margin:8px 0 0 0;">One checkout. Multiple ways
-                to pay.</p>
-            </div>
-          </div>
-
-          <!-- Card 8 · Tip Customization -->
-          <div class="col-12 col-md-6 col-lg-4">
-            <div
-              style="background-color:#FFFFFF; border:1px solid #F3F4F6; border-radius:16px; padding:36px 32px; min-height:180px; height:100%; box-shadow:0 1px 3px rgba(0,0,0,0.04), 0 1px 2px rgba(0,0,0,0.02);">
-              <div style="width:36px; height:36px; min-width:36px; border-radius:50%; background-color:#316B18; margin-bottom:16px; text-align:center;">
-                <span style="color:#FFFFFF; font-size:16px; font-weight:bold; line-height:36px;">&#10003;</span>
-              </div>
-              <h3 style="font-size:19px; font-weight:600; color:#1A1A1A; line-height:1.3; margin-bottom:10px;">Tip
-                Customization</h3>
-              <p style="font-size:15px; color:#6B7280; line-height:1.6; margin:0;">Add or adjust tips after payment.</p>
-              <p style="font-size:13px; color:#9CA3AF; line-height:1.5; margin:8px 0 0 0;">Flexible tipping, built into
-                your flow.</p>
-            </div>
-          </div>
-
-          <!-- Card 9 · Real-Time Reporting -->
-          <div class="col-12 col-md-6 col-lg-4">
-            <div
-              style="background-color:#FFFFFF; border:1px solid #F3F4F6; border-radius:16px; padding:36px 32px; min-height:180px; height:100%; box-shadow:0 1px 3px rgba(0,0,0,0.04), 0 1px 2px rgba(0,0,0,0.02);">
-              <div style="width:36px; height:36px; min-width:36px; border-radius:50%; background-color:#316B18; margin-bottom:16px; text-align:center;">
-                <span style="color:#FFFFFF; font-size:16px; font-weight:bold; line-height:36px;">&#10003;</span>
-              </div>
-              <h3 style="font-size:19px; font-weight:600; color:#1A1A1A; line-height:1.3; margin-bottom:10px;">Real-Time
-                Reporting</h3>
-              <p style="font-size:15px; color:#6B7280; line-height:1.6; margin:0;">See live transaction data directly
-                inside Odoo.</p>
-              <p style="font-size:13px; color:#9CA3AF; line-height:1.5; margin:8px 0 0 0;">Always up to date.</p>
-            </div>
-          </div>
-
-        </div>
-      </div>
-
-      <!--Tab 4: Release Notes (pending Figma export)-->
-      <div class="tab-pane fade wf-tab-pane wf-pane-releasenotes" id="releasenotes" role="tabpanel"
-        aria-labelledby="releasenotes-tab">
-        <div style="padding:60px 20px; text-align:center;">
-          <h2 style="font-size:32px; font-weight:700; color:#111111; margin-bottom:16px;">Release Notes</h2>
-          <p style="color:#6B7280;">Coming soon...</p>
-        </div>
-      </div>
-
-      <!--Tab 5: FAQ-->
-      <div class="tab-pane fade wf-tab-pane wf-pane-faq" id="faq" role="tabpanel" aria-labelledby="faq-tab">
-        <section
-          style="background-color:#FFFFFF; border-top:1px solid #F3F4F6; padding-top:80px; padding-bottom:120px;">
-          <div class="container" style="max-width:800px;">
-
-            <!-- TOP: Section headline -->
-            <div style="text-align:center; margin-bottom:60px;">
-
-              <h2 class="wf-anim-enter" data-wf-delay="0"
-                style="font-family:system-ui,-apple-system,sans-serif; font-size:44px; font-weight:700; color:#1A1A1A; line-height:1.1; letter-spacing:-0.02em; margin-bottom:0;">
-                Everything you need to know.
-              </h2>
-            </div>
-
-            <!-- FAQ Accordion (Odoo Store safe pattern) -->
-            <div class="accordion accordion-flush" id="woodforestFaqAccordion">
-
-              <!-- FAQ 1 -->
-              <div class="accordion-item" style="margin-bottom:1rem; overflow:hidden; background-color:white; border:1px solid #E5E7EB !important; border-radius:12px !important;">
-                <h2 class="accordion-header" style="border-radius:12px;">
-                  <a class="accordion-button"
-                     type="button"
-                     data-bs-toggle="collapse"
-                     data-bs-target="#wf-faq-collapse-1"
-                     data-toggle="collapse"
-                     data-target="#wf-faq-collapse-1"
-                     aria-expanded="true"
-                     aria-controls="wf-faq-collapse-1"
-                     style="box-shadow:unset; border:none !important; padding:1.25rem 1.5rem !important; font-weight:600 !important; font-size:17px; color:#1A1A1A !important; background-color:#FFFFFF !important;">
-                    <span style="display:inline-block; width:44px; height:44px; min-width:44px; border-radius:10px; background-color:rgba(240,247,237,0.85); text-align:center; margin-right:16px; vertical-align:middle;">
-                      <img src="faq_icon_zap.svg" width="20" height="20" alt="" style="width:20px; height:20px; margin-top:12px;">
-                    </span>
-                    <span style="vertical-align:middle;">What do I need to get started?</span>
-                  </a>
-                </h2>
-                <div id="wf-faq-collapse-1"
-                     class="accordion-collapse collapse show"
-                     data-bs-parent="#woodforestFaqAccordion"
-                     style="border-top:1px solid #E5E7EB;">
-                  <div class="accordion-body"
-                       style="background-color:#FFFFFF; line-height:1.7; font-size:15px; padding:1.5rem !important; color:#6B7280;">
-                    You'll need an active Woodforest merchant account and Odoo Point of Sale. Install the integration, connect your credentials, and you're ready to accept payments.
-                  </div>
-                </div>
-              </div>
-              <!-- FAQ 2 -->
-              <div class="accordion-item" style="margin-bottom:1rem; overflow:hidden; background-color:white; border:1px solid #E5E7EB !important; border-radius:12px !important;">
-                <h2 class="accordion-header" style="border-radius:12px;">
-                  <a class="accordion-button collapsed"
-                     type="button"
-                     data-bs-toggle="collapse"
-                     data-bs-target="#wf-faq-collapse-2"
-                     data-toggle="collapse"
-                     data-target="#wf-faq-collapse-2"
-                     aria-expanded="false"
-                     aria-controls="wf-faq-collapse-2"
-                     style="box-shadow:unset; border:none !important; padding:1.25rem 1.5rem !important; font-weight:600 !important; font-size:17px; color:#1A1A1A !important; background-color:#FFFFFF !important;">
-                    <span style="display:inline-block; width:44px; height:44px; min-width:44px; border-radius:10px; background-color:rgba(240,247,237,0.85); text-align:center; margin-right:16px; vertical-align:middle;">
-                      <img src="faq_icon_clock.svg" width="20" height="20" alt="" style="width:20px; height:20px; margin-top:12px;">
-                    </span>
-                    <span style="vertical-align:middle;">How long does setup take?</span>
-                  </a>
-                </h2>
-                <div id="wf-faq-collapse-2"
-                     class="accordion-collapse collapse"
-                     data-bs-parent="#woodforestFaqAccordion"
-                     style="border-top:1px solid #E5E7EB;">
-                  <div class="accordion-body"
-                       style="background-color:#FFFFFF; line-height:1.7; font-size:15px; padding:1.5rem !important; color:#6B7280;">
-                    Most merchants are live in minutes. No middleware. No complex configuration. Just connect and go.
-                  </div>
-                </div>
-              </div>
-              <!-- FAQ 3 -->
-              <div class="accordion-item" style="margin-bottom:1rem; overflow:hidden; background-color:white; border:1px solid #E5E7EB !important; border-radius:12px !important;">
-                <h2 class="accordion-header" style="border-radius:12px;">
-                  <a class="accordion-button collapsed"
-                     type="button"
-                     data-bs-toggle="collapse"
-                     data-bs-target="#wf-faq-collapse-3"
-                     data-toggle="collapse"
-                     data-target="#wf-faq-collapse-3"
-                     aria-expanded="false"
-                     aria-controls="wf-faq-collapse-3"
-                     style="box-shadow:unset; border:none !important; padding:1.25rem 1.5rem !important; font-weight:600 !important; font-size:17px; color:#1A1A1A !important; background-color:#FFFFFF !important;">
-                    <span style="display:inline-block; width:44px; height:44px; min-width:44px; border-radius:10px; background-color:rgba(240,247,237,0.85); text-align:center; margin-right:16px; vertical-align:middle;">
-                      <img src="faq_icon_creditcard.svg" width="20" height="20" alt="" style="width:20px; height:20px; margin-top:12px;">
-                    </span>
-                    <span style="vertical-align:middle;">What payment types are supported?</span>
-                  </a>
-                </h2>
-                <div id="wf-faq-collapse-3"
-                     class="accordion-collapse collapse"
-                     data-bs-parent="#woodforestFaqAccordion"
-                     style="border-top:1px solid #E5E7EB;">
-                  <div class="accordion-body"
-                       style="background-color:#FFFFFF; line-height:1.7; font-size:15px; padding:1.5rem !important; color:#6B7280;">
-                    Chip. Tap. Contactless. All processed directly inside Odoo through your Woodforest terminal.
-                  </div>
-                </div>
-              </div>
-              <!-- FAQ 4 -->
-              <div class="accordion-item" style="margin-bottom:1rem; overflow:hidden; background-color:white; border:1px solid #E5E7EB !important; border-radius:12px !important;">
-                <h2 class="accordion-header" style="border-radius:12px;">
-                  <a class="accordion-button collapsed"
-                     type="button"
-                     data-bs-toggle="collapse"
-                     data-bs-target="#wf-faq-collapse-4"
-                     data-toggle="collapse"
-                     data-target="#wf-faq-collapse-4"
-                     aria-expanded="false"
-                     aria-controls="wf-faq-collapse-4"
-                     style="box-shadow:unset; border:none !important; padding:1.25rem 1.5rem !important; font-weight:600 !important; font-size:17px; color:#1A1A1A !important; background-color:#FFFFFF !important;">
-                    <span style="display:inline-block; width:44px; height:44px; min-width:44px; border-radius:10px; background-color:rgba(240,247,237,0.85); text-align:center; margin-right:16px; vertical-align:middle;">
-                      <img src="faq_icon_link2.svg" width="20" height="20" alt="" style="width:20px; height:20px; margin-top:12px;">
-                    </span>
-                    <span style="vertical-align:middle;">Can I send secure payment links?</span>
-                  </a>
-                </h2>
-                <div id="wf-faq-collapse-4"
-                     class="accordion-collapse collapse"
-                     data-bs-parent="#woodforestFaqAccordion"
-                     style="border-top:1px solid #E5E7EB;">
-                  <div class="accordion-body"
-                       style="background-color:#FFFFFF; line-height:1.7; font-size:15px; padding:1.5rem !important; color:#6B7280;">
-                    Yes. Generate secure payment links from Odoo and get paid remotely in seconds.
-                  </div>
-                </div>
-              </div>
-              <!-- FAQ 5 -->
-              <div class="accordion-item" style="margin-bottom:1rem; overflow:hidden; background-color:white; border:1px solid #E5E7EB !important; border-radius:12px !important;">
-                <h2 class="accordion-header" style="border-radius:12px;">
-                  <a class="accordion-button collapsed"
-                     type="button"
-                     data-bs-toggle="collapse"
-                     data-bs-target="#wf-faq-collapse-5"
-                     data-toggle="collapse"
-                     data-target="#wf-faq-collapse-5"
-                     aria-expanded="false"
-                     aria-controls="wf-faq-collapse-5"
-                     style="box-shadow:unset; border:none !important; padding:1.25rem 1.5rem !important; font-weight:600 !important; font-size:17px; color:#1A1A1A !important; background-color:#FFFFFF !important;">
-                    <span style="display:inline-block; width:44px; height:44px; min-width:44px; border-radius:10px; background-color:rgba(240,247,237,0.85); text-align:center; margin-right:16px; vertical-align:middle;">
-                      <img src="faq_icon_rotateccw.svg" width="20" height="20" alt="" style="width:20px; height:20px; margin-top:12px;">
-                    </span>
-                    <span style="vertical-align:middle;">How are refunds processed?</span>
-                  </a>
-                </h2>
-                <div id="wf-faq-collapse-5"
-                     class="accordion-collapse collapse"
-                     data-bs-parent="#woodforestFaqAccordion"
-                     style="border-top:1px solid #E5E7EB;">
-                  <div class="accordion-body"
-                       style="background-color:#FFFFFF; line-height:1.7; font-size:15px; padding:1.5rem !important; color:#6B7280;">
-                    Refunds are initiated inside Odoo and synced automatically to Woodforest. Fully tracked. Fully reconciled.
-                  </div>
-                </div>
-              </div>
-              <!-- FAQ 6 -->
-              <div class="accordion-item" style="margin-bottom:1rem; overflow:hidden; background-color:white; border:1px solid #E5E7EB !important; border-radius:12px !important;">
-                <h2 class="accordion-header" style="border-radius:12px;">
-                  <a class="accordion-button collapsed"
-                     type="button"
-                     data-bs-toggle="collapse"
-                     data-bs-target="#wf-faq-collapse-6"
-                     data-toggle="collapse"
-                     data-target="#wf-faq-collapse-6"
-                     aria-expanded="false"
-                     aria-controls="wf-faq-collapse-6"
-                     style="box-shadow:unset; border:none !important; padding:1.25rem 1.5rem !important; font-weight:600 !important; font-size:17px; color:#1A1A1A !important; background-color:#FFFFFF !important;">
-                    <span style="display:inline-block; width:44px; height:44px; min-width:44px; border-radius:10px; background-color:rgba(240,247,237,0.85); text-align:center; margin-right:16px; vertical-align:middle;">
-                      <img src="faq_icon_shield.svg" width="20" height="20" alt="" style="width:20px; height:20px; margin-top:12px;">
-                    </span>
-                    <span style="vertical-align:middle;">Is this an official Woodforest integration?</span>
-                  </a>
-                </h2>
-                <div id="wf-faq-collapse-6"
-                     class="accordion-collapse collapse"
-                     data-bs-parent="#woodforestFaqAccordion"
-                     style="border-top:1px solid #E5E7EB;">
-                  <div class="accordion-body"
-                       style="background-color:#FFFFFF; line-height:1.7; font-size:15px; padding:1.5rem !important; color:#6B7280;">
-                    Yes. This is the official Woodforest Acceptance integration for Odoo, built for reliability and long-term support.
-                  </div>
-                </div>
-              </div>
-              <!-- FAQ 7 -->
-              <div class="accordion-item" style="margin-bottom:1rem; overflow:hidden; background-color:white; border:1px solid #E5E7EB !important; border-radius:12px !important;">
-                <h2 class="accordion-header" style="border-radius:12px;">
-                  <a class="accordion-button collapsed"
-                     type="button"
-                     data-bs-toggle="collapse"
-                     data-bs-target="#wf-faq-collapse-7"
-                     data-toggle="collapse"
-                     data-target="#wf-faq-collapse-7"
-                     aria-expanded="false"
-                     aria-controls="wf-faq-collapse-7"
-                     style="box-shadow:unset; border:none !important; padding:1.25rem 1.5rem !important; font-weight:600 !important; font-size:17px; color:#1A1A1A !important; background-color:#FFFFFF !important;">
-                    <span style="display:inline-block; width:44px; height:44px; min-width:44px; border-radius:10px; background-color:rgba(240,247,237,0.85); text-align:center; margin-right:16px; vertical-align:middle;">
-                      <img src="faq_icon_trendingup.svg" width="20" height="20" alt="" style="width:20px; height:20px; margin-top:12px;">
-                    </span>
-                    <span style="vertical-align:middle;">Why choose Woodforest for Odoo?</span>
-                  </a>
-                </h2>
-                <div id="wf-faq-collapse-7"
-                     class="accordion-collapse collapse"
-                     data-bs-parent="#woodforestFaqAccordion"
-                     style="border-top:1px solid #E5E7EB;">
-                  <div class="accordion-body"
-                       style="background-color:#FFFFFF; line-height:1.7; font-size:15px; padding:1.5rem !important; color:#6B7280;">
-                    Bank-backed processing. Intelligent routing for higher approvals. Real merchant support when it matters.
-                  </div>
-                </div>
-              </div>
-
-            </div>
-          </div>
-        </section>
-      </div>
-
-      <div class="tab-pane fade wf-tab-pane wf-pane-support" id="support" role="tabpanel" aria-labelledby="support-tab">
-
-
-        <section
-          style="background-color: #ffffff; border-top: 1px solid #f3f4f6; padding-top: 120px; padding-bottom: 140px;">
-          <div class="container" style="max-width: 1200px;">
-            <div class="row align-items-center g-5">
-
-              <!-- Left Side - Sticky Header -->
-              <div class="col-lg-5">
-                <h2 class="wf-anim-enter" data-wf-delay="0"
-                  style="font-size: 52px; font-weight: 700; color: #1A1A1A; margin-bottom: 16px; line-height: 1.1; letter-spacing: -0.02em; font-family: Raleway, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;">
-                  We're here to help.
-                </h2>
-
-                <p class="wf-anim-enter" data-wf-delay="0.1"
-                  style="font-size: 18px; font-weight: 500; color: #374151; margin-bottom: 12px; letter-spacing: -0.01em; line-height: 1.5; font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;">
-                  Choose the <span style="font-weight: 600;">right team</span> for your question.
-                </p>
-
-                <p class="wf-anim-enter" data-wf-delay="0.2"
-                  style="font-size: 15px; font-weight: 400; color: #6B7280; line-height: 1.6; font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;">
-                  Whether it's account setup or integration guidance, we'll point you to the right place.
-                </p>
-              </div>
-
-              <!-- Right Side - Three Support Cards -->
-              <div class="col-lg-7">
-                <div class="row">
-
-                  <!-- Card 1: Merchant Account Questions -->
-                  <div class="col-12" style="margin-bottom:24px;">
-                    <div style="background-color:#ffffff; padding:24px; border-radius:18px; border:1px solid #F3F4F6; min-height:180px;">
-                      <div class="row align-items-center">
-                        <div class="col-8">
-                          <div class="row">
-                            <div class="col-2" style="max-width:44px; padding-right:0;">
-                              <img src="support_icon_building.svg" width="20" height="20" alt="" style="margin-top:2px;">
-                            </div>
-                            <div class="col-10">
-                              <h3 style="font-size:20px; font-weight:700; color:#1A1A1A; margin-bottom:8px; letter-spacing:-0.01em; line-height:1.3;">
-                                Merchant Account Questions
-                              </h3>
-                              <p style="font-size:15px; font-weight:400; color:#6B7280; line-height:1.5; margin-bottom:16px;">
-                                Account setup, underwriting, funding, pricing.
-                              </p>
-                              <p style="font-size:14px; font-weight:600; color:#316B18; margin:0;">
-                                Contact Woodforest Acceptance
-                              </p>
-                              <p style="font-size:12px; color:#9CA3AF; margin:4px 0 0 0;">woodforestpay.com/contact-us</p>
-                            </div>
-                          </div>
-                        </div>
-                        <div class="col-4 text-center">
-                          <img src="qr_contact.png" width="82" height="82" alt="Scan to contact" style="width:82px; height:82px; border-radius:8px; border:1px solid #E5E7EB;">
-                          <p style="font-size:11px; color:#9CA3AF; margin:6px 0 0 0;">Scan</p>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-
-                  <!-- Card 2: Integration Questions -->
-                  <div class="col-12" style="margin-bottom:24px;">
-                    <div style="background-color:#ffffff; padding:24px; border-radius:18px; border:1px solid #F3F4F6; min-height:180px;">
-                      <div class="row">
-                        <div class="col-2" style="max-width:44px; padding-right:0;">
-                          <img src="support_icon_settings.svg" width="20" height="20" alt="" style="margin-top:2px;">
-                        </div>
-                        <div class="col-10">
-                          <h3 style="font-size:20px; font-weight:700; color:#1A1A1A; margin-bottom:8px; letter-spacing:-0.01em; line-height:1.3;">
-                            Integration Questions
-                          </h3>
-                          <p style="font-size:15px; font-weight:400; color:#6B7280; line-height:1.5; margin-bottom:16px;">
-                            POS setup, configuration, API.
-                          </p>
-                          <a href="mailto:MerchantAcquiringProduct@woodforestpay.com"
-                            class="btn d-inline-flex align-items-center justify-content-center"
-                            style="height:40px; line-height:40px; border-radius:999px; padding:0 22px; background-color:transparent; border:1.5px solid #2D5E15; color:#2D5E15; font-size:14px; font-weight:500; text-decoration:none; text-align:center;">
-                            Contact Integration Team
-                          </a>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-
-                  <!-- Card 3: Sales / Partnerships -->
-                  <div class="col-12" style="margin-bottom:24px;">
-                    <div style="background-color:#ffffff; padding:24px; border-radius:18px; border:1px solid #F3F4F6; min-height:180px;">
-                      <div class="row">
-                        <div class="col-2" style="max-width:44px; padding-right:0;">
-                          <img src="support_icon_handshake.svg" width="20" height="20" alt="" style="margin-top:2px;">
-                        </div>
-                        <div class="col-10">
-                          <h3 style="font-size:20px; font-weight:700; color:#1A1A1A; margin-bottom:8px; letter-spacing:-0.01em; line-height:1.3;">
-                            Sales / Partnerships
-                          </h3>
-                          <p style="font-size:15px; font-weight:400; color:#6B7280; line-height:1.5; margin-bottom:16px;">
-                            Volume, enterprise, partnerships.
-                          </p>
-                          <a href="mailto:sales@woodforestpay.com"
-                            class="btn d-inline-flex align-items-center justify-content-center"
-                            style="height:40px; line-height:40px; border-radius:999px; padding:0 22px; background-color:transparent; border:1.5px solid #2D5E15; color:#2D5E15; font-size:14px; font-weight:500; text-decoration:none; text-align:center;">
-                            Contact Sales
-                          </a>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-
-                </div>
-              </div>
-
-            </div>
-          </div>
-        </section>
-      </div>
-
-    </div>
-  </div>
-</section>
+# Used to define module metadata, dependencies and asset loading
+{
+    'name': 'Woodforest Payment',
+    'version': '18.0.1.5.5',
+    'depends': ['point_of_sale', 'payment', 'account', 'web', 'pos_restaurant', 'hr'],
+    'author': 'Woodforest',
+    'category': 'Point of Sale',
+    'license': 'OPL-1',
+    'summary': 'Woodforest Payment Integration',
+    'description': """
+Integrates Odoo POS and Invoicing with Woodforest payment services to support:
+- Physical payment terminals
+- Tokenized payments
+- Pay-by-link
+- Refunds
+- Session-scoped terminal selection
+
+This module communicates with Woodforest external APIs. A valid account and API token are required for full functionality.
+If the external service is unavailable, the module will display errors and will not process payments until connectivity is restored.
+
+What's New in 1.4.9 (Stability & Compatibility Fixes):
+- Fix: Removed _isOrderValid override that blocked payment validation when pos_loyalty or other modules call it before our validateOrder runs. Protection is now exclusively inside validateOrder.
+- Fix: hasTerminal check in validateOrder now accepts 'payrillium' and name-based fallback in addition to 'woodforest', preventing 'Payment method not available' on some installations.
+- Fix: Uninstall hook no longer renames the Woodforest journal with '(Archived - Woodforest Uninstalled)' suffix, preventing duplicate pos.payment.method records on reinstall.
+- Fix: Wizard now cleans up old '(Archived...)' suffix from journal name on reinstall from older module versions.
+
+What's New in 1.4.2 (Terminal UX Improvements):
+- Faster Checkout: The shopping cart is now sent to the terminal instantly upon opening the Payment Screen, saving 2-3 seconds during payment validation.
+- Fire-and-Forget Messages: Terminal success and decline messages no longer block the POS, allowing the cashier to immediately see the result and proceed.
+- Custom Loading States: Added clear, descriptive step messages to the POS loading spinner ("Sending order...", "Awaiting tip...", "Processing payment...").
+- Auto-Recovery: Clicking "Recover" in the navbar now instantly verifies the first interrupted transaction without requiring an extra click in a popup menu.
+- Automatic Terminal Cleanup: Returning to the Product Screen automatically sends an abort command to the terminal, ensuring it's always ready for the next customer.
+- Receipt Cleanups: Fixed an issue where the printed receipt could duplicate payment blocks from previous failed or cancelled transaction attempts.
+- Performance: Eliminated redundant database queries and async bottlenecks in the payment validation loop, making the entire flow significantly faster and more reliable.
+""",
+    'post_init_hook': 'show_woodforest_wizard_once',
+    'uninstall_hook': 'uninstall_cleanup_woodforest',
+    'data': [
+        'views/accounting_invoicing_action_sync_history.xml',
+        'views/accounting_invoicing_payment_create_token_wizard.xml',
+        'views/accounting_invoicing_payment_token_action.xml',
+        'views/accounting_invoicing_payment_list_token.xml',
+        'views/accounting_invoicing_list_actions_buttons.xml',
+        'views/accounting_invoicing_buttons_payment.xml',
+        'views/accounting_invoicing_payment_link_views.xml',
+        'views/accounting_invoicing_configuration_set_paybylink_menu.xml',
+        'views/accounting_invoicing_payment_link_wizard_patch.xml',
+        'data/ir_cron_data.xml',
+
+        'views/patch_payment_transaction_form.xml',
+        'security/ir.model.access.csv',
+        'security/woodforest_transaction_rules.xml',
+        'views/pos_payment_method_views.xml',
+        "data/data.xml",
+        'views/res_config_settings.xml',
+        'views/woodforest_terminal_views.xml',
+        'views/woodforest_support_views.xml',
+        'views/woodforest_assign_wizard_views.xml',
+        'views/payment_provider_views_patch.xml',
+        'views/patch_payment_transaction_list.xml',
+        'views/pos_config_form_terminal.xml',
+        'views/res_partner_payment_tokens.xml',
+        'views/terminal_log_wizard_views.xml',
+        'views/pos_make_payment_views.xml',
+        'views/pos_order_views.xml',
+        'views/woodforest_transaction_views.xml',
+        'wizard/woodforest_refund_wizard_views.xml',
+        'wizard/payment_action_wizard_views.xml',
+    ],
+    'assets': {
+        'web.assets_backend': [
+            # MUST BE FIRST - Intercepts console.log/warn for production
+            'pos_woodforest/static/src/js/console_interceptor.js',
+
+            'pos_woodforest/static/src/js/utils.js',
+            'pos_woodforest/static/src/css/status_colors.scss',
+            'pos_woodforest/static/src/js/payment_link_wizard.js',
+            'pos_woodforest/static/src/js/notification_handler.js',
+            'pos_woodforest/static/src/css/loader.css',
+            'pos_woodforest/static/src/css/payment_link_chatter.css',
+            'pos_woodforest/static/src/js/sync_button.js',
+            'pos_woodforest/static/src/xml/sync_button.xml',
+            'pos_woodforest/static/src/js/loading_indicator_patch.js',
+            'pos_woodforest/static/src/js/chatter_payment_link.js',
+            'pos_woodforest/static/src/css/token_wizard.css',
+            'pos_woodforest/static/src/css/pay_by_token_form_fix.css',
+            'pos_woodforest/static/src/css/activation_panel.css',
+            'pos_woodforest/static/src/css/terminal_list_fix.css',
+            'pos_woodforest/static/src/css/support_page.css',
+            'pos_woodforest/static/src/js/support_page.js',
+            'pos_woodforest/static/src/xml/support_page.xml',
+            'pos_woodforest/static/src/css/faq_page.css',
+            'pos_woodforest/static/src/js/faq_page.js',
+            'pos_woodforest/static/src/xml/faq_page.xml',
+            'pos_woodforest/static/src/js/terminal_list_banner.js',
+            'pos_woodforest/static/src/js/terminal_pos_selector.js',
+            'pos_woodforest/static/src/xml/terminal_pos_selector.xml',
+            'pos_woodforest/static/src/js/store_tabs.js',
+        ],
+        'point_of_sale._assets_pos': [
+            'pos_woodforest/static/src/xml/chrome_patch.xml',
+            'pos_woodforest/static/src/xml/pos_terminal_status.xml',
+            'pos_woodforest/static/src/js/api_service.js',
+            'pos_woodforest/static/src/js/config_loader.js',
+            'pos_woodforest/static/src/js/order_models.js',
+            'pos_woodforest/static/src/js/order_patch.js',
+            'pos_woodforest/static/src/js/order_receipt_patch.js',
+            'pos_woodforest/static/src/js/payment_handler.js',
+            'pos_woodforest/static/src/js/payment_screen.js',
+            'pos_woodforest/static/src/xml/payment_screen_patch.xml',
+            'pos_woodforest/static/src/js/payment_lines_patch.js',
+            'pos_woodforest/static/src/js/patch_pos_store.js',
+            'pos_woodforest/static/src/js/product_screen.js',
+            'pos_woodforest/static/src/js/order_summary.js',
+            'pos_woodforest/static/src/js/setup_config.js',
+            'pos_woodforest/static/src/js/terminal_service.js',
+            'pos_woodforest/static/src/js/ticket_screen.js',
+            'pos_woodforest/static/src/js/utils.js',
+            'pos_woodforest/static/src/css/woodforest.css',
+            'pos_woodforest/static/src/js/navbar_patch.js',
+            'pos_woodforest/static/src/xml/order_receipt_template.xml',
+            'pos_woodforest/static/src/js/saved_card_selection_popup.js',
+            'pos_woodforest/static/src/xml/saved_card_selection_popup.xml',
+            'pos_woodforest/static/src/js/recovery_popup.js',
+            'pos_woodforest/static/src/xml/control_buttons_patch.xml',
+            'pos_woodforest/static/src/js/receipt_screen_patch.js',
+            'pos_woodforest/static/src/js/close_pos_patch.js',
+            'pos_woodforest/static/src/js/transaction_detail_popup.js',
+            'pos_woodforest/static/src/xml/transaction_detail_popup.xml',
+            'pos_woodforest/static/src/js/transaction_list_screen.js',
+            'pos_woodforest/static/src/xml/transaction_list_screen.xml',
+            'pos_woodforest/static/src/xml/navbar_transactions.xml',
+
+        ],
+    },
+    'icon': '/pos_woodforest/static/description/icon.png',
+    'images': [
+        'static/description/Woodofrest-thumbnail.gif',
+    ],
+    'installable': True,
+
+    'application': True,
+    'auto_install': False,
+}
