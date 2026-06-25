@@ -16,6 +16,7 @@ class PayrilliumTerminal(models.Model):
 
     name = fields.Char(string="Name", required=True)
     serial = fields.Char(string="Serial Number")
+    terminal_merchant_id = fields.Char(string="Terminal Merchant ID", readonly=True)
     iface_tipproduct = fields.Boolean(
         string="Enable Tips on Terminal",
         default=True,
@@ -413,7 +414,7 @@ class PayrilliumTerminal(models.Model):
             _logger.info("Check terminal payload=%s, ts=%s",
                          request_body, timestamp)
             resp = requests.post(url, headers=headers, json={
-                                 "data": request_body})
+                                 "data": request_body}, timeout=(5, None))
             resp.raise_for_status()
             data = resp.json()
 
@@ -461,6 +462,22 @@ class PayrilliumTerminal(models.Model):
                 execution_id, "terminal_ping", "response", None,
                 success=False, error_message=str(e))
             return {"status": "error", "message": str(e)}
+
+    @api.model
+    def action_sync_merchant_ui(self, terminal_id):
+        terminal = self.browse(terminal_id)
+        if not terminal.exists() or not terminal.serial:
+            return {'status': 'error', 'message': 'Missing serial'}
+        
+        try:
+            # We call the existing method that fetches and updates the merchant ID
+            res = terminal.action_fetch_terminal_merchant_id()
+            if isinstance(res, dict) and res.get('type') == 'ir.actions.client':
+                msg = res.get('params', {}).get('message', 'Check logs')
+                return {'status': 'error', 'message': msg}
+            return {'status': 'success', 'message': 'Updated', 'merchant_id': terminal.terminal_merchant_id}
+        except Exception as e:
+            return {'status': 'error', 'message': str(e)}
 
     def action_check_terminal(self):
         self.ensure_one()
@@ -568,7 +585,7 @@ class PayrilliumTerminal(models.Model):
             
             log_payrillium_event(execution_id, "tip", "request", request_body)
             
-            resp = requests.post(url, headers=headers, json={"data": request_body})
+            resp = requests.post(url, headers=headers, json={"data": request_body}, timeout=(5, None))
             
             if resp.status_code != 200:
                 error_msg = f"HTTP {resp.status_code}: {resp.text}"
@@ -639,23 +656,20 @@ class PayrilliumTerminal(models.Model):
     def action_test_approved_view(self):
         """Test the 'Approved' custom view on the terminal."""
         self.ensure_one()
-        config = self.env['payrillium.config'].sudo().search([], limit=1)
-        message = (config.approved_message or "{amount} Successfully Charged").replace("{amount}", "$100.00")
         payload = {
-            "title": config.approved_title or "Approved",
-            "message": message,
-            "timeout": str(config.approved_timeout or 5)
+            "title": "Approved",
+            "message": "$100.00 Successfully Charged",
+            "timeout": "5"
         }
         return self._send_view_to_terminal(payload, "approved", "Approved")
 
     def action_test_decline_view(self):
         """Test the 'Decline' custom view on the terminal."""
         self.ensure_one()
-        config = self.env['payrillium.config'].sudo().search([], limit=1)
         payload = {
-            "title": config.decline_title or "Declined",
-            "message": config.decline_message or "Transaction failed",
-            "timeout": str(config.decline_timeout or 5)
+            "title": "Declined",
+            "message": "Transaction failed",
+            "timeout": "5"
         }
         return self._send_view_to_terminal(payload, "decline", "Decline")
 
@@ -686,7 +700,7 @@ class PayrilliumTerminal(models.Model):
                 "timestamp": str(timestamp),
             }
             
-            resp = requests.post(url, headers=headers, json={"data": request_body})
+            resp = requests.post(url, headers=headers, json={"data": request_body}, timeout=(5, None))
             resp.raise_for_status()
             
             return {
@@ -734,7 +748,7 @@ class PayrilliumTerminal(models.Model):
             log_payrillium_event(
                 execution_id, "reset_terminal", "request", request_body)
             resp = requests.post(url, headers=headers, json={
-                                 "data": request_body})
+                                 "data": request_body}, timeout=(5, None))
             resp.raise_for_status()
             data = resp.json()
 
@@ -890,3 +904,55 @@ class PayrilliumTerminal(models.Model):
         except Exception as e:
             _logger.exception("=== ERROR creating terminal log wizard: %s ===", e)
             raise UserError(f"Error opening log download wizard: {e}")
+
+    def action_fetch_terminal_merchant_id(self):
+        self.ensure_one()
+        if not self.serial or self.serial == "NONE":
+            raise UserError("Terminal has no serial number configured.")
+        
+        execution_id = f"merchant_cfg_{self.serial}_{int(datetime.utcnow().timestamp())}"
+        try:
+            payload = {"data": {}}
+            url = build_url(self.serial, "local", "merchant_config")
+            timestamp = int(datetime.utcnow().timestamp()) * 1000
+            payload_clean = deep_clean_payload(payload)
+            auth_hash = build_header_hash(self.env, payload_clean, timestamp)
+            request_body = json.dumps(payload_clean, separators=(",", ":"))
+
+            log_payrillium_event(execution_id, "merchant_config", "request", request_body)
+
+            headers = {
+                "Content-Type": "application/json",
+                "Authorization": f"Basic {auth_hash}",
+                "timestamp": str(timestamp),
+            }
+
+            resp = requests.post(url, headers=headers, json={"data": request_body}, timeout=5.0)
+            resp.raise_for_status()
+            data = resp.json()
+
+            _logger.info("merchant_config raw response: %s", data)
+            log_payrillium_event(execution_id, "merchant_config", "response", data, success=True)
+            
+            merchant_id = data.get("data", {}).get("message", {}).get("merchantID")
+            
+            if merchant_id:
+                self.terminal_merchant_id = merchant_id
+                return
+            else:
+                _logger.warning("merchant_config: merchantID not found in response: %s", data)
+                return {
+                    'type': 'ir.actions.client',
+                    'tag': 'display_notification',
+                    'params': {
+                        'title': 'Warning',
+                        'message': "Response received but no merchantID found. Check terminal logs.",
+                        'type': 'warning',
+                        'sticky': False
+                    }
+                }
+
+        except Exception as e:
+            log_payrillium_event(execution_id, "merchant_config", "response", None, success=False, error_message=str(e))
+            raise UserError(f"Failed to fetch terminal configuration: {e}")
+

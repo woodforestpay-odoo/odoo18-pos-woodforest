@@ -85,7 +85,12 @@ def get_terminals_from_token(full_token):
                 "pbl_developer_id": mirillium_config["pbl_developer_id"],
                 "pbl_solution_id": mirillium_config["pbl_solution_id"],
                 "pbl_request_phone": mirillium_config["pbl_request_phone"],
-                "pbl_request_shipping": mirillium_config["pbl_request_shipping"]
+                "pbl_request_shipping": mirillium_config["pbl_request_shipping"],
+                "cybersource_merchant_id": next(
+                    (gp.get("merchant_id") for gp in (data.get("mirillium_config", {}).get("gateway_platforms", []))
+                     if gp.get("platform") == "CYBERSOURCE"),
+                    None
+                )
             }
 
         return {"success": False, "message": data.get("message", "Unexpected response from Mirillium"), "terminals": []}

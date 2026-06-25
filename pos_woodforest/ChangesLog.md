@@ -2,6 +2,45 @@ version = "18-1.5.5"
 
 ### Release Summary
 
+- **Critical: Split Payment Race Condition Fix (`payment_screen.js`):**
+  - **Bug:** In split payments (e.g. 4-way split), the `showSuccessMessage` ("Approved $X.XX") was sent to the terminal as fire-and-forget (no `await`). The `for` loop immediately started the next payment's tip request while the terminal was still displaying "Approved" from the previous payment. Both HTTP commands hit the terminal simultaneously, causing the tip screen to never appear on the customer-facing device. By the 3rd or 4th payment, the terminal reported **T04 Screen Inactivity** and the payment was declined.
+  - **Evidence:** Database `payrillium_log` confirmed `approved` REQUEST and `tip` REQUEST arriving at the exact same second for consecutive payments (e.g. 23:44:45 approved pago 1 + tip pago 2, 23:45:01 approved pago 2 + tip pago 3).
+  - **Fix:** When more payments follow in the split (`isLastWoodforest === false`), `showSuccessMessage` is now `await`ed so the terminal finishes displaying "Approved" before the next payment sends its tip request. The last payment in the split remains fire-and-forget to avoid blocking Odoo's ticket generation.
+
+- **Worker-Safe Registry Access (`controllers/main.py`):**
+  - Replaced `registry(dbname)` with `Registry(dbname)` (from `odoo.modules.registry`) in all async job functions (`_run_mirillium_call`, `_start_async_job`). The lowercase `registry()` is a convenience wrapper that can fail silently when called from background threads in multi-worker deployments.
+
+- **Stale Job Detection (`controllers/main.py`):**
+  - Added `_STALE_JOB_TIMEOUT_SECONDS = 180`. When a job stays in `pending`/`running` status longer than 3 minutes (e.g. the background thread died because the worker process was recycled), `poll_job` now marks it as `error` with a descriptive message instead of polling forever.
+
+- **Thread Start Protection (`controllers/main.py`):**
+  - `_start_async_job` now wraps `thread.start()` in a try/except. If the OS rejects the thread (resource limits, worker shutdown), the job is immediately marked as `error` in the database so the frontend receives a clean error instead of hanging.
+
+- **Missing Model File (`models/payrillium_async_job.py`):**
+  - Added the `payrillium.async.job` ORM model that was referenced in `models/__init__.py` but missing from the file system, causing an `ImportError` on module load.
+
+- **Fix: Custom Tip Calculation in Percent Mode (`api_service.js`):**
+  - **Bug:** When `tipMode` is `percent` and the customer taps "Custom" on the terminal, the entered value was incorrectly treated as a percentage. For example, on a $27.20 payment, typing `5` (meaning $5.00 tip) resulted in `(27.20 × 5) / 100 = $1.36` tip instead of $5.00.
+  - **Fix:** `TipResultCustom` now always treats the entered value as a flat dollar amount. Preset buttons (`TipResultOption`) continue converting percentages correctly.
+
+- **Fix: TERMINAL_BUSY Decline Cascade (`payment_screen.js`):**
+  - **Bug:** When the terminal responds with `TERMINAL_BUSY`, the error handler was sending a `showDecline` request to the same busy terminal. That decline also got a BUSY response, triggering another decline retry. This created an exponential cascade — logs show 20+ decline requests within seconds, all failing with BUSY, overloading the terminal.
+  - **Fix:** Added `skipTerminalDecline` logic that detects BUSY errors (via `isBusy`, `mcCode PYRD-TERMINAL_BUSY-000012`, or message text) and skips the decline message entirely. Also skips decline when auth was in-flight with a connection error, when cashier aborted, or when tip was cancelled (terminal already shows its own cancel screen).
+
+- **Fix: Consecutive Orders BUSY Collision (`api_service.js`):**
+  - **Bug:** After completing a sale, `showApproved` displayed "Approved" on the terminal indefinitely until the next command arrived. If the cashier quickly started a new order and reached the payment screen, the new order's `basket` and `tip` requests hit the terminal while it was still showing "Approved" → `TERMINAL_BUSY`.
+  - **Fix:** Added `paymentTimeOut: 10` (seconds) to both `showApproved` and `showDecline` payloads. The terminal now auto-clears the message after 10 seconds, freeing itself for the next order's commands.
+
+- **Fix: Always Await showApproved (`payment_screen.js`):**
+  - **Bug:** The last payment in an order fired `showApproved` as fire-and-forget. Odoo navigated to the ticket/receipt screen immediately, allowing the cashier to start a new order while the terminal was still displaying "Approved" (~3-5s). The new order's `basket`/`tip` commands then hit the busy terminal.
+  - **Fix:** `showApproved` is now always `await`ed — both for split payments and single payments. The ticket screen appears only after the terminal finishes displaying "Approved", guaranteeing the terminal is free for the next order.
+
+
+
+
+
+
+
 - **UI: FAQ Layout Enhancement (`faq_page.xml`, `faq_page.css`):**
   - **Improvement:** Refactored the terminal FAQ screen to use a stacked horizontal layout. The "Current Status" panel now spans the full top width with its child cards arranged horizontally, and the "Troubleshooting Actions" are positioned immediately below. 
   - **Responsive:** Added media queries to automatically stack the horizontal cards vertically on screens smaller than 1000px.
@@ -9,6 +48,10 @@ version = "18-1.5.5"
 - **Critical: Crash Manager Shield (`payment_screen.js`, `utils.js`):**
   - **Bug:** The Odoo 18 base POS occasionally throws malformed, raw JavaScript objects (e.g., `{ code: 401, message: "Backend Invoice" }`) instead of standard `Error` instances during network micro-cuts or invoice generation failures. When the Woodforest error handler caught these and attempted to display them, Odoo's global Crash Manager crashed trying to read `error.stack.split()`, resulting in a fatal white "Oops!" screen that locked the terminal.
   - **Fix:** Added `ensureError()` utility in `utils.js` that converts any thrown value into a proper `Error` instance with a valid `.stack` property. All catch blocks in `payment_screen.js` now wrap errors with `ensureError()` before passing them to handlers. Added a fail-safe inner try/catch around `_handlePaymentError` — if it crashes internally, a basic AlertDialog is shown instead of the white screen.
+
+- **Fix: Multi-Worker Compatibility (2 workers support):**
+  - **Improvement:** Resolved background threading and concurrency issues when running Odoo with multiple worker processes (e.g., `workers = 2`), ensuring stable transaction checks and payment processing.
+
 
 - **Critical: Serialize Ghost Reference Fix (`order_patch.js`):**
   - **Bug:** Pressing "Validate" crashed with `TypeError: Cannot read properties of undefined (reading 'serialize')`. This occurred when `syncAllOrders` attempted to serialize an order containing a reference to a deleted payment line (ghost record) that no longer existed in OWL's reactive state.
@@ -21,8 +64,15 @@ version = "18-1.5.5"
 - **Dynamic Payment Method Name (`order_patch.js`, `setup_config.js`):**
   - **Refactor:** Removed all hardcoded `"woodforest"` string comparisons from `order_patch.js`. Introduced `getPayrilliumMethodName()` in `setup_config.js` that reads the payment method name from the cached config (fallback: `"woodforest"`). Renamed `_isWoodforestPayment()` → `_isPayrilliumPayment()` and `PosPayment` checks now use `_isOurPaymentMethod()`. This makes the module portable — changing the payment method name in the backend automatically propagates everywhere.
 
+- **Configuration & UX Improvements:**
+  - **Feature:** Added Cybersource Merchant ID to the Payrillium Configuration (Database, UI, and validation).
+  - **Feature:** New dynamic Receipt Font Size control (Extra Small, Small, Normal, Large) configurable directly from the Woodforest settings panel.
+  - **Improvement:** Cleaned up the terminal settings UI by replacing the deprecated Approved/Decline messages with the new Receipt Preferences.
+  - **Stability:** Added a 5-second timeout safeguard to all terminal API calls to prevent the POS from hanging during local network or IPv6 routing failures.
+  - **UX:** Improved Support Dashboard with real-time Merchant ID sync feedback, auto-clearing statuses, and clean bootstrap layouts.
 
-version = "18-1.5.3"
+
+version = "18-1.5.4"
 
 ### Release Summary
 

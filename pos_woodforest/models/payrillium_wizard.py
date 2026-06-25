@@ -362,7 +362,8 @@ class PayrilliumWizard(models.TransientModel):
                 'pbl_request_phone': pbl_request_phone,
                 'pbl_request_shipping': pbl_request_shipping,
                 'receivable_account_id': self.receivable_account_id.id,
-                'outstanding_account_id': self.account_id.id
+                'outstanding_account_id': self.account_id.id,
+                'cybersource_merchant_id': response.get("cybersource_merchant_id"),
             }
             if config:
                 config.write(values)

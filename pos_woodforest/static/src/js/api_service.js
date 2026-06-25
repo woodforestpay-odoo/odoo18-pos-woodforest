@@ -8,6 +8,7 @@ import {
 import { rpc } from "@web/core/network/rpc";
 
 const console = payrilliumConsole;
+const BACKGROUND_TIMEOUT = 10;
 
 // ─────────────────────────────────────────────
 // TERMINAL_BUSY Retry Wrapper
@@ -269,6 +270,7 @@ export const PayrilliumAPI = {
     }
   },
   async showApproved(payload, executionId = null, sessionId = null) {
+    payload = { ...payload, paymentTimeOut: BACKGROUND_TIMEOUT };
     return _withBusyRetry(async () => {
       try {
         await _logTerminalInfo(sessionId, "showApproved");
@@ -285,6 +287,7 @@ export const PayrilliumAPI = {
   },
 
   async showDecline(payload, executionId = null, sessionId = null) {
+    payload = { ...payload, paymentTimeOut: BACKGROUND_TIMEOUT };
     return _withBusyRetry(async () => {
       try {
         await _logTerminalInfo(sessionId, "showDecline");
@@ -378,11 +381,13 @@ export const PayrilliumAPI = {
         const resultData = tipResult?.data?.data;
 
         if (resultType?.includes("TipResultCustom")) {
+          // Custom tip is ALWAYS a dollar amount — the terminal input does not
+          // show a "%" symbol, so the customer types dollars regardless of tipMode.
           const raw = parseFloat(
             String(resultData?.value ?? 0).replace(",", "."),
           );
           if (!isNaN(raw) && raw > 0) {
-            tipAmount = isPercentMode ? (lineAmount * raw) / 100 : raw;
+            tipAmount = raw;
           }
         } else if (resultType?.includes("TipResultOption")) {
           const index = resultData?.selection;

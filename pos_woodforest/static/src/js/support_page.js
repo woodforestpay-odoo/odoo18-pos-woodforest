@@ -20,6 +20,8 @@ export class PayrilliumSupportPage extends Component {
       loadingTerminals: true,
       downloadingTerminalId: null,
       downloadingServerLogs: false,
+      cybersourceMerchantId: null,
+      fetchingMerchantId: false,
 
       // Cybersource Search
       cs: {
@@ -40,7 +42,10 @@ export class PayrilliumSupportPage extends Component {
     });
 
     onMounted(async () => {
-      await this._loadTerminals();
+      await Promise.all([
+        this._loadTerminals(),
+        this._fetchCybersourceMerchantId()
+      ]);
     });
   }
 
@@ -52,11 +57,74 @@ export class PayrilliumSupportPage extends Component {
       this.state.terminals = await this.orm.searchRead(
         "payrillium.terminal",
         [],
-        ["name", "serial"],
+        ["name", "serial", "terminal_merchant_id"],
       );
     } finally {
       this.state.loadingTerminals = false;
     }
+  }
+
+  async _fetchCybersourceMerchantId() {
+    this.state.fetchingMerchantId = true;
+    try {
+      const configs = await this.orm.searchRead("payrillium.config", [], ["id", "cybersource_merchant_id"], { limit: 1 });
+      if (configs.length > 0) {
+        if (configs[0].cybersource_merchant_id) {
+          // Already stored in DB — just display it
+          this.state.cybersourceMerchantId = configs[0].cybersource_merchant_id;
+        } else {
+          // Not yet stored (e.g. existing install before this feature) — fetch once and save
+          const result = await this.orm.call("payrillium.config", "action_fetch_cybersource_merchant_id", [configs[0].id]);
+          if (result && result.success) {
+            this.state.cybersourceMerchantId = result.cybersource_merchant_id;
+          } else {
+            this.state.cybersourceMerchantId = null;
+          }
+        }
+      }
+    } catch (e) {
+      console.error("Error fetching cybersource merchant ID:", e);
+      this.state.cybersourceMerchantId = null;
+    } finally {
+      this.state.fetchingMerchantId = false;
+    }
+  }
+
+  async refreshCybersourceMerchantId() {
+    this.state.fetchingMerchantId = true;
+    try {
+      const configs = await this.orm.searchRead("payrillium.config", [], ["id"], { limit: 1 });
+      if (configs.length > 0) {
+        const result = await this.orm.call("payrillium.config", "action_fetch_cybersource_merchant_id", [configs[0].id]);
+        if (result && result.success) {
+          this.state.cybersourceMerchantId = result.cybersource_merchant_id;
+          this.notification.add(`Updated: ${result.cybersource_merchant_id}`, { type: "success", title: "Cybersource Merchant ID" });
+        } else {
+          this.notification.add(result?.message || "Failed to fetch", { type: "warning", title: "Cybersource Merchant ID" });
+        }
+      }
+    } catch (e) {
+      console.error("Error refreshing cybersource merchant ID:", e);
+      this.notification.add(e.message || "Error", { type: "danger", title: "Refresh Error" });
+    } finally {
+      this.state.fetchingMerchantId = false;
+    }
+  }
+
+  merchantIdStatus(terminal) {
+    if (!terminal.terminal_merchant_id) {
+      return { label: "Not fetched", cls: "text-muted", icon: "fa-question-circle", title: "" };
+    }
+    
+    const isMatch = this.state.cybersourceMerchantId && terminal.terminal_merchant_id === this.state.cybersourceMerchantId;
+
+    if (!this.state.cybersourceMerchantId) {
+      return { label: terminal.terminal_merchant_id, cls: "text-muted", icon: "fa-minus-circle", title: "" };
+    }
+    if (isMatch) {
+      return { label: terminal.terminal_merchant_id, cls: "text-success", icon: "fa-check-circle", title: "Matches backend configuration" };
+    }
+    return { label: terminal.terminal_merchant_id, cls: "text-danger", icon: "fa-exclamation-triangle", title: "Mismatch with backend configuration!" };
   }
 
   _today() {
@@ -104,6 +172,39 @@ export class PayrilliumSupportPage extends Component {
       }
     } finally {
       this.state.downloadingTerminalId = null;
+    }
+  }
+
+  async syncTerminalMerchant(terminal) {
+    terminal.syncing = true;
+    terminal.syncResult = null;
+    try {
+      const result = await this.orm.call(
+        "payrillium.terminal",
+        "action_sync_merchant_ui",
+        [terminal.id],
+      );
+      terminal.syncResult = result;
+      if (result && result.status === 'success' && result.merchant_id) {
+          terminal.terminal_merchant_id = result.merchant_id;
+      } else {
+          // If sync fails (e.g., offline), we mark it as unknown/not-fetched
+          terminal.terminal_merchant_id = null;
+      }
+    } catch (error) {
+      terminal.syncResult = { status: 'error', message: 'Connection Error' };
+      terminal.terminal_merchant_id = null;
+    } finally {
+      terminal.syncing = false;
+      setTimeout(() => {
+        terminal.syncResult = null;
+      }, 3500);
+    }
+  }
+
+  async syncAllMerchants() {
+    for (const t of this.state.terminals) {
+      await this.syncTerminalMerchant(t);
     }
   }
 

@@ -382,7 +382,7 @@ export async function showDeclineMessage(
     {
       title: title || settings.title || "Declined",
       message: message || settings.message || "Transaction failed",
-      timeout: settings.timeout || "5",
+      timeout: settings.timeout || "3",
     },
     executionId,
     sessionId,

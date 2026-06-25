@@ -21,4 +21,4 @@ from . import res_partner
 from . import terminal_log_wizard
 from . import pos_order
 from . import pos_make_payment
-
+from . import payrillium_async_job

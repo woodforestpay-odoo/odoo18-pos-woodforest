@@ -102,3 +102,28 @@
   0%, 100% { box-shadow: 0 2px 8px rgba(229, 57, 53, 0.35); }
   50%      { box-shadow: 0 2px 14px rgba(229, 57, 53, 0.6); }
 }
+
+/* ── Receipt Font Size Overrides ────────────────────────── */
+
+/* Screen preview (inside POS UI) */
+.pos-receipt.wf-receipt-font-xs   { font-size: 10px !important; }
+.pos-receipt.wf-receipt-font-small { font-size: 12px !important; }
+/* normal = 14px (Odoo default, no override needed) */
+.pos-receipt.wf-receipt-font-large { font-size: 18px !important; }
+
+/* Print output */
+@media print {
+    .render-container .pos-receipt.wf-receipt-font-xs { 
+        font-size: 18px !important; 
+    }
+    
+    .render-container .pos-receipt.wf-receipt-font-small { 
+        font-size: 22px !important; 
+    }
+    
+    /* normal = 27px (Odoo default for print, no override needed) */
+    
+    .render-container .pos-receipt.wf-receipt-font-large { 
+        font-size: 32px !important; 
+    }
+}

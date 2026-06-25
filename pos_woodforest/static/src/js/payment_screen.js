@@ -986,8 +986,12 @@ patch(PaymentScreen.prototype, {
       // Signal navbar that the terminal is responding
       payrilliumBus.trigger("payrillium:terminal_online");
 
-      // Fire and forget: We do NOT await this. Waiting here blocks Odoo's ticket generation
-      // for 6+ seconds while the terminal slowly acknowledges the message.
+      // Show "Approved" on the terminal.
+      // SPLIT PAYMENT FIX: When more payments follow (isLastWoodforest === false),
+      // we MUST await this so the terminal finishes displaying "Approved" before
+      // the next payment sends its tip request. Without this, both commands hit
+      // the terminal simultaneously and the tip screen never appears.
+      // For the last payment, fire-and-forget is safe — no subsequent commands.
       try {
         const chargedAmount =
           this.transactionDataToSave?.amount || paymentLine.get_amount();
@@ -995,22 +999,24 @@ patch(PaymentScreen.prototype, {
           ? this._posService.formatCurrency(chargedAmount)
           : chargedAmount.toFixed(2);
         console.warn(
-          `[showSuccess] Displaying approved amount: $${chargedAmount} (base=$${paymentLine.get_amount()}, tip=$${tipAmount})`,
+          `[showSuccess] Displaying approved amount: $${chargedAmount} (base=$${paymentLine.get_amount()}, tip=$${tipAmount}), isLast=${isLastWoodforest}`,
         );
 
-        showSuccessMessage(
+        const approvedPromise = showSuccessMessage(
           this.payrilliumAPI,
           this.terminalMessages,
           formattedAmount,
           this.executionId,
           sessionId,
           tipAmount,
-        ).catch((e) => {
-          console.warn(
-            "Failed to show success message on terminal in background",
-            e,
-          );
-        });
+        );
+
+        // Always await — ensures the terminal finishes showing "Approved"
+        // before Odoo proceeds. This prevents the next order's basket/tip
+        // from hitting a busy terminal (PYRD-TERMINAL_BUSY-000012).
+        console.warn("[showSuccess] Awaiting terminal acknowledgment before proceeding");
+        await approvedPromise;
+        console.warn("[showSuccess] Terminal acknowledged — terminal is free");
       } catch (e) {
         console.warn("Error preparing success message", e);
       }
@@ -1148,22 +1154,45 @@ patch(PaymentScreen.prototype, {
         paymentLine,
       };
       paymentLine.set_payment_status("retry");
-      // Show error-specific message on terminal (fire-and-forget)
-      showDeclineMessage(
-        this.payrilliumAPI,
-        this.terminalMessages,
-        this.executionId,
-        sessionId,
-        {
-          title: isCashierAbort ? "Cancelled" : (error?.terminalTitle || "Declined"),
-          message: isCashierAbort ? "Cancelled by Operator" : (error?.terminalMsg || "Transaction Failed"),
-        },
-      ).catch((e) => {
+
+      // Determine if sending a decline to the terminal would be pointless or harmful:
+      // - Terminal is busy → it can't show our message anyway
+      // - Auth was in flight + comm error → terminal may still be processing
+      // - Cashier aborted → terminal state is unknown
+      // - Tip was cancelled → terminal already showed its own cancel screen
+      const isTerminalBusy =
+        error?.isBusy ||
+        error?.mcCode === "PYRD-TERMINAL_BUSY-000012" ||
+        (error?.message && error.message.toLowerCase().includes("busy"));
+
+      const skipTerminalDecline =
+        isTerminalBusy ||
+        (this._authWasStarted && (error.terminalConnectionError || error.isCommError)) ||
+        this._payrilliumAborted ||
+        error?.cancelled ||
+        error?.tipCancelled;
+
+      if (!skipTerminalDecline) {
+        showDeclineMessage(
+          this.payrilliumAPI,
+          this.terminalMessages,
+          this.executionId,
+          sessionId,
+          {
+            title: isCashierAbort ? "Cancelled" : (error?.terminalTitle || "Error"),
+            message: isCashierAbort ? "Cancelled by Operator" : (error?.terminalMsg || "Payment could not be completed"),
+          },
+        ).catch((e) => {
+          console.warn(
+            "Failed to show decline message on terminal in background",
+            e,
+          );
+        });
+      } else {
         console.warn(
-          "Failed to show decline message on terminal in background",
-          e,
+          "[SKIP DECLINE] Not sending decline to terminal — terminal is busy, cancelled, or auth outcome is unknown.",
         );
-      });
+      }
       await this._handlePaymentError(ensureError(formattedError));
       return false;
     } finally {

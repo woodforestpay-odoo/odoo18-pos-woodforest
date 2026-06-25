@@ -8,12 +8,13 @@ import uuid as uuid_lib
 from datetime import datetime, timezone
 import random
 import logging
+import odoo
+from odoo.modules.registry import Registry
 
-from odoo import _
+from odoo import _, http, fields, api
 from ..config import PAYMENT_METHOD_NAME
 from ..config import PAYMENT_METHOD_COLOR
 from ..config import PAYMENT_METHOD_ICON
-from odoo import http, fields
 from odoo.http import request
 from ..services.mirillium.utils import get_payrillium_credentials
 from ..services.logging_service import log_payrillium_event
@@ -26,32 +27,33 @@ _logger = logging.getLogger(__name__)
 API_BASE_URL = f"{CLOUD_MIRILLIUM_API_URL}"
 
 # ─────────────────────────────────────────────
-#  Async Polling Infrastructure
+#  Async Polling Infrastructure (ORM-backed)
 #  Avoids proxy timeout (504) on long Mirillium calls
 # ─────────────────────────────────────────────
-_pending_jobs = {}   # { job_id: { "status": "pending"|"done"|"error", "data": ..., "ts": float } }
-_jobs_lock = threading.Lock()
-_JOBS_MAX_AGE = 300  # seconds before a job is cleaned up
 
+# Maximum time (seconds) a job can stay in pending/running before being
+# considered stale.  This handles the case where a worker process is recycled
+# mid-flight and the background thread dies silently.
+_STALE_JOB_TIMEOUT_SECONDS = 180
 
-def _cleanup_old_jobs():
-    """Remove jobs older than _JOBS_MAX_AGE seconds."""
-    now = time.time()
-    with _jobs_lock:
-        expired = [k for k, v in _pending_jobs.items() if now - v.get("ts", 0) > _JOBS_MAX_AGE]
-        for k in expired:
-            del _pending_jobs[k]
+def _cleanup_old_jobs(env):
+    """Remove jobs older than 15 minutes to keep the table clean."""
+    try:
+        time_threshold = fields.Datetime.subtract(fields.Datetime.now(), minutes=15)
+        expired_jobs = env["payrillium.async.job"].sudo().search([("create_date", "<", time_threshold)])
+        if expired_jobs:
+            expired_jobs.unlink()
+    except Exception as e:
+        _logger.warning("Error cleaning up old async jobs: %s", e)
 
 
 def _run_mirillium_call(job_id, url, headers, body, execution_id, endpoint, dbname, post_process=None):
     """
-    Execute the Mirillium HTTP call in a background thread and store the result.
-    This function does NOT use request.env — it only does:
-      1. Pure HTTP via requests.post()
-      2. DB logging via log_payrillium_event(dbname=...)
+    Execute the Mirillium HTTP call in a background thread and store the result
+    safely in the PostgreSQL database using an isolated cursor.
     """
     try:
-        response = requests.post(url, headers=headers, json={"data": body})
+        response = requests.post(url, headers=headers, json={"data": body}, timeout=(5, None))
 
         # Capture response body BEFORE raise_for_status — Mirillium sends
         # useful error details in the body even on 4xx/5xx responses
@@ -64,44 +66,92 @@ def _run_mirillium_call(job_id, url, headers, body, execution_id, endpoint, dbna
             _logger.error("  [async] Mirillium %s returned HTTP %s: %s", endpoint, http_status, error_body)
             log_payrillium_event(execution_id, endpoint, "response", error_body,
                                 success=False, error_message=f"HTTP {http_status}", dbname=dbname)
-            with _jobs_lock:
-                _pending_jobs[job_id] = {
-                    "status": "error",
-                    "data": {"status": "error", "http_status": http_status, "api_response": error_body},
-                    "ts": time.time()
-                }
+            
+            with Registry(dbname).cursor() as cr:
+                env = api.Environment(cr, odoo.SUPERUSER_ID, {})
+                job = env["payrillium.async.job"].sudo().search([("job_id", "=", job_id)], limit=1)
+                if job:
+                    job.write({
+                        "status": "error",
+                        "result_data": {"status": "error", "http_status": http_status, "api_response": error_body},
+                        "error_message": f"HTTP {http_status}"
+                    })
+                cr.commit()
             return
 
         data = response.json()
         if post_process:
             data = post_process(data)
         log_payrillium_event(execution_id, endpoint, "response", data, success=True, dbname=dbname)
-        with _jobs_lock:
-            _pending_jobs[job_id] = {"status": "done", "data": data, "ts": time.time()}
+        
+        with Registry(dbname).cursor() as cr:
+            env = api.Environment(cr, odoo.SUPERUSER_ID, {})
+            job = env["payrillium.async.job"].sudo().search([("job_id", "=", job_id)], limit=1)
+            if job:
+                job.write({
+                    "status": "done",
+                    "result_data": data
+                })
+            cr.commit()
+            
     except Exception as e:
         error_msg = str(e)
         _logger.error("  [async] Error in %s: %s", endpoint, error_msg)
         log_payrillium_event(execution_id, endpoint, "response", None,
                             success=False, error_message=error_msg, dbname=dbname)
-        with _jobs_lock:
-            _pending_jobs[job_id] = {
-                "status": "error",
-                "data": {"status": "error", "message": error_msg},
-                "ts": time.time()
-            }
+        
+        with Registry(dbname).cursor() as cr:
+            env = api.Environment(cr, odoo.SUPERUSER_ID, {})
+            job = env["payrillium.async.job"].sudo().search([("job_id", "=", job_id)], limit=1)
+            if job:
+                job.write({
+                    "status": "error",
+                    "result_data": {"status": "error", "message": error_msg},
+                    "error_message": error_msg
+                })
+            cr.commit()
 
 
 def _start_async_job(url, headers, body, execution_id, endpoint, dbname, post_process=None):
-    """Create a pending job, launch a thread, and return the job_id."""
+    """Create a pending job with an isolated cursor, launch a thread, and return the job_id."""
     job_id = str(uuid_lib.uuid4())
-    with _jobs_lock:
-        _pending_jobs[job_id] = {"status": "pending", "ts": time.time()}
+    
+    # Create the job using an isolated cursor and commit explicitly 
+    # to avoid race conditions with the background thread.
+    with Registry(dbname).cursor() as cr:
+        env = api.Environment(cr, odoo.SUPERUSER_ID, {})
+        env["payrillium.async.job"].sudo().create({
+            "job_id": job_id,
+            "execution_id": execution_id,
+            "endpoint": endpoint,
+            "status": "pending"
+        })
+        cr.commit()
+        
     thread = threading.Thread(
         target=_run_mirillium_call,
         args=(job_id, url, headers, body, execution_id, endpoint, dbname, post_process),
         daemon=True
     )
-    thread.start()
+    try:
+        thread.start()
+    except Exception as exc:
+        _logger.error("  [async] Failed to start thread for job %s: %s", job_id, exc)
+        try:
+            with Registry(dbname).cursor() as cr:
+                env = api.Environment(cr, odoo.SUPERUSER_ID, {})
+                job = env["payrillium.async.job"].sudo().search([("job_id", "=", job_id)], limit=1)
+                if job:
+                    job.write({
+                        "status": "error",
+                        "result_data": {"status": "error", "message": f"Thread start failed: {exc}"},
+                        "error_message": f"Thread start failed: {exc}"
+                    })
+                cr.commit()
+        except Exception:
+            _logger.error("  [async] Could not mark job %s as error after thread failure", job_id)
+        return job_id
+
     _logger.info("  [async] Started job %s for %s", job_id, endpoint)
     return job_id
 
@@ -222,18 +272,45 @@ class PayrilliumWizardController(http.Controller):
         if not job_id:
             return {"status": "error", "message": "Missing job_id"}
 
-        _cleanup_old_jobs()
+        _cleanup_old_jobs(request.env)
 
-        with _jobs_lock:
-            job = _pending_jobs.get(job_id)
-            if job and job["status"] != "pending":
-                # Job is done or errored — return and clean up
-                _pending_jobs.pop(job_id, None)
-
+        job = request.env["payrillium.async.job"].sudo().search([("job_id", "=", job_id)], limit=1)
+        
         if not job:
-            return {"status": "not_found"}
+            # Do NOT aggressively return not_found to prevent premature M99 errors.
+            # It could be DB replication lag or a race condition.
+            return {"status": "pending", "message": "Job initializing"}
 
-        return {"status": job["status"], "data": job.get("data")}
+        if job.status in ("pending", "running"):
+            # Stale job detection: if the job has been pending/running longer
+            # than _STALE_JOB_TIMEOUT_SECONDS, the background thread likely died
+            # (e.g. worker recycled).  Mark it as error so the frontend doesn't
+            # wait forever.
+            age_seconds = (fields.Datetime.now() - job.create_date).total_seconds()
+            if age_seconds > _STALE_JOB_TIMEOUT_SECONDS:
+                _logger.warning("  [poll] Job %s is stale (%.0fs in %s). Marking as error.", job_id, age_seconds, job.status)
+                job.write({
+                    "status": "error",
+                    "result_data": {
+                        "status": "error",
+                        "message": "Payment processing timed out. The background worker may have been recycled. Please retry."
+                    },
+                    "error_message": f"Stale job: {age_seconds:.0f}s in {job.status}"
+                })
+                # Fall through to the done/error return below
+            else:
+                return {"status": "pending"}
+
+        # Job is done or errored — read data, clean up, and return
+        status = job.status
+        data = job.result_data
+        
+        try:
+            job.unlink()
+        except Exception:
+            pass
+
+        return {"status": status, "data": data}
 
     # ─────────────────────────────────────────────
     #  Configuration Endpoints
@@ -359,17 +436,16 @@ class PayrilliumWizardController(http.Controller):
 
     @http.route('/woodforest/config/messages', type='json', auth='user')
     def get_terminal_messages(self):
-        config = request.env['payrillium.config'].sudo().search([], limit=1)
         return {
             "approved": {
-                "title": config.approved_title or "Approved",
-                "message": config.approved_message or "{amount} Successfully Charged",
-                "timeout": str(config.approved_timeout or 5)
+                "title": "Approved",
+                "message": "{amount} Successfully Charged",
+                "timeout": "5"
             },
             "decline": {
-                "title": config.decline_title or "Declined",
-                "message": config.decline_message or "Transaction failed",
-                "timeout": str(config.decline_timeout or 5)
+                "title": "Declined",
+                "message": "Transaction failed",
+                "timeout": "5"
             }
         }
 

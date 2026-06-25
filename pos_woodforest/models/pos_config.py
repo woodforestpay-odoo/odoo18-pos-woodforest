@@ -25,6 +25,18 @@ class PosConfig(models.Model):
         readonly=True
     )
 
+    payrillium_receipt_font_size = fields.Selection([
+        ('xs', 'Extra Small'),
+        ('small', 'Small'),
+        ('normal', 'Normal'),
+        ('large', 'Large'),
+    ], string='Receipt Font Size', compute='_compute_payrillium_receipt_font_size')
+
+    def _compute_payrillium_receipt_font_size(self):
+        config = self.env['payrillium.config'].sudo().search([], limit=1)
+        for record in self:
+            record.payrillium_receipt_font_size = config.receipt_font_size if config else 'normal'
+
     def write(self, vals):
         if 'payrillium_terminal_id' in vals and not self.env.context.get('terminal_sync'):
             for config in self:

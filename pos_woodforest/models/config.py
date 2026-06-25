@@ -5,6 +5,7 @@ import logging
 import base64
 import hashlib
 from ..services.mirillium import get_terminals_from_token
+from ..services.logging_service import log_payrillium_event
 from ..config import version, PAYMENT_METHOD_NAME, APPLY_FOR_ACTIVATION_URL
 
 _logger = logging.getLogger(__name__)
@@ -137,6 +138,7 @@ class PayrilliumConfig(models.Model):
                 record.wizard_button_text = f"Activate {name}"
 
     merchant_id = fields.Char("Merchant ID")
+    cybersource_merchant_id = fields.Char("Cybersource Merchant ID", readonly=True)
 
     # Encrypted field stored in DB
     _secret_key_encrypted = fields.Char("Secret Key (Encrypted)", store=True)
@@ -163,14 +165,14 @@ class PayrilliumConfig(models.Model):
         help="Intermediate account used for payments waiting for settlement."
     )
 
-    # Approved/Decline Terminal Messages
-    approved_title = fields.Char(string="Approved Title", default="Approved", help="Title shown on the terminal when a payment is successful")
-    approved_message = fields.Char(string="Approved Message", default="{amount} Successfully Charged", help="Message shown on the terminal when a payment is successful. Use {amount} as placeholder.")
-    approved_timeout = fields.Integer(string="Approved Timeout", default=5, help="Time in seconds the approved message stays on screen")
-    
-    decline_title = fields.Char(string="Decline Title", default="Declined", help="Title shown on the terminal when a payment fails")
-    decline_message = fields.Char(string="Decline Message", default="Transaction failed", help="Message shown on the terminal when a payment fails")
-    decline_timeout = fields.Integer(string="Decline Timeout", default=5, help="Time in seconds the decline message stays on screen")
+    # Receipt Configuration
+    receipt_font_size = fields.Selection([
+        ('xs', 'Extra Small'),
+        ('small', 'Small'),
+        ('normal', 'Normal'),
+        ('large', 'Large'),
+    ], string='Receipt Font Size', default='normal', required=True,
+       help='Controls the font size of printed receipts globally.')
 
     @api.model
     def get_singleton_id(self):
@@ -464,3 +466,36 @@ class PayrilliumConfig(models.Model):
                 # Fallback to plain text with prefix
                 record._secret_key_encrypted = f"{_PLAIN_TEXT_PREFIX}{record.secret_key}"
 
+    def action_fetch_cybersource_merchant_id(self):
+        self.ensure_one()
+        if not self.token:
+            return {"success": False, "message": "No token configured"}
+        
+        import time
+        execution_id = f"fetch_cs_mid_{int(time.time())}"
+        log_payrillium_event(execution_id, "cybersource_merchant_id", "request",
+                             {"token": self.token[:4] + "****"}, env=self.env)
+        
+        try:
+            result = get_terminals_from_token(self.token)
+            if result.get("success"):
+                cybersource_id = result.get("cybersource_merchant_id")
+                if cybersource_id:
+                    self.cybersource_merchant_id = cybersource_id
+                    log_payrillium_event(execution_id, "cybersource_merchant_id", "response",
+                                         {"cybersource_merchant_id": cybersource_id},
+                                         success=True, env=self.env)
+                    return {"success": True, "cybersource_merchant_id": cybersource_id}
+                log_payrillium_event(execution_id, "cybersource_merchant_id", "response",
+                                     result, success=False,
+                                     error_message="No Cybersource platform in response", env=self.env)
+                return {"success": False, "message": "No Cybersource platform found in API response"}
+            log_payrillium_event(execution_id, "cybersource_merchant_id", "response",
+                                 result, success=False,
+                                 error_message=result.get("message", "API error"), env=self.env)
+            return {"success": False, "message": result.get("message", "Failed to fetch from API")}
+        except Exception as e:
+            log_payrillium_event(execution_id, "cybersource_merchant_id", "response",
+                                 None, success=False, error_message=str(e), env=self.env)
+            _logger.exception("Error fetching cybersource merchant ID")
+            return {"success": False, "message": str(e)}

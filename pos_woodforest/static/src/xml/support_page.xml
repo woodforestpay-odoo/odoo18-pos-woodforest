@@ -79,8 +79,13 @@
                                     <div>
                                         <h2 class="o_support_section_title mb-0">Terminal Logs</h2>
                                         <p class="o_support_section_desc mb-0">
-                                            Logs from each terminal.
+                                            Logs and configurations from each terminal.
                                         </p>
+                                    </div>
+                                    <div class="ms-auto mt-2 mt-md-0">
+                                        <button class="btn btn-info btn-sm text-white" t-on-click="() => this.syncAllMerchants()">
+                                            <i class="fa fa-refresh me-1"/> Sync Configurations
+                                        </button>
                                     </div>
                                 </div>
 
@@ -90,13 +95,14 @@
                                             <tr>
                                                 <th>Terminal Name</th>
                                                 <th>Serial Number</th>
+                                                <th>Merchant ID Configured</th>
                                                 <th class="text-end">Actions</th>
                                             </tr>
                                         </thead>
                                         <tbody>
                                             <t t-if="state.loadingTerminals">
                                                 <tr>
-                                                    <td colspan="3" class="text-center py-4">
+                                                    <td colspan="4" class="text-center py-4">
                                                         <i class="fa fa-circle-o-notch fa-spin me-2"/>Loading...
                                                     </td>
                                                 </tr>
@@ -104,25 +110,53 @@
                                             <t t-else="">
                                                 <t t-foreach="state.terminals" t-as="terminal" t-key="terminal.id">
                                                     <tr>
-                                                        <td t-esc="terminal.name"/>
-                                                        <td t-esc="terminal.serial"/>
-                                                        <td class="text-end">
-                                                            <button class="btn btn-secondary btn-sm"
-                                                                    t-on-click="() => this.downloadTerminalLogs(terminal.id)"
-                                                                    t-att-disabled="state.downloadingTerminalId === terminal.id">
-                                                                <t t-if="state.downloadingTerminalId === terminal.id">
-                                                                    <i class="fa fa-circle-o-notch fa-spin me-1"/>Loading...
+                                                        <td class="text-nowrap align-middle" t-esc="terminal.name"/>
+                                                        <td class="text-nowrap align-middle" t-esc="terminal.serial"/>
+                                                        <td class="align-middle">
+                                                            <t t-set="midStatus" t-value="this.merchantIdStatus(terminal)"/>
+                                                            <div class="d-flex flex-column align-items-start gap-1">
+                                                                <span t-att-class="midStatus.cls + ' text-nowrap'">
+                                                                    <i t-attf-class="fa {{ midStatus.icon }} me-1"/>
+                                                                    <t t-esc="midStatus.label"/>
+                                                                </span>
+                                                                <!-- Sync Feedback -->
+                                                                <t t-if="terminal.syncing">
+                                                                    <span class="badge bg-secondary"><i class="fa fa-spin fa-circle-o-notch me-1"/>Checking...</span>
                                                                 </t>
-                                                                <t t-else="">
-                                                                    <i class="fa fa-download me-1"/>Download
+                                                                <t t-elif="terminal.syncResult">
+                                                                    <span t-if="terminal.syncResult.status === 'success'" class="badge bg-success"><i class="fa fa-check me-1"/>Updated</span>
+                                                                    <span t-else="" class="badge bg-danger" t-att-title="terminal.syncResult.message"><i class="fa fa-exclamation-triangle me-1"/>Offline</span>
                                                                 </t>
-                                                            </button>
+                                                            </div>
+                                                        </td>
+                                                        <td class="text-end align-middle">
+                                                            <div class="d-flex justify-content-end align-items-center gap-2">
+                                                                <button class="btn btn-outline-info btn-sm"
+                                                                        title="Check Configuration"
+                                                                        t-on-click="() => this.syncTerminalMerchant(terminal)"
+                                                                        t-att-disabled="terminal.syncing"
+                                                                        style="width: 32px; height: 32px; display: inline-flex; align-items: center; justify-content: center; padding: 0;">
+                                                                    <i class="fa fa-refresh"/>
+                                                                </button>
+                                                                <button class="btn btn-outline-secondary btn-sm"
+                                                                        title="Download Logs"
+                                                                        t-on-click="() => this.downloadTerminalLogs(terminal.id)"
+                                                                        t-att-disabled="state.downloadingTerminalId === terminal.id"
+                                                                        style="width: 32px; height: 32px; display: inline-flex; align-items: center; justify-content: center; padding: 0;">
+                                                                    <t t-if="state.downloadingTerminalId === terminal.id">
+                                                                        <i class="fa fa-circle-o-notch fa-spin"/>
+                                                                    </t>
+                                                                    <t t-else="">
+                                                                        <i class="fa fa-download"/>
+                                                                    </t>
+                                                                </button>
+                                                            </div>
                                                         </td>
                                                     </tr>
                                                 </t>
                                                 <t t-if="state.terminals.length == 0">
                                                     <tr>
-                                                        <td colspan="3" class="text-center py-4 text-muted">
+                                                        <td colspan="4" class="text-center py-4 text-muted">
                                                             No terminals found.
                                                         </td>
                                                     </tr>
@@ -152,6 +186,22 @@
                                             <p class="o_support_section_desc mb-0">
                                                 Query the external payment network to validate transaction status and reconciliation data.
                                             </p>
+                                            <div class="mt-1 small text-muted d-flex align-items-center gap-2">
+                                                <i class="fa fa-id-card me-1"/>
+                                                Cybersource Account: 
+                                                <t t-if="state.fetchingMerchantId">
+                                                    <span class="fst-italic">Fetching...</span>
+                                                </t>
+                                                <t t-else="">
+                                                    <strong t-esc="state.cybersourceMerchantId || 'Unknown'"/>
+                                                </t>
+                                                <button class="btn btn-link btn-sm p-0 ms-1" 
+                                                        t-on-click="refreshCybersourceMerchantId"
+                                                        t-att-disabled="state.fetchingMerchantId"
+                                                        title="Re-fetch from API">
+                                                    <i t-attf-class="fa {{ state.fetchingMerchantId ? 'fa-circle-o-notch fa-spin' : 'fa-refresh' }}"/>
+                                                </button>
+                                            </div>
                                         </div>
                                     </div>
                                     <!-- Global Cybersource Download -->

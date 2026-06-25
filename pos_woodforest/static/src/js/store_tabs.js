@@ -324,65 +324,164 @@ function initSupportCards() {
 
 
 /* ================================================================
- *  8. SETUP STEPS — Progressive scroll completion
- *     Each step starts gray with a number. As each row enters the
- *     viewport, the circle turns green, the number fades out,
- *     the checkmark fades in, and the content slides up.
+ *  8. SETUP STEPS — Title-based DOM finder + scroll animation
+ *     Odoo sanitizer strips wf-step-* classes. We find step rows
+ *     by their h3 title text, walk up to the d-flex parent, then
+ *     reset to gray and animate to green on scroll.
  * ================================================================ */
 
-function initSetupSteps() {
-    const rows = document.querySelectorAll('.wf-step-row');
-    if (!rows.length) return;
+var SETUP_STEP_TITLES = [
+    "Install from Odoo Apps",
+    "Connect your Woodforest account",
+    "Add Woodforest as a payment method",
+    "Assign a terminal",
+    "Start taking payments"
+];
 
-    const stepObserver = new IntersectionObserver((entries) => {
-        entries.forEach((entry) => {
+function findSetupStepRowsByTitle() {
+    var rows = [];
+    var h3s = document.querySelectorAll('h3');
+
+    SETUP_STEP_TITLES.forEach(function (title) {
+        var foundH3 = null;
+        h3s.forEach(function (h3) {
+            var text = (h3.textContent || '').replace(/\s+/g, ' ').trim();
+            if (text.indexOf(title) !== -1) {
+                foundH3 = h3;
+            }
+        });
+        if (!foundH3) return;
+
+        var node = foundH3.parentElement;
+        while (node && node !== document.body) {
+            if (
+                node.tagName === 'DIV' &&
+                node.classList &&
+                node.classList.contains('d-flex')
+            ) {
+                var firstChild = node.children[0];
+                var style = firstChild ? (firstChild.getAttribute('style') || '') : '';
+                if (style.indexOf('width:40px') !== -1 || style.indexOf('width: 40px') !== -1) {
+                    rows.push(node);
+                    return;
+                }
+            }
+            node = node.parentElement;
+        }
+    });
+
+    console.log('WOODFOREST setup rows by title:', rows.length);
+    return rows;
+}
+
+function resetSetupStep(row) {
+    var firstCol = row.children[0];
+    if (!firstCol) return;
+
+    var circle = null;
+    var divs = firstCol.querySelectorAll('div');
+    divs.forEach(function (div) {
+        var style = div.getAttribute('style') || '';
+        if (style.indexOf('border-radius:50%') !== -1 || style.indexOf('border-radius: 50%') !== -1) {
+            circle = div;
+        }
+    });
+
+    if (circle) {
+        circle.style.transition = 'background-color 400ms ease-out, border-color 400ms ease-out';
+        circle.style.backgroundColor = '#FFFFFF';
+        circle.style.border = '2px solid #E5E7EB';
+    }
+
+    var check = circle ? circle.querySelector('span') : null;
+    if (check) {
+        check.style.transition = 'opacity 300ms ease-out';
+        check.style.opacity = '0';
+    }
+
+    divs.forEach(function (div) {
+        var style = div.getAttribute('style') || '';
+        if (style.indexOf('width:2px') !== -1 || style.indexOf('width: 2px') !== -1) {
+            div.style.transition = 'background-color 400ms ease-out';
+            div.style.backgroundColor = '#E5E7EB';
+        }
+    });
+
+    var content = row.children[row.children.length - 1];
+    if (content && content.querySelector('h3')) {
+        content.style.transition = 'opacity 400ms ease-out, transform 400ms ease-out';
+        content.style.opacity = '0.5';
+        content.style.transform = 'translateY(8px)';
+    }
+}
+
+function activateSetupStep(row) {
+    if (row.dataset.wfStepDone === '1') return;
+    row.dataset.wfStepDone = '1';
+
+    var firstCol = row.children[0];
+    if (!firstCol) return;
+
+    var circle = null;
+    var divs = firstCol.querySelectorAll('div');
+    divs.forEach(function (div) {
+        var style = div.getAttribute('style') || '';
+        if (style.indexOf('border-radius:50%') !== -1 || style.indexOf('border-radius: 50%') !== -1) {
+            circle = div;
+        }
+    });
+
+    if (circle) {
+        circle.style.backgroundColor = '#316B18';
+        circle.style.border = '2px solid #316B18';
+    }
+
+    var check = circle ? circle.querySelector('span') : null;
+    if (check) {
+        setTimeout(function () { check.style.opacity = '1'; }, 100);
+    }
+
+    divs.forEach(function (div) {
+        var style = div.getAttribute('style') || '';
+        if (style.indexOf('width:2px') !== -1 || style.indexOf('width: 2px') !== -1) {
+            div.style.backgroundColor = '#316B18';
+        }
+    });
+
+    var content = row.children[row.children.length - 1];
+    if (content && content.querySelector('h3')) {
+        content.style.opacity = '1';
+        content.style.transform = 'translateY(0)';
+    }
+}
+
+function initSetupStepsByRenderedDom() {
+    var rows = findSetupStepRowsByTitle();
+    if (!rows.length) return false;
+
+    rows.forEach(resetSetupStep);
+
+    if (!('IntersectionObserver' in window)) {
+        rows.forEach(activateSetupStep);
+        return true;
+    }
+
+    var observer = new IntersectionObserver(function (entries) {
+        entries.forEach(function (entry) {
             if (!entry.isIntersecting) return;
-            const row = entry.target;
-
-            // Connector line → green
-            const line = row.querySelector('.wf-step-line');
-            if (line) {
-                line.style.backgroundColor = '#316B18';
-            }
-
-            // Circle → green fill
-            const circle = row.querySelector('.wf-step-circle');
-            if (circle) {
-                circle.style.backgroundColor = '#316B18';
-                circle.style.borderColor = '#316B18';
-            }
-
-            // Number → fade out
-            const num = row.querySelector('.wf-step-num');
-            if (num) {
-                num.style.opacity = '0';
-            }
-
-            // Checkmark → fade in (100ms delay)
-            const check = row.querySelector('.wf-step-check');
-            if (check) {
-                setTimeout(() => {
-                    check.style.opacity = '1';
-                }, 100);
-            }
-
-            // Content → slide up + full opacity
-            const content = row.querySelector('.wf-step-content');
-            if (content) {
-                content.style.opacity = '1';
-                content.style.transform = 'translateY(0)';
-            }
-
-            stepObserver.unobserve(row);
+            activateSetupStep(entry.target);
+            observer.unobserve(entry.target);
         });
     }, {
-        threshold: 0.6,
-        rootMargin: '-60px 0px -60px 0px',
+        threshold: 0.3,
+        rootMargin: '0px 0px -10% 0px'
     });
 
-    rows.forEach((row) => {
-        stepObserver.observe(row);
+    rows.forEach(function (row) {
+        observer.observe(row);
     });
+
+    return true;
 }
 
 
@@ -393,7 +492,7 @@ function initSetupSteps() {
 function initAll(container) {
     initStoreTabs(container);
     initScrollAnimations();
-    initSetupSteps();
+    initSetupStepsByRenderedDom();
     initOverviewHovers();
     initFeatureCards();
     initSupportCards();
@@ -536,4 +635,31 @@ whenReady(() => {
         }
 
     }, true);
+})();
+
+
+/* ================================================================
+ *  SETUP STEPS — Standalone title-based fallback
+ *  Runs independently via whenReady + MutationObserver.
+ *  Reuses findSetupStepRowsByTitle / resetSetupStep /
+ *  activateSetupStep / initSetupStepsByRenderedDom defined above.
+ * ================================================================ */
+
+(function initSetupStepsFallback() {
+    if (window.__woodforestSetupStepsInitialized) return;
+    window.__woodforestSetupStepsInitialized = true;
+
+    // Try immediately
+    if (initSetupStepsByRenderedDom()) return;
+
+    // Wait for DOM then retry + watch
+    whenReady(function () {
+        if (initSetupStepsByRenderedDom()) return;
+        var domObserver = new MutationObserver(function () {
+            if (initSetupStepsByRenderedDom()) {
+                domObserver.disconnect();
+            }
+        });
+        domObserver.observe(document.body, { childList: true, subtree: true });
+    });
 })();

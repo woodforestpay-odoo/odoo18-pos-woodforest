@@ -1,0 +1,13 @@
+# Local documentation (not published to Odoo Store)
+PUBLISHING_GUIDE.md
+
+# Python
+__pycache__/
+*.py[cod]
+*.pyc
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo

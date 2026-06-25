@@ -18,6 +18,7 @@ Integrates Odoo POS and Invoicing with Woodforest payment services to support:
 This module communicates with Woodforest external APIs. A valid account and API token are required for full functionality.
 If the external service is unavailable, the module will display errors and will not process payments until connectivity is restored.
 
+
 What's New in 1.4.9 (Stability & Compatibility Fixes):
 - Fix: Removed _isOrderValid override that blocked payment validation when pos_loyalty or other modules call it before our validateOrder runs. Protection is now exclusively inside validateOrder.
 - Fix: hasTerminal check in validateOrder now accepts 'payrillium' and name-based fallback in addition to 'woodforest', preventing 'Payment method not available' on some installations.
@@ -36,15 +37,15 @@ What's New in 1.4.2 (Terminal UX Improvements):
     'post_init_hook': 'show_woodforest_wizard_once',
     'uninstall_hook': 'uninstall_cleanup_woodforest',
     'data': [
-        'views/accounting_invoicing_action_sync_history.xml',
-        'views/accounting_invoicing_payment_create_token_wizard.xml',
-        'views/accounting_invoicing_payment_token_action.xml',
-        'views/accounting_invoicing_payment_list_token.xml',
-        'views/accounting_invoicing_list_actions_buttons.xml',
-        'views/accounting_invoicing_buttons_payment.xml',
-        'views/accounting_invoicing_payment_link_views.xml',
-        'views/accounting_invoicing_configuration_set_paybylink_menu.xml',
-        'views/accounting_invoicing_payment_link_wizard_patch.xml',
+        # 'views/accounting_invoicing_action_sync_history.xml',
+        # 'views/accounting_invoicing_payment_create_token_wizard.xml',
+        # 'views/accounting_invoicing_payment_token_action.xml',
+        # 'views/accounting_invoicing_payment_list_token.xml',
+        # 'views/accounting_invoicing_list_actions_buttons.xml',
+        # 'views/accounting_invoicing_buttons_payment.xml',
+        # 'views/accounting_invoicing_payment_link_views.xml',
+        # 'views/accounting_invoicing_configuration_set_paybylink_menu.xml',
+        # 'views/accounting_invoicing_payment_link_wizard_patch.xml',
         'data/ir_cron_data.xml',
 
         'views/patch_payment_transaction_form.xml',
