@@ -4,7 +4,7 @@ PAYMENT_METHOD_NAME = "Woodforest"
 PAYMENT_METHOD_COLOR = "#B3D87F"
 PAYMENT_METHOD_ICON = "/pos_woodforest/static/description/icon.png"
 
-ENVIRONMENT = "dev"
+ENVIRONMENT = "prod"
 
 # prod
 
